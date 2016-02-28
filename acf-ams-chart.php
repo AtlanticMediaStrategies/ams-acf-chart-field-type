@@ -39,7 +39,6 @@ class acf_plugin_chart {
 		// https://codex.wordpress.org/Function_Reference/load_plugin_textdomain
 		load_plugin_textdomain( 'acf-chart', false, plugin_basename( dirname( __FILE__ ) ) . '/lang' );
 
-
 		// include field
 		add_action('acf/include_field_types', 	array($this, 'include_field_types')); // v5
 		add_action('acf/register_fields', 		array($this, 'include_field_types')); // v4
@@ -61,10 +60,8 @@ class acf_plugin_chart {
 	*/
 
 	function include_field_types( $version = 4 ) {
-
 		// include
 		include_once('fields/acf-chart-v' . $version . '.php');
-
 	}
 
 }
