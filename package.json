@@ -4,7 +4,7 @@
   "description": "Admin backend for the AMS ACF chart field type",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --hot --host local.allstate.com",
+    "start": "webpack-dev-server --inline --hot --progress --host local.allstate.com",
     "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

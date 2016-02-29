@@ -5,7 +5,7 @@ module.exports = {
   devtool: 'source-map',
 
   output: {
-    publicPath: 'dist/',
+    publicPath: '/wp-content/plugins/ams-acf-chart-field-type/assets/dist/',
   },
 
   module: {

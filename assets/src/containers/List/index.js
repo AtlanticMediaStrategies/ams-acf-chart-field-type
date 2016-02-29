@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
+  import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import DocumentMeta from 'react-document-meta';
 
-import { Items } from 'components/Items';
-import { AddItem } from 'components/AddItem';
+import { Items } from '../../components/Items';
+import { AddItem } from '../../components/AddItem';
 
 /* actions */
-import * as actionCreators from 'actions/items';
+import * as actionCreators from '../../actions/items';
 
 const metaData = {
   title: 'Redux test',
