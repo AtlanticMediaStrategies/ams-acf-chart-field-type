@@ -78,6 +78,18 @@ class acf_field_chart extends acf_field {
 		Routes::map('/acf-chart/update/:id', function($params) {
 			$this::updateData($_POST, $params);
 		});
+		Routes::map('/acf-chart/:id', function($params) {
+			$this::readData($params);
+		});
+	}
+
+	/**
+	 *  @param $params {array} param array
+	 */
+	function readData($params) {
+		header('Content-Type: application/json');
+		$data = get_post_meta($params['id'], 'data');
+		die(json_encode(array_shift($data)));
 	}
 
 	/**
