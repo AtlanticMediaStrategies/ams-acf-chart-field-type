@@ -35,6 +35,9 @@ class acf_plugin_chart {
 
 	function __construct() {
 
+		// composer autoload
+		require(dirname(__FILE__) . '/vendor/autoload.php');
+
 		// set text domain
 		// https://codex.wordpress.org/Function_Reference/load_plugin_textdomain
 		load_plugin_textdomain( 'acf-chart', false, plugin_basename( dirname( __FILE__ ) ) . '/lang' );

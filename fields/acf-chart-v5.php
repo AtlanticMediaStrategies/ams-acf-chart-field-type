@@ -3,13 +3,15 @@
 // exit if accessed directly
 if( ! defined( 'ABSPATH' ) ) exit;
 
+if(! class_exists('Routes')) {
+	die('Router needed');
+}
 
 // check if class already exists
 if( !class_exists('acf_field_chart') ) :
 
 
 class acf_field_chart extends acf_field {
-
 
 	/*
 	*  __construct
@@ -44,7 +46,7 @@ class acf_field_chart extends acf_field {
 		*  category (string) basic | content | choice | relational | jquery | layout | visualization
 		*/
 
-		$this->category = 'Vvisualization';
+		$this->category = 'Visualization';
 
 
 		/*
@@ -62,10 +64,34 @@ class acf_field_chart extends acf_field {
 			'error'	=> __('Error! Please enter a higher value', 'acf-chart'),
 		);
 
+		$this::map_routes();
 
 		// do not delete!
-    	parent::__construct();
+  	parent::__construct();
 
+	}
+
+	/**
+	 *  Maps upstatement/router
+	 */
+	function map_routes() {
+		Routes::map('/acf-chart/update/:id', function($params) {
+			$this::updateData($_POST, $params);
+		});
+	}
+
+	/**
+	 *  @param $post {array}  the $_POST php array
+	 *  @param $params {array} route array
+	 */
+	function updateData($post, $params) {
+		header('Content-Type: application/json');
+		$res = update_post_meta($params['id'], 'data', $post['json']);
+		if(!$res) {
+			header('status: 500');
+			die('Error');
+		}
+		die(json_encode($res));
 	}
 
 
@@ -128,11 +154,8 @@ class acf_field_chart extends acf_field {
 		*  Review the data of $field.
 		*  This will show what data is available
 		*/
-
-		echo '<div id="app"></div>'
-		// echo '<pre>';
-		// 	print_r( $field );
-		// echo '</pre>';
+		$ID = $field['ID'];
+		echo '<div id="app" data-id="'.$ID.'"></div>';
 
 
 		/*
@@ -164,11 +187,11 @@ class acf_field_chart extends acf_field {
 		$dir = dirname(plugin_dir_url( __FILE__ ));
 
 		// register & include JS
-		wp_register_script( 'acf-input-chart', "{$dir}/assets/dist/bundle.js", '' , '', true);
-		wp_enqueue_script('acf-input-chart');
-
-		// wp_register_script( 'acf-input-chart', "http://local.allstate.com:8080/assets/dist/bundle.js", '' , '', true);
+		// wp_register_script( 'acf-input-chart', "{$dir}/assets/dist/bundle.js", '' , '', true);
 		// wp_enqueue_script('acf-input-chart');
+
+		wp_register_script( 'acf-input-chart', "http://local.allstate.com:8080/assets/dist/bundle.js", '' , '', true);
+		wp_enqueue_script('acf-input-chart');
 	}
 
 

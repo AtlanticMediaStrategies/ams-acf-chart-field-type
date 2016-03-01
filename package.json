@@ -86,6 +86,7 @@
     "plotly.js": "^1.6.0",
     "node-csv": "^0.1.2",
     "dropzone": "^4.3.0",
-    "react-dropzone": "^3.3.2"
+    "react-dropzone": "^3.3.2",
+    "reqwest-without-xhr2": "^2.0.2"
   }
 }
