@@ -30,8 +30,6 @@
     "babel-preset-react": "^6.3.13",
     "babel-preset-react-hmre": "^1.0.1",
     "babel-preset-stage-0": "^6.3.13",
-    "bootstrap-loader": "^1.0.5",
-    "bootstrap-sass": "^3.3.6",
     "classnames": "^2.2.3",
     "css-loader": "^0.23.1",
     "eslint": "^1.10.3",
@@ -50,8 +48,6 @@
     "karma-chrome-launcher": "^0.2.2",
     "karma-mocha": "^0.2.1",
     "karma-webpack": "^1.7.0",
-    "less": "^2.5.3",
-    "less-loader": "^2.2.2",
     "mocha": "^2.3.4",
     "morgan": "^1.6.1",
     "node-sass": "^3.4.2",
@@ -84,9 +80,9 @@
     "react-router-redux": "^4.0.0",
     "react-router": "^2.0.0",
     "plotly.js": "^1.6.0",
-    "node-csv": "^0.1.2",
     "dropzone": "^4.3.0",
     "react-dropzone": "^3.3.2",
-    "reqwest-without-xhr2": "^2.0.2"
+    "reqwest-without-xhr2": "^2.0.2",
+    "victory": "^0.4.0"
   }
 }
