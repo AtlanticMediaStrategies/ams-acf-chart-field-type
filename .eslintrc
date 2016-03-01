@@ -3,7 +3,8 @@
     "modules": true
   },
   "plugins": [
-    "react"
+    "react",
+    "html"
   ],
   "env": {
     "es6": true

@@ -22,6 +22,9 @@ export class Home extends Component {
     super(props)
     this.props.init_data(this.props.id)
   }
+  /**
+   *  @param files {array}
+   */
   handleFiles(files) {
     const reader = new FileReader()
     reader.onload = () => {
@@ -36,16 +39,15 @@ export class Home extends Component {
           }
         })
         .then(res => {
-          console.log(res)
+          this.props.set_data(res)
         })
         .catch(err => {
           console.log(err)
         })
       })
     }
-    files.forEach(file => {
-      reader.readAsText(file)
-    })
+    const file = files.shift()
+    reader.readAsText(file)
   }
 
   toggleEdit(e) {

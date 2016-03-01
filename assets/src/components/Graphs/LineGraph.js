@@ -1,8 +1,11 @@
 import React, {Component} from 'react'
 import {
   VictoryChart,
-  VictoryLine
+  VictoryLine,
+  VictoryAxis
 } from 'victory'
+
+import moment from 'moment'
 
 export default class LineGraph extends Component {
   render() {
@@ -12,7 +15,7 @@ export default class LineGraph extends Component {
 
     const keys = data.shift();
 
-    const.colors = [
+    const colors = [
       "#9C9C9C",
       "#E6AC00",
       "#006aab",
@@ -37,14 +40,51 @@ export default class LineGraph extends Component {
       });
     }, {});
 
+    const x_axis = []
+
+    let max = -Infinity
+
     data.forEach((datum, i) => {
-      console.log(datum);
+      Object.keys(obj).forEach((key, j) => {
+        const x = new moment(datum[0], 'YYYY-MM').toDate();
+        if(j == 0) {
+          x_axis.push(x)
+        } else {
+          if(datum[j] > max) {
+            max = datum[j]
+          }
+          obj[key].push({
+            y: datum[j],
+            x: i
+          })
+        }
+      })
     });
 
+    const lines = Object.keys(obj).map((key,i) => {
+      if(key === 'date') {
+        return
+      }
+      return (
+        <VictoryLine
+          style={{
+            data: {
+              stroke: colors[i],
+              strokeWidth: 4
+            }
+          }}
+          interpolation="monotone"
+          key={i} data={obj[key]}>
 
+        </VictoryLine>
+      )
+    })
+
+    const width = document.getElementById('postbox-container-2').offsetWidth
 
     return (
-      <VictoryChart>
+      <VictoryChart height={500} width={width}>
+        {lines}
       </VictoryChart>
     )
   }

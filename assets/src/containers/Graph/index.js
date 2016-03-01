@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import LineGraph from '../../components/Graphs/LineGraph.js'
+import DataTable from '../../components/Table/DataTable.js'
 
 export default class Graph extends Component {
   constructor(props) {
@@ -12,7 +13,10 @@ export default class Graph extends Component {
     } = this.props
 
     return (
-      <div>Graph Container</div>
+      <div>
+        <LineGraph data={data}></LineGraph>
+        <DataTable data={data}></DataTable>
+      </div>
     )
   }
   static propTypes = {

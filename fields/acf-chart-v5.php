@@ -199,11 +199,11 @@ class acf_field_chart extends acf_field {
 		$dir = dirname(plugin_dir_url( __FILE__ ));
 
 		// register & include JS
-		// wp_register_script( 'acf-input-chart', "{$dir}/assets/dist/bundle.js", '' , '', true);
-		// wp_enqueue_script('acf-input-chart');
-
-		wp_register_script( 'acf-input-chart', "http://local.allstate.com:8080/assets/dist/bundle.js", '' , '', true);
+		wp_register_script( 'acf-input-chart', "{$dir}/assets/dist/bundle.js", '' , '', true);
 		wp_enqueue_script('acf-input-chart');
+
+		// wp_register_script( 'acf-input-chart', "http://local.allstate.com:8080/assets/dist/bundle.js", '' , '', true);
+		// wp_enqueue_script('acf-input-chart');
 	}
 
 
