@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {
   VictoryChart,
   VictoryLine,
+  VictoryAnimation,
   VictoryAxis
 } from 'victory'
 
@@ -9,62 +10,41 @@ import moment from 'moment'
 
 export default class LineGraph extends Component {
   render() {
-    const {
+    let {
       data
     } = this.props;
 
-    const keys = data.shift();
+    data = [...data]
+
+    const dates = data.shift();
+    const x_axis = dates.map((date, i) => {
+      if(i == 0) return
+      const parsed_date = date.replace('/', '/20');
+      return new moment(parsed_date, 'M/YYYY').toDate()
+    })
 
     const colors = [
-      "#9C9C9C",
-      "#E6AC00",
-      "#006aab",
-      "#fe2f07",
-      "#5179FF",
-      "#E92771",
-      "#22A597",
-      "#FF7F50",
       "#008848",
       "#971100",
-      "#00C9E3",
-      "#BD10E0",
-      "#5ace45",
-      "#5c0f9a",
-      "#8BC4FF",
-      "#FF00A2"
+      "#9C9C9C",
+      "#E6AC00",
     ];
 
-    const obj = keys.reduce((obj, key, i) => {
-      return Object.assign(obj, {
-        [key]: []
-      });
-    }, {});
+    const values = [];
 
-    const x_axis = []
-
-    let max = -Infinity
-
-    data.forEach((datum, i) => {
-      Object.keys(obj).forEach((key, j) => {
-        const x = new moment(datum[0], 'YYYY-MM').toDate();
-        if(j == 0) {
-          x_axis.push(x)
-        } else {
-          if(datum[j] > max) {
-            max = datum[j]
-          }
-          obj[key].push({
-            y: datum[j],
-            x: i
-          })
+    const lines = data.map((datum, i) => {
+      const label = datum[0]
+      const line_data = datum.map((y, j) => {
+        if(j < 1) {
+          return
         }
-      })
-    });
-
-    const lines = Object.keys(obj).map((key,i) => {
-      if(key === 'date') {
-        return
-      }
+        values.push(y)
+        return {
+          x: x_axis[j],
+          y: y
+        }
+      });
+      line_data.shift()
       return (
         <VictoryLine
           style={{
@@ -73,18 +53,44 @@ export default class LineGraph extends Component {
               strokeWidth: 4
             }
           }}
+          key={i}
+          label={label}
+          padding={100}
+          y={(data) => {
+            console.log(data)
+            return parseInt(data.y)
+          }}
           interpolation="monotone"
-          key={i} data={obj[key]}>
-
+          data={line_data}>
         </VictoryLine>
-      )
+      );
     })
+
+    const padding = {
+      top: 50,
+      right: 120,
+      bottom: 50,
+      left: 50
+    }
+
+    const max = Math.max(...values)
+    const min = Math.min(...values)
 
     const width = document.getElementById('postbox-container-2').offsetWidth
 
+    x_axis.shift()
+
     return (
-      <VictoryChart height={500} width={width}>
+      <VictoryChart
+        height={500}
+        width={width}
+        padding={padding}
+      >
         {lines}
+        <VictoryAxis
+          scale="time"
+          tickFormat={(date) => new moment(date).format('MM/YYYY')}
+          ></VictoryAxis>
       </VictoryChart>
     )
   }

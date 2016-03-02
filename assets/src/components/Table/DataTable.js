@@ -5,6 +5,8 @@ export default class DataTable extends Component {
     if(!this.props.data) {
       return
     }
+    let data = [...this.props.data]
+
     const rows = this.props.data.map((rows, i) => {
       const columns = rows.map(column => {
         return (
