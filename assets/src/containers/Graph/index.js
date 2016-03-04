@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import LineGraph from '../../components/Graphs/LineGraph.js'
 import DataTable from '../../components/Table/DataTable.js'
+import PieChart from '../../components/Graphs/PieChart.js'
 
 export default class Graph extends Component {
   constructor(props) {
@@ -17,7 +18,7 @@ export default class Graph extends Component {
 
     return (
       <div>
-        <LineGraph data={filtered_data}></LineGraph>
+        <PieChart data={filtered_data}></PieChart>
         <DataTable data={filtered_data}></DataTable>
       </div>
     )

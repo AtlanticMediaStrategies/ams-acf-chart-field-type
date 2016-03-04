@@ -88,9 +88,6 @@ export default class LineGraph extends Component {
       left: 50
     }
 
-    const max = Math.max(...values)
-    const min = Math.min(...values)
-
     const width = document.getElementById('postbox-container-2').offsetWidth
 
     x_axis.shift()
