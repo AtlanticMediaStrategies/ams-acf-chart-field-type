@@ -27,6 +27,9 @@ export class Home extends Component {
     }
   }
 
+  /**
+   *  Calculate which graph to pull in
+   */
   componentDidMount() {
     const section = ReactDOM.findDOMNode(this)
     let parent = section.parentNode;
@@ -56,7 +59,7 @@ export class Home extends Component {
           }
         })
         .then(res => {
-          this.props.set_data(res)
+          this.props.set_data(res, this.state.id)
         })
         .catch(err => {
           console.log(err)

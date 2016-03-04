@@ -16,6 +16,7 @@ export function app(state = initialState, action) {
         ...state,
         data:  {
           ...state.data,
+          edit: false,
           [action.id]: action.data
         }
       };
