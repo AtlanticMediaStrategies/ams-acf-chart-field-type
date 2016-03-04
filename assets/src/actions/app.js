@@ -30,6 +30,23 @@ export function set_type(chart_type, id) {
   }
 }
 
+export function save_type(chart_type, {id, graphs}) {
+  const data = graphs[id].data;
+  return function (dispatch) {
+    const json = JSON.stringify({
+      data,
+      type: chart_type
+    })
+    request({
+      url: `/acf-chart/update/${id}/`,
+      method: 'POST',
+      data: {
+        json
+      }
+    }).then(() => dispatch(set_type(chart_type, id)))
+  }.bind(this)
+}
+
 export function init_data(id) {
   return function (dispatch) {
     request({
