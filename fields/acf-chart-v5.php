@@ -167,16 +167,8 @@ class acf_field_chart extends acf_field {
 		*  This will show what data is available
 		*/
 		$ID = $field['ID'];
-		echo '<div id="app" data-id="'.$ID.'"></div>';
+		echo '<div id="app" class="acf-chart" data-id="'.$ID.'"></div>';
 
-
-		/*
-		*  Create a simple text input using the 'font_size' setting.
-		*/
-
-		?>
-		<input type="text" name="<?php echo esc_attr($field['name']) ?>" value="<?php echo esc_attr($field['value']) ?>" style="font-size:<?php echo $field['font_size'] ?>px;" />
-		<?php
 	}
 
 
