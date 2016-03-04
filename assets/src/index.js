@@ -7,6 +7,7 @@ import configureStore from './store/configureStore';
 import routes from './routes';
 const store = configureStore({}, history);
 const history = syncHistoryWithStore(browserHistory, store);
+require('es6-shim')
 
 const apps = document.querySelectorAll('.acf-chart');
 
