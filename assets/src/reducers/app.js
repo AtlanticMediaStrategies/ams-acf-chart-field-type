@@ -1,15 +1,23 @@
-const appElm = document.getElementById('app')
 const initialState = {
-  id: appElm.getAttribute('data-id'),
-  edit: false
+  ids: [],
+  edit: false,
+  graphs: {}
 }
 
 export function app(state = initialState, action) {
   switch (action.type) {
+    case 'PUSH_ID':
+      return {
+        ...state,
+        ids: [...state.ids, action.id]
+      }
     case 'SET_DATA':
       return {
         ...state,
-        data: action.fields
+        data:  {
+          ...state.data,
+          [action.id]: action.data
+        }
       };
     case 'TOGGLE_EDIT':
       return {

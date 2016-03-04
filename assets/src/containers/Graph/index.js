@@ -8,14 +8,17 @@ export default class Graph extends Component {
   }
   render() {
 
-    const {
-      data
+    let {
+      data,
+      id
     } = this.props
+
+    let filtered_data = data[id];
 
     return (
       <div>
-        <LineGraph data={data}></LineGraph>
-        <DataTable data={data}></DataTable>
+        <LineGraph data={filtered_data}></LineGraph>
+        <DataTable data={filtered_data}></DataTable>
       </div>
     )
   }

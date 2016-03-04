@@ -14,6 +14,10 @@ export default class LineGraph extends Component {
       data
     } = this.props;
 
+    if(!data) {
+      return <div></div>
+    }
+
     data = [...data]
 
     const dates = data.shift();
@@ -57,7 +61,6 @@ export default class LineGraph extends Component {
           label={label}
           padding={100}
           y={(data) => {
-            console.log(data)
             return parseInt(data.y)
           }}
           interpolation="monotone"

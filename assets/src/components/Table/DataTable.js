@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 export default class DataTable extends Component {
   render() {
     if(!this.props.data) {
-      return
+      return <div></div>
     }
     let data = [...this.props.data]
 

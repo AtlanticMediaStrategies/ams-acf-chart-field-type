@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as actionCreators from '../../actions/app.js';
+
 
 import DocumentMeta from 'react-document-meta';
 import Dropzone from 'react-dropzone';
@@ -20,8 +22,23 @@ import Graph from '../Graph';
 export class Home extends Component {
   constructor(props) {
     super(props)
-    this.props.init_data(this.props.id)
+    this.state = {
+      id: null
+    }
   }
+
+  componentDidMount() {
+    const section = ReactDOM.findDOMNode(this)
+    let parent = section.parentNode;
+    while(!parent.classList.contains('acf-chart')) {
+      parent = parent.parentNode;
+    }
+    const id = parent.getAttribute('data-id')
+    this.props.push_id(id)
+    this.props.init_data(id)
+    this.setState({id})
+  }
+
   /**
    *  @param files {array}
    */
@@ -32,7 +49,7 @@ export class Home extends Component {
         if(err)
           throw err
         request({
-          url: `/acf-chart/update/${this.props.id}`,
+          url: `/acf-chart/update/${this.state.id}`,
           method: 'POST',
           data: {
             json: JSON.stringify(res)
@@ -63,7 +80,7 @@ export class Home extends Component {
     } = this.props
 
     const main = data && !edit ? (
-        <Graph {...this.props}></Graph>
+        <Graph {...this.props} id={this.state.id}></Graph>
       ) : (
         <Dropzone onDrop={this.handleFiles.bind(this)} accept="text/csv">
           <div className="drop-text">

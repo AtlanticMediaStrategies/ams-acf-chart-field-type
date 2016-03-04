@@ -8,9 +8,13 @@ import routes from './routes';
 const store = configureStore({}, history);
 const history = syncHistoryWithStore(browserHistory, store);
 
-ReactDOM.render(
-  <Provider store={store}>
-    <Router history={history} routes={routes} />
-  </Provider>,
-  document.getElementById('app')
-);
+const apps = document.querySelectorAll('.acf-chart');
+
+Array.from(apps).forEach(app => {
+  ReactDOM.render(
+    <Provider store={store}>
+      <Router history={history} routes={routes} />
+    </Provider>,
+    app
+  )
+})

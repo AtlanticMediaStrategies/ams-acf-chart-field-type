@@ -1,9 +1,17 @@
 import request from 'reqwest-without-xhr2'
 
-export function set_data(fields) {
+export function push_id(id) {
+  return {
+    type: 'PUSH_ID',
+    id
+  }
+}
+
+export function set_data(data, id) {
   return  {
     type: 'SET_DATA',
-    fields
+    data,
+    id
   }
 }
 
@@ -21,7 +29,7 @@ export function init_data(id) {
       type: 'json'
     })
     .then(data => {
-      dispatch(set_data(JSON.parse(data)))
+      dispatch(set_data(JSON.parse(data), id))
     })
 
   }
