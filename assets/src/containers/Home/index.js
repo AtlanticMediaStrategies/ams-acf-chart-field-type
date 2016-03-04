@@ -78,11 +78,11 @@ export class Home extends Component {
   render() {
 
     const {
-      data,
+      graphs,
       edit
     } = this.props
 
-    const main = data && !edit ? (
+    const main = graphs && !edit ? (
         <Graph {...this.props} id={this.state.id}></Graph>
       ) : (
         <Dropzone onDrop={this.handleFiles.bind(this)} accept="text/csv">

@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { VictoryPie } from 'victory';
 
+/**
+ *  Wrapper around VictoryPie
+ */
 export default class PieChart extends Component {
   render() {
     let {
@@ -8,7 +11,9 @@ export default class PieChart extends Component {
     } = this.props
 
     if(!data) {
-      return <div></div>
+      return (
+        <div></div>
+      )
     }
 
     // clone array
@@ -16,14 +21,11 @@ export default class PieChart extends Component {
 
     const dates = data.shift()
 
+    // transform data to VictoryPie.data
     const pie_data = data.map((datum, i) => {
-      const label = datum[0]
-      const pie = datum[datum.length - 1] // use most recent data
-      console.log(`label: ${label}, data: ${pie}`)
-      return {
-        x: label,
-        y: parseInt(pie)
-      }
+      const x = datum[0]
+      const y = parseInt(datum[datum.length - 1]) // use most recent data
+      return { x , y }
     })
 
     return (

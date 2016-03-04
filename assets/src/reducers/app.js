@@ -5,6 +5,8 @@ const initialState = {
 }
 
 export function app(state = initialState, action) {
+  let graph;
+
   switch (action.type) {
     case 'PUSH_ID':
       return {
@@ -12,14 +14,27 @@ export function app(state = initialState, action) {
         ids: [...state.ids, action.id]
       }
     case 'SET_DATA':
+      graph = state.graphs[action.id] || {};
+      Object.assign(graph, action.data)
       return {
         ...state,
-        data:  {
-          ...state.data,
-          edit: false,
-          [action.id]: action.data
+        graphs:  {
+          ...state.graphs,
+          [action.id]: graph
         }
       };
+    case 'SET_TYPE':
+      graph = state.graphs[action.id]
+      Object.assign(graph, {
+        type: action.chart_type
+      })
+      return {
+        ...state,
+        graphs: {
+          ...state.graphs,
+          [action.id]: graph
+        }
+      }
     case 'TOGGLE_EDIT':
       return {
         ...state,

@@ -22,6 +22,14 @@ export function toggle_edit(fields) {
   }
 }
 
+export function set_type(chart_type, id) {
+  return {
+    type: 'SET_TYPE',
+    chart_type,
+    id
+  }
+}
+
 export function init_data(id) {
   return function (dispatch) {
     request({
@@ -29,8 +37,8 @@ export function init_data(id) {
       type: 'json'
     })
     .then(data => {
-      dispatch(set_data(JSON.parse(data), id))
+      const parsed =  JSON.parse(data);
+      dispatch(set_data(parsed, id))
     })
-
   }
 }

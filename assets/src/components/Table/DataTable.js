@@ -8,13 +8,13 @@ export default class DataTable extends Component {
     let data = [...this.props.data]
 
     const rows = this.props.data.map((rows, i) => {
-      const columns = rows.map(column => {
+      const columns = rows.map((column, j) => {
         return (
-          <td>{column}</td>
+          <td key={j}>{column}</td>
         )
       })
       return (
-        <tr>
+        <tr key={i}>
           {columns}
         </tr>
       )
