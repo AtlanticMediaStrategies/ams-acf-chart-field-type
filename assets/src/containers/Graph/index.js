@@ -39,10 +39,25 @@ export default class Graph extends Component {
       type = 'line'
     }
 
-    if(type == 'pie') {
-      var graph = <PieChart data={data}></PieChart>
+    if(document.querySelector('.values')) {
+      const parent = document.querySelector(`.values .acf-chart[data-id="${id}"]`)
     } else {
-      var graph = <LineGraph data={data}></LineGraph>
+      const parent = document.querySelector(`.acf-chart[data-id="${id}"]`)
+    }
+    const width = parent.offsetWidth;
+
+    if(type == 'pie') {
+      var graph =
+        <PieChart
+          width={width}
+          data={data}>
+        </PieChart>
+    } else {
+      var graph =
+        <LineGraph
+          width={width}
+          data={data}>
+        </LineGraph>
     }
 
     const pie_classes = classnames({

@@ -1,5 +1,4 @@
 <?php
-
 // exit if accessed directly
 if( ! defined( 'ABSPATH' ) ) exit;
 
@@ -194,8 +193,8 @@ class acf_field_chart extends acf_field {
 		wp_register_script( 'acf-input-chart', "{$dir}/assets/dist/bundle.js", '' , '', true);
 		wp_enqueue_script('acf-input-chart');
 
-		// wp_register_script( 'acf-input-chart', "http://local.allstate.com:8080/assets/dist/bundle.js", '' , '', true);
-		// wp_enqueue_script('acf-input-chart');
+		wp_register_script( 'acf-input-chart', "http://local.allstate.com:8080/assets/dist/bundle.js", '' , '', true);
+		wp_enqueue_script('acf-input-chart');
 	}
 
 
@@ -322,7 +321,6 @@ class acf_field_chart extends acf_field {
 
 	*/
 
-
 	/*
 	*  load_value()
 	*
@@ -338,15 +336,9 @@ class acf_field_chart extends acf_field {
 	*  @return	$value
 	*/
 
-	/*
-
 	function load_value( $value, $post_id, $field ) {
-
-		return $value;
-
+		return '<div class="acf-chart" data-id="'.$field['ID'].'"></div>';
 	}
-
-	*/
 
 
 	/*
@@ -391,32 +383,28 @@ class acf_field_chart extends acf_field {
 	*  @return	$value (mixed) the modified value
 	*/
 
-	/*
-
-	function format_value( $value, $post_id, $field ) {
+	// function format_value( $value, $post_id, $field ) {
 
 		// bail early if no value
-		if( empty($value) ) {
-
-			return $value;
-
-		}
+		// if( empty($value) ) {
+		//
+		// 	return $value;
+		//
+		// }
 
 
 		// apply setting
-		if( $field['font_size'] > 12 ) {
+		// if( $field['font_size'] > 12 ) {
 
 			// format the value
 			// $value = 'something';
 
-		}
+		// }
 
 
 		// return
-		return $value;
-	}
-
-	*/
+		// return $value;
+	// }
 
 
 	/*
@@ -502,15 +490,14 @@ class acf_field_chart extends acf_field {
 	*  @return	$field
 	*/
 
-	/*
+	// /*
 
-	function load_field( $field ) {
+	// function load_field( $field ) {
+	// 	return $field;
+	//
+	// }
 
-		return $field;
-
-	}
-
-	*/
+	// */
 
 
 	/*
