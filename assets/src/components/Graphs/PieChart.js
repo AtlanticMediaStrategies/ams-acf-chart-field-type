@@ -7,7 +7,8 @@ import { VictoryPie } from 'victory';
 export default class PieChart extends Component {
   render() {
     let {
-      data
+      data,
+      width
     } = this.props
 
     if(!data) {

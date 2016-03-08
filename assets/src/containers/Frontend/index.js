@@ -28,9 +28,9 @@ export default class Frontend extends Component {
       parent = parent.parentNode;
     }
     const id = parent.getAttribute('data-id')
-    this.props.push_id(id)
-    this.props.init_data(id)
-    this.setState({id})
+    const name = parent.getAttribute('data-name')
+    this.props.init_data(id, name)
+    this.setState({id, name})
 
   }
 
@@ -40,8 +40,17 @@ export default class Frontend extends Component {
         <div>loading</div>
       )
     }
+
+    const post_graphs  = this.props.graphs[this.state.id]
+    if(!post_graphs) {
+      return (
+        <div>Loading</div>
+      )
+    }
+    const {type, data} = post_graphs[this.state.name]
+
     return (
-      <Graph {...this.props} id={this.state.id}/>
+      <Graph type={type} data={data} id={this.state.id}/>
     )
   }
 }

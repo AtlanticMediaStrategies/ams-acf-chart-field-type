@@ -11,7 +11,8 @@ import moment from 'moment'
 export default class LineGraph extends Component {
   render() {
     let {
-      data
+      data,
+      width
     } = this.props;
 
     if(!data) {
@@ -87,8 +88,6 @@ export default class LineGraph extends Component {
       bottom: 50,
       left: 50
     }
-
-    const width = document.getElementById('postbox-container-2').offsetWidth
 
     x_axis.shift()
 

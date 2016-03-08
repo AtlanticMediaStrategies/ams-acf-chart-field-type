@@ -74,10 +74,10 @@ class acf_field_chart extends acf_field {
 	 *  Maps upstatement/router
 	 */
 	function map_routes() {
-		Routes::map('/acf-chart/update/:id', function($params) {
+		Routes::map('/acf-chart/update/:id/:name', function($params) {
 			$this::updateData($_POST, $params);
 		});
-		Routes::map('/acf-chart/:id', function($params) {
+		Routes::map('/acf-chart/:id/:name', function($params) {
 			$this::readData($params);
 		});
 	}
@@ -87,7 +87,7 @@ class acf_field_chart extends acf_field {
 	 */
 	function readData($params) {
 		header('Content-Type: application/json');
-		$data = get_post_meta($params['id'], 'data');
+		$data = get_post_meta($params['id'], $params['name']);
 		die(json_encode(array_shift($data)));
 	}
 
@@ -97,7 +97,7 @@ class acf_field_chart extends acf_field {
 	 */
 	function updateData($post, $params) {
 		header('Content-Type: application/json');
-		$res = update_post_meta($params['id'], 'data', $post['json']);
+		$res = update_post_meta($params['id'], $params['name'], $post['json']);
 		if(!$res) {
 			header('status: 500');
 			die('Error');
@@ -165,8 +165,13 @@ class acf_field_chart extends acf_field {
 		*  Review the data of $field.
 		*  This will show what data is available
 		*/
+		preg_match('/\[(\d)+\]/', $field['name'], $matches);
+		$order = $matches[1];
+		if($order != '0' && !$order) {
+			return; // don't render
+		}
 		$ID = $field['ID'];
-		echo '<div id="app" class="acf-chart" data-id="'.$ID.'"></div>';
+		echo '<div id="app" class="acf-chart" data-id="'.$ID.'" data-name="modules_'.$order.'_chart"></div>';
 
 	}
 
@@ -190,8 +195,8 @@ class acf_field_chart extends acf_field {
 		$dir = dirname(plugin_dir_url( __FILE__ ));
 
 		// register & include JS
-		wp_register_script( 'acf-input-chart', "{$dir}/assets/dist/bundle.js", '' , '', true);
-		wp_enqueue_script('acf-input-chart');
+		// wp_register_script( 'acf-input-chart', "{$dir}/assets/dist/bundle.js", '' , '', true);
+		// wp_enqueue_script('acf-input-chart');
 
 		wp_register_script( 'acf-input-chart', "http://local.allstate.com:8080/assets/dist/bundle.js", '' , '', true);
 		wp_enqueue_script('acf-input-chart');
@@ -337,7 +342,7 @@ class acf_field_chart extends acf_field {
 	*/
 
 	function load_value( $value, $post_id, $field ) {
-		return '<div class="acf-chart" data-id="'.$field['ID'].'"></div>';
+		return '<div class="acf-chart" data-id="'.$field['ID'].'" data-name="'.$field['name'].'"></div>';
 	}
 
 
