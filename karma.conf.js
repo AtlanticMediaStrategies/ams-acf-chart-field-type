@@ -1,10 +1,10 @@
 module.exports = (config) => {
   config.set({
-    basePath: 'src',
+    basePath: 'assets/src',
     singleRun: true,
     frameworks: ['mocha'],
     reporters: ['dots'],
-    browsers: ['Chrome'],
+    browsers: ['PhantomJS'],
     files: [
       'test/**/*.spec.js',
     ],
@@ -23,6 +23,11 @@ module.exports = (config) => {
         }],
       },
     },
+    plugins: [
+      'karma-mocha',
+      'karma-webpack',
+      'karma-phantomjs-launcher'
+    ],
     webpackMiddleware: {
       stats: {
         color: true,

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server --inline --hot --host local.allstate.com",
     "build": "webpack",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "karma start"
   },
   "repository": {
     "type": "git",
@@ -87,6 +87,13 @@
     "victory": "^0.4.0",
     "eslint-plugin-html": "^1.4.0",
     "moment": "^2.11.2",
-    "es6-shim": "^0.35.0"
+    "es6-shim": "^0.35.0",
+    "ava": "^0.12.0",
+    "should": "^8.2.2",
+    "phantomjs-prebuilt": "^2.1.5",
+    "karma": "^0.13.21",
+    "mocha": "^2.4.5",
+    "karma-mocha": "^0.2.2",
+    "karma-phantomjs-launcher": "^1.0.0"
   }
 }
