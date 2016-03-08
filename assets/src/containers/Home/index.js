@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 
 import * as actionCreators from '../../actions/app.js';
 
-
 import DocumentMeta from 'react-document-meta';
 import Dropzone from 'react-dropzone';
 import csv from 'csv';
@@ -82,8 +81,36 @@ export class Home extends Component {
       edit
     } = this.props
 
+    const pie_classes = classnames({
+      btn: true,
+      ['btn--active']: type === 'pie'
+    })
+
+    const line_classes = classnames({
+      btn: true,
+      ['btn--active']: type === 'line'
+    })
+
     const main = graphs && !edit ? (
-        <Graph {...this.props} id={this.state.id}></Graph>
+        <div>
+          <h3 for="pie">Chart Type</h3>
+          <button
+              type="radio"
+              className={pie_classes}
+              name="pie"
+              onClick={this.set_type.bind(this)}
+              data-type="pie">
+              Pie
+          </button>
+          <button
+            onClick={this.set_type.bind(this)}
+            className={line_classes}
+            data-type="line">
+            line
+          </button>
+          <Graph {...this.props} id={this.state.id}></Graph>
+          <DataTable data={data}></DataTable>
+        </div>
       ) : (
         <Dropzone onDrop={this.handleFiles.bind(this)} accept="text/csv">
           <div className="drop-text">

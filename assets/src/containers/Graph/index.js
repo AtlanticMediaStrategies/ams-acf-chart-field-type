@@ -18,11 +18,10 @@ export default class Graph extends Component {
   }
   render() {
 
-    let {
+    const {
       graphs,
       id
     } = this.props
-
 
     let filtered_data = graphs[id];
 
@@ -40,7 +39,8 @@ export default class Graph extends Component {
     }
 
     if(document.querySelector('.values')) {
-      const parent = document.querySelector(`.values .acf-chart[data-id="${id}"]`)
+      const parent =
+        document.querySelector(`.values .acf-chart[data-id="${id}"]`)
     } else {
       const parent = document.querySelector(`.acf-chart[data-id="${id}"]`)
     }
@@ -60,34 +60,10 @@ export default class Graph extends Component {
         </LineGraph>
     }
 
-    const pie_classes = classnames({
-      btn: true,
-      ['btn--active']: type === 'pie'
-    })
-
-    const line_classes = classnames({
-      btn: true,
-      ['btn--active']: type === 'line'
-    })
     return  (
       <div>
-        <h3 for="pie">Chart Type</h3>
-        <button
-            type="radio"
-            className={pie_classes}
-            name="pie"
-            onClick={this.set_type.bind(this)}
-            data-type="pie">
-            Pie
-        </button>
-        <button
-          onClick={this.set_type.bind(this)}
-          className={line_classes}
-          data-type="line">
-          line
-        </button>
+
         {graph}
-        <DataTable data={data}></DataTable>
       </div>
     )
   }
