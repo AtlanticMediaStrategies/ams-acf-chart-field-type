@@ -42,7 +42,7 @@ export default class Frontend extends Component {
     }
 
     const post_graphs  = this.props.graphs[this.state.id]
-    if(!post_graphs) {
+    if(!post_graphs || ! post_graphs[this.state.name])  {
       return (
         <div>Loading</div>
       )
