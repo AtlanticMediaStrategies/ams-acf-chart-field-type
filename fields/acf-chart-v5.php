@@ -80,6 +80,45 @@ class acf_field_chart extends acf_field {
 		Routes::map('/acf-chart/:id/:name', function($params) {
 			$this::readData($params);
 		});
+
+		Routes::map('/acf-chart/thumbnail/:id/:name', function($params) {
+			$this::saveThumbnail($_POST, $params);
+		});
+	}
+
+	function saveThumbnail($post, $params) {
+		$raw = base64_decode($post['base64']);
+		$file = array(
+			'name' => 'Test',
+			'type' => 'image/png',
+			'tmp_name' => $raw,
+			'error' => '0',
+			'size' => filesize($raw)
+		);
+		$overrides = array(
+
+			// tells WordPress to not look for the POST form
+			// fields that would normally be present, default is true,
+			// we downloaded the file from a remote server, so there
+			// will be no form fields
+			'test_form' => false,
+
+			// setting this to false lets WordPress allow empty files, not recommended
+			'test_size' => true,
+
+			// A properly uploaded file will pass this test.
+			// There should be no reason to override this one.
+			'test_upload' => true,
+		);
+
+		$results = wp_handle_sideload( $file, $overrides );
+
+		$filename = $results['file']; // full path to the file
+		$local_url = $results['url']; // URL to the file in the uploads dir
+		$type = $results['type']; // MIME type of the file
+
+		update_post_meta($params['id'], 'thumbnail', $local_url);
+
 	}
 
 	/**

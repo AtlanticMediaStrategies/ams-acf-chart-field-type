@@ -54,6 +54,43 @@ export class Home extends Component {
   }
 
   /**
+   *  @function saveImage
+   *  @description parses with fabric and posts
+   */
+  saveImage(e) {
+    e.preventDefault()
+    require(['fabric-webpack'], ({fabric}) => {
+      const {
+        Canvas
+      } = fabric;
+
+      const elm = ReactDOM.findDOMNode(this)
+      const svg = elm.querySelector('svg')
+
+      const can = new Canvas();
+
+      can.setWidth(svg.offsetWidth)
+      can.setHeight(svg.offsetHeight)
+
+      // strip to only base64
+      let data = can.toDataURL()
+      data = data.replace('data:image/png;base64,' , '');
+
+      const id = elm.parentNode.getAttribute('id')
+      fabric.parseSVGDocument(svg, (layers) => {
+        layers.forEach(layer => can.add(layer))
+          request({
+            method: 'POST',
+            url: `/acf-chart/thumbnail/${this.state.id}/${this.state.name}/`,
+            data: {
+              base64: data
+            }
+          })
+      })
+    });
+  }
+
+  /**
    *  @param files {array}
    */
   handleFiles(files) {
@@ -74,8 +111,12 @@ export class Home extends Component {
             json
           }
         })
-        .then(res => {
-          this.props.set_data(res, this.state.id)
+        .then(() => {
+          this.props.set_data({data: res}, this.state.id, this.state.name)
+          this.setState({
+            edit: false
+          })
+          this.saveImage()
         })
         .catch(err => {
           console.log(err)
@@ -92,7 +133,7 @@ export class Home extends Component {
   toggleEdit(e) {
     e.preventDefault()
     this.setState({
-      edit: this.state.edit
+      edit: !this.state.edit
     })
   }
 
@@ -174,6 +215,7 @@ export class Home extends Component {
       <section>
         {main}
         <button onClick={this.toggleEdit.bind(this)}>Edit</button>
+        <button onClick={this.saveImage.bind(this)}>Save Thumbnail</button>
       </section>
     );
   }
