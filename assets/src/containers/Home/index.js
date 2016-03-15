@@ -72,20 +72,19 @@ export class Home extends Component {
       can.setWidth(svg.offsetWidth)
       can.setHeight(svg.offsetHeight)
 
-      // strip to only base64
-      let data = can.toDataURL()
-      data = data.replace('data:image/png;base64,' , '');
-
       const id = elm.parentNode.getAttribute('id')
       fabric.parseSVGDocument(svg, (layers) => {
         layers.forEach(layer => can.add(layer))
-          request({
-            method: 'POST',
-            url: `/acf-chart/thumbnail/${this.state.id}/${this.state.name}/`,
-            data: {
-              base64: data
-            }
-          })
+        let data = can.toDataURL()
+        data = data.replace('data:image/png;base64,', '')
+
+        request({
+          method: 'POST',
+          url: `/acf-chart/thumbnail/${this.state.id}/${this.state.name}/`,
+          data: {
+            base64: data
+          }
+        })
       })
     });
   }

@@ -86,39 +86,33 @@ class acf_field_chart extends acf_field {
 		});
 	}
 
+	/**
+	 *  @param $post {array} $_POST array
+	 *  @param $params {array} params passed to route (id, name)
+	 *  Source: https://wordpress.org/support/topic/saving-base64-string-as-a-media-attachment
+	 */
 	function saveThumbnail($post, $params) {
-		$raw = base64_decode($post['base64']);
-		$file = array(
-			'name' => 'Test',
-			'type' => 'image/png',
-			'tmp_name' => $raw,
-			'error' => '0',
-			'size' => filesize($raw)
-		);
-		$overrides = array(
+		$upload_dir = wp_upload_dir();
+		$upload_path = str_replace( '/', DIRECTORY_SEPARATOR, $upload_dir['path'] ) . DIRECTORY_SEPARATOR;
+		$decoded = base64_decode( $post['base64']) ;
+		$filename = $params['name'] . '.png';
+		$hashed_filename  = md5( $filename . microtime() ) . '_' . $filename;
 
-			// tells WordPress to not look for the POST form
-			// fields that would normally be present, default is true,
-			// we downloaded the file from a remote server, so there
-			// will be no form fields
-			'test_form' => false,
+		$image_upload     = file_put_contents( $upload_path . $hashed_filename, $decoded );
 
-			// setting this to false lets WordPress allow empty files, not recommended
-			'test_size' => true,
+		$file             = array();
+		$file['error']    = '';
+		$file['tmp_name'] = $upload_path . $hashed_filename;
+		$file['name']     = $hashed_filename;
+		$file['type']     = 'image/jpg';
+		$file['size']     = filesize( $upload_path . $hashed_filename );
 
-			// A properly uploaded file will pass this test.
-			// There should be no reason to override this one.
-			'test_upload' => true,
-		);
-
-		$results = wp_handle_sideload( $file, $overrides );
-
-		$filename = $results['file']; // full path to the file
-		$local_url = $results['url']; // URL to the file in the uploads dir
-		$type = $results['type']; // MIME type of the file
-
-		update_post_meta($params['id'], 'thumbnail', $local_url);
-
+		$file_return = wp_handle_sideload( $file, array( 'test_form' => false ) );
+		if(!$file_return) {
+			die('ERROR');
+		}
+		update_post_meta($params['id'], 'thumbnail', $file_return['url']);
+		die(json_encode($file_return));
 	}
 
 	/**
@@ -230,11 +224,11 @@ class acf_field_chart extends acf_field {
 		$dir = dirname(plugin_dir_url( __FILE__ ));
 
 		// register & include JS
-		// wp_register_script( 'acf-input-chart', "{$dir}/assets/dist/bundle.js", '' , '', true);
-		// wp_enqueue_script('acf-input-chart');
-
-		wp_register_script( 'acf-input-chart', "http://local.allstate.com:8080/assets/dist/bundle.js", '' , '', true);
+		wp_register_script( 'acf-input-chart', "{$dir}/assets/dist/bundle.js", '' , '', true);
 		wp_enqueue_script('acf-input-chart');
+
+		// wp_register_script( 'acf-input-chart', "http://local.allstate.com:8080/assets/dist/bundle.js", '' , '', true);
+		// wp_enqueue_script('acf-input-chart');
 	}
 
 
