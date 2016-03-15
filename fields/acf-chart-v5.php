@@ -159,20 +159,16 @@ class acf_field_chart extends acf_field {
 	*/
 
 	function render_field( $field ) {
-
-
-		/*
-		*  Review the data of $field.
-		*  This will show what data is available
-		*/
 		preg_match('/\[(\d)+\]/', $field['name'], $matches);
+		if(!$matches) {
+			echo '<div><p>Please click "update" to update a csv in this area.</p></div>';
+			return;
+		}
 		$order = $matches[1];
 		if($order != '0' && !$order) {
 			return; // don't render
 		}
-		$ID = $field['ID'];
-		echo '<div id="app" class="acf-chart" data-id="'.$ID.'" data-name="modules_'.$order.'_chart"></div>';
-
+		echo '<div id="app" class="acf-chart" data-name="modules_'.$order.'_chart"></div>';
 	}
 
 
@@ -195,11 +191,11 @@ class acf_field_chart extends acf_field {
 		$dir = dirname(plugin_dir_url( __FILE__ ));
 
 		// register & include JS
-		wp_register_script( 'acf-input-chart', "{$dir}/assets/dist/bundle.js", '' , '', true);
-		wp_enqueue_script('acf-input-chart');
-
-		// wp_register_script( 'acf-input-chart', "http://local.allstate.com:8080/assets/dist/bundle.js", '' , '', true);
+		// wp_register_script( 'acf-input-chart', "{$dir}/assets/dist/bundle.js", '' , '', true);
 		// wp_enqueue_script('acf-input-chart');
+
+		wp_register_script( 'acf-input-chart', "http://local.allstate.com:8080/assets/dist/bundle.js", '' , '', true);
+		wp_enqueue_script('acf-input-chart');
 	}
 
 
@@ -342,7 +338,7 @@ class acf_field_chart extends acf_field {
 	*/
 
 	function load_value( $value, $post_id, $field ) {
-		return '<div class="acf-chart" data-id="'.$field['ID'].'" data-name="'.$field['name'].'"></div>';
+		return '<div class="acf-chart" data-id="'. $post_id .'" data-name="'.$field['name'].'"></div>';
 	}
 
 
@@ -470,16 +466,9 @@ class acf_field_chart extends acf_field {
 	*  @param	$key (string) the $meta_key which the value was deleted
 	*  @return	n/a
 	*/
-
-	/*
-
 	function delete_value( $post_id, $key ) {
-
-
-
+		delete_post_meta($post_id, $key);
 	}
-
-	*/
 
 
 	/*
@@ -543,15 +532,9 @@ class acf_field_chart extends acf_field {
 	*/
 
 	/*
-
 	function delete_field( $field ) {
-
-
-
 	}
-
 	*/
-
 
 }
 

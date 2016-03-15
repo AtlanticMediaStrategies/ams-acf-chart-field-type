@@ -12,6 +12,7 @@ import styles from './home.scss';
 import request from 'reqwest-without-xhr2';
 import classnames from 'classnames';
 import DataTable from '../../components/Table/DataTable.js'
+import qs from 'qs';
 
 import Graph from '../Graph';
 
@@ -43,7 +44,10 @@ export class Home extends Component {
     while(!parent.classList.contains('acf-chart')) {
       parent = parent.parentNode;
     }
-    const id = parent.getAttribute('data-id')
+    const location = qs.parse(window.location.search.replace('?', ''))
+    const id_param = parent.getAttribute('data-id');
+    const id = location.post || id_param
+    parent.setAttribute(`data-id`, id)
     const name = parent.getAttribute('data-name')
     this.props.init_data(id, name)
     this.setState({id, name})
