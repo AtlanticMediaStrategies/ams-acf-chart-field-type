@@ -91,7 +91,10 @@ export default class LineGraph extends Component {
 
     x_axis.shift()
 
-    const height = width / 2.56;
+    let height = width / 2.56;
+    if(height < 300) {
+      height = 300
+    }
 
     return (
       <VictoryChart
