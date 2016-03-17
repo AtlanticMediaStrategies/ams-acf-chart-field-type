@@ -91,9 +91,11 @@ export default class LineGraph extends Component {
 
     x_axis.shift()
 
+    const height = width / 2.56;
+
     return (
       <VictoryChart
-        height={500}
+        height={height}
         width={width}
         padding={padding}
       >

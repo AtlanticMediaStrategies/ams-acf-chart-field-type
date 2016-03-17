@@ -7,8 +7,7 @@ import { VictoryPie } from 'victory';
 export default class PieChart extends Component {
   render() {
     let {
-      data,
-      width
+      data
     } = this.props
 
     if(!data) {
@@ -29,9 +28,16 @@ export default class PieChart extends Component {
       return { x , y }
     })
 
+    let width = this.props.width;
+    if(width > 800) {
+      width = 800
+    }
+
+
     return (
       <VictoryPie
         data={pie_data}
+        width={width}
       >
       </VictoryPie>
     )

@@ -4,16 +4,21 @@ import LineGraph from '../../components/Graphs/LineGraph.js'
 import DataTable from '../../components/Table/DataTable.js'
 import PieChart from '../../components/Graphs/PieChart.js'
 import classnames from 'classnames'
+import _ from 'lodash'
 
 
 export default class Graph extends Component {
-  render() {
 
-    const {
-      data,
-      type,
-      id
-    } = this.props
+  constructor(props) {
+    super(props);
+    this.state = {
+      width: 1280
+    }
+  }
+
+  componentDidMount() {
+
+    const {id} = this.props;
 
     let parent;
     if(document.querySelector('.values')) {
@@ -22,18 +27,35 @@ export default class Graph extends Component {
     } else {
       parent = document.querySelector(`.acf-chart[data-id="${id}"]`)
     }
-    const width = parent.offsetWidth;
+    let width = parent.offsetWidth;
+    this.setState({width})
+
+    const calculateWidth = () => {
+      this.setState({width: parent.offsetWidth});
+    }
+
+    window.addEventListener('resize' , _.debounce(calculateWidth, 200));
+
+  }
+
+  render() {
+    const {
+      data,
+      type,
+      id
+    } = this.props
+
 
     if(type == 'pie') {
       var graph =
         <PieChart
-          width={width}
+          width={this.state.width}
           data={data}>
         </PieChart>
     } else {
       var graph =
         <LineGraph
-          width={width}
+          width={this.state.width}
           data={data}>
         </LineGraph>
     }
