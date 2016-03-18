@@ -5,6 +5,7 @@ import { Router, useRouterHistor, browserHistory} from 'react-router';
 import { syncHistoryWithStore} from 'react-router-redux';
 import configureStore from './store/configureStore';
 import routes from './routes';
+import 'famous-polyfills/classList.js';
 const store = configureStore({});
 const history = syncHistoryWithStore(browserHistory, store);
 import a11y from 'react-a11y';
