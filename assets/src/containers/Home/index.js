@@ -13,7 +13,6 @@ import request from 'reqwest-without-xhr2';
 import classnames from 'classnames';
 import DataTable from '../../components/Table/DataTable.js'
 import qs from 'qs';
-
 import Graph from '../Graph';
 
 /**
@@ -59,7 +58,7 @@ export class Home extends Component {
    */
   saveImage(e) {
     e.preventDefault()
-    require(['fabric-webpack'], ({fabric}) => {
+    require(['fabric-webpack', 'notie'], ({fabric}, notie) => {
       const {
         Canvas
       } = fabric;
@@ -69,13 +68,26 @@ export class Home extends Component {
 
       const can = new Canvas();
 
-      can.setWidth(svg.offsetWidth)
-      can.setHeight(svg.offsetHeight)
+      let {
+        height,
+        width
+      } = svg.style;
+
+      height = parseInt(height.replace('px', ''))
+      width = parseInt(width.replace('px', ''))
+
+      can.setWidth(width);
+      can.setHeight(height);
 
       const id = elm.parentNode.getAttribute('id')
       fabric.parseSVGDocument(svg, (layers) => {
         layers.forEach(layer => can.add(layer))
         let data = can.toDataURL()
+        if(data === 'data:,') {
+          notie.alert(3, 'Failed to parse svg', 2);
+          return
+        }
+
         data = data.replace('data:image/png;base64,', '')
 
         request({
@@ -85,8 +97,10 @@ export class Home extends Component {
             base64: data
           }
         })
+        .then(() => notie.alert(1, 'Success!', 2))
+        .fail(() => notie.alert(2, 'An error occurred', 2))
       })
-    });
+    })
   }
 
   /**
