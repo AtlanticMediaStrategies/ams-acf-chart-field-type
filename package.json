@@ -89,6 +89,7 @@
     "famous-polyfills": "^0.3.0",
     "json-loader": "^0.5.4",
     "moment": "^2.11.2",
+    "notie": "^2.1.0",
     "object.assign": "^4.0.3",
     "plotly.js": "^1.6.0",
     "qs": "^6.1.0",
