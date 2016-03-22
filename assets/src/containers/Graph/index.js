@@ -4,7 +4,6 @@ import LineGraph from '../../components/Graphs/LineGraph.js'
 import DataTable from '../../components/Table/DataTable.js'
 import PieChart from '../../components/Graphs/PieChart.js'
 import classnames from 'classnames'
-import _ from 'lodash'
 
 
 export default class Graph extends Component {
