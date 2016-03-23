@@ -102,6 +102,7 @@
     "react-router-redux": "^4.0.0",
     "redux": "^3.1.4",
     "reqwest-without-xhr2": "^2.0.2",
+    "underscore": "^1.8.3",
     "victory": "^0.4.0"
   }
 }

@@ -33,7 +33,10 @@ export default class Graph extends Component {
       this.setState({width: parent.offsetWidth});
     }
 
-    window.addEventListener('resize' , _.debounce(calculateWidth, 200));
+    require(['underscore'], (score) => {
+      const underscore = window._ || score;
+      window.addEventListener('resize' , underscore.debounce(calculateWidth, 200));
+    })
 
   }
 
