@@ -157,9 +157,9 @@ export class Home extends Component {
   /**
    *  Maps redux set_type action
    */
-  set_type(type, e) {
+  set_type(e) {
     this.props.save_type(
-      type,
+      e.target.value,
       this.state.id,
       this.state.name,
       this.props
@@ -193,23 +193,28 @@ export class Home extends Component {
     const main = data && !this.state.edit ? (
         <div>
           <h3 for="pie">Chart Type</h3>
-          <Radio
-              type="radio"
-              checked={type == 'pie'}
-              label="Pie Chart"
-              group="type"
-              onClick={this.set_type.bind(this, 'pie')}>
-          </Radio>
-          <Radio
-            label="Line Chart"
-            checked={type == 'line'}
-            onClick={this.set_type.bind(this, 'line')}>
-          </Radio>
-          <Radio
-            label="Bar Chart"
-            checked={type == 'bar'}
-            onClick={this.set_type.bind(this, 'bar')}>
-          </Radio>
+          <form onChange={this.set_type.bind(this)}>
+            <Radio
+                type="radio"
+                checked={type == 'pie'}
+                label="Pie Chart"
+                value="pie"
+                group="type"
+            >
+            </Radio>
+            <Radio
+              label="Line Chart"
+              checked={type == 'line'}
+              value="line"
+            >
+            </Radio>
+            <Radio
+              label="Bar Chart"
+              checked={type == 'bar'}
+              value="bar"
+            >
+            </Radio>
+          </form>
           <Graph data={data} type={type} id={this.state.id}></Graph>
         </div>
       ) : (
