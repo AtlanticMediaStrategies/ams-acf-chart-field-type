@@ -11,8 +11,12 @@ import csv from 'csv';
 import styles from './home.scss';
 import request from 'reqwest-without-xhr2';
 import classnames from 'classnames';
-import DataTable from '../../components/Table/DataTable.js'
+import { Radio } from 'rebass';
+import DataTable from '../../components/Table/DataTable.js';
+
 import qs from 'qs';
+
+
 import Graph from '../Graph';
 
 /**
@@ -153,10 +157,9 @@ export class Home extends Component {
   /**
    *  Maps redux set_type action
    */
-  set_type(e) {
-    e.preventDefault()
+  set_type(type, e) {
     this.props.save_type(
-      e.target.getAttribute('data-type'),
+      type,
       this.state.id,
       this.state.name,
       this.props
@@ -186,33 +189,27 @@ export class Home extends Component {
       type = 'line'
     }
 
-    const pie_classes = classnames({
-      btn: true,
-      ['btn--active']: type === 'pie'
-    })
-
-    const line_classes = classnames({
-      btn: true,
-      ['btn--active']: type === 'line'
-    })
 
     const main = data && !this.state.edit ? (
         <div>
           <h3 for="pie">Chart Type</h3>
-          <button
+          <Radio
               type="radio"
-              className={pie_classes}
-              name="pie"
-              onClick={this.set_type.bind(this)}
-              data-type="pie">
-              Pie
-          </button>
-          <button
-            onClick={this.set_type.bind(this)}
-            className={line_classes}
-            data-type="line">
-            line
-          </button>
+              checked={type == 'pie'}
+              label="Pie Chart"
+              group="type"
+              onClick={this.set_type.bind(this, 'pie')}>
+          </Radio>
+          <Radio
+            label="Line Chart"
+            checked={type == 'line'}
+            onClick={this.set_type.bind(this, 'line')}>
+          </Radio>
+          <Radio
+            label="Bar Chart"
+            checked={type == 'bar'}
+            onClick={this.set_type.bind(this, 'bar')}>
+          </Radio>
           <Graph data={data} type={type} id={this.state.id}></Graph>
         </div>
       ) : (
@@ -227,6 +224,7 @@ export class Home extends Component {
     return (
       <section>
         {main}
+        <DataTable data={data}></DataTable>
         <button onClick={this.toggleEdit.bind(this)}>Edit</button>
         <button onClick={this.saveImage.bind(this)}>Save Thumbnail</button>
       </section>

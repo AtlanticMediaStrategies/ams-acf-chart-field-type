@@ -100,6 +100,7 @@
     "react-redux": "^4.0.6",
     "react-router": "^2.0.0",
     "react-router-redux": "^4.0.0",
+    "rebass": "^0.2.4",
     "redux": "^3.1.4",
     "reqwest-without-xhr2": "^2.0.2",
     "underscore": "^1.8.3",

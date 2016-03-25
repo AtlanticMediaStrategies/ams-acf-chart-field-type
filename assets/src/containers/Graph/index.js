@@ -3,6 +3,8 @@ import styles from './style.scss'
 import LineGraph from '../../components/Graphs/LineGraph.js'
 import DataTable from '../../components/Table/DataTable.js'
 import PieChart from '../../components/Graphs/PieChart.js'
+import BarChart from '../../components/Graphs/BarChart.js'
+
 import classnames from 'classnames'
 
 
@@ -54,6 +56,12 @@ export default class Graph extends Component {
           width={this.state.width}
           data={data}>
         </PieChart>
+    } else if (type == 'bar') {
+      var graph =
+        <BarChart
+          width={this.state.width}
+          data={data}>
+        </BarChart>
     } else {
       var graph =
         <LineGraph
