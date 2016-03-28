@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import styles from './style.scss';
 
 export default class DataTable extends Component {
   render() {
@@ -10,21 +11,28 @@ export default class DataTable extends Component {
     const rows = this.props.data.map((row, i) => {
       const columns = row.map((column, j) => {
         return (
-          <td key={j}>{column}</td>
+          <td
+            className={styles.tableCell}
+            key={j}>
+              {column}
+          </td>
         )
       })
       return (
-        <tr key={i}>
+        <tr className={styles.tableRow} key={i}>
           {columns}
         </tr>
       )
     });
+
     return (
-      <table width="100%">
-        <tbody>
-          {rows}
-        </tbody>
-      </table>
+      <div className={styles.tableContainer}>
+        <table className={styles.table}>
+          <tbody>
+            {rows}
+          </tbody>
+        </table>
+      </div>
     )
   }
 }
