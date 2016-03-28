@@ -11,7 +11,7 @@ import csv from 'csv';
 import styles from './home.scss';
 import request from 'reqwest-without-xhr2';
 import classnames from 'classnames';
-import { Radio } from 'rebass';
+import { Radio, Button } from 'rebass';
 import DataTable from '../../components/Table/DataTable.js';
 
 import qs from 'qs';
@@ -36,6 +36,10 @@ export class Home extends Component {
       id: null,
       edit: false
     }
+  }
+
+  static childContextTypes = {
+    rebass: React.PropTypes.object
   }
 
   /**
@@ -105,6 +109,24 @@ export class Home extends Component {
         .fail(() => notie.alert(2, 'An error occurred', 2))
       })
     })
+  }
+
+  getChildContext() {
+    return {
+      rebass: {
+        colors: {
+          primary: '#4088DD',
+          success: '#77CD19',
+          error: '#CD051E',
+          cancel: '#FDFDFD'
+        },
+        inverted: '#FDFDFD',
+        Button: {
+          textTransform: 'uppercase',
+          letteSpacing: '0.05em'
+        }
+      }
+    }
   }
 
   /**
@@ -198,18 +220,21 @@ export class Home extends Component {
                 type="radio"
                 checked={type == 'pie'}
                 label="Pie Chart"
+                name="pie"
                 value="pie"
                 group="type"
             >
             </Radio>
             <Radio
               label="Line Chart"
+              name="line"
               checked={type == 'line'}
               value="line"
             >
             </Radio>
             <Radio
               label="Bar Chart"
+              name="bar"
               checked={type == 'bar'}
               value="bar"
             >
@@ -230,8 +255,15 @@ export class Home extends Component {
       <section>
         {main}
         <DataTable data={data}></DataTable>
-        <button onClick={this.toggleEdit.bind(this)}>Edit</button>
-        <button onClick={this.saveImage.bind(this)}>Save Thumbnail</button>
+        <Button
+          backgroundColor={this.state.edit === true ? 'white': 'primary'}
+          color={this.state.edit === true ? 'primary': 'white'}
+          style={{ marginRight: '8px' }}
+          onClick={this.toggleEdit.bind(this)}>Edit</Button>
+        <Button
+          rounded='right'
+          theme='success'
+          onClick={this.saveImage.bind(this)}>Save Thumbnail</Button>
       </section>
     );
   }
