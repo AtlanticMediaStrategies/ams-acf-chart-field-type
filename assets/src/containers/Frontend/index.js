@@ -47,10 +47,19 @@ export default class Frontend extends Component {
         <div>Loading</div>
       )
     }
-    const {type, data} = post_graphs[this.state.name]
+    const {
+      type,
+      colors,
+      data
+    } = post_graphs[this.state.name]
 
     return (
-      <Graph type={type} data={data} id={this.state.id}/>
+      <Graph
+        type={type}
+        colors={colors}
+        data={data}
+        id={this.state.id}
+      />
     )
   }
 }
