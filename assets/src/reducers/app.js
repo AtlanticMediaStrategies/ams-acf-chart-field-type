@@ -78,7 +78,8 @@ export function app(state = initialState, action) {
       const post_id = qs.parse(window.location.search.replace('?', '')).post
 
       graphs = state.graphs[post_id]
-      graph = graphs[action.id]
+      graph = graphs[name]
+
 
       graph.colors.splice(i, 1, color)
 
