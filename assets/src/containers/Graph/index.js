@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import styles from './style.scss'
 import LineGraph from '../../components/Graphs/LineGraph.js'
 import DataTable from '../../components/Table/DataTable.js'
 import PieChart from '../../components/Graphs/PieChart.js'
@@ -7,9 +6,7 @@ import BarChart from '../../components/Graphs/BarChart.js'
 
 import classnames from 'classnames'
 
-
 export default class Graph extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -17,19 +14,22 @@ export default class Graph extends Component {
     }
   }
 
+  /**
+   *  Bind resize function for responsive graphs
+   */
   componentDidMount() {
 
-    const {id} = this.props;
+    const { id } = this.props;
 
-    let parent;
+    // differing parent based on whether in wp-admin or not
+    let parent_selector = `.acf-chart[data-id="${id}"]`;
     if(document.querySelector('.values')) {
-      parent =
-        document.querySelector(`.values .acf-chart[data-id="${id}"]`)
-    } else {
-      parent = document.querySelector(`.acf-chart[data-id="${id}"]`)
+      parent_selector = `.values ${parent_selector}`
     }
-    let width = parent.offsetWidth;
-    this.setState({width})
+
+    const parent = document.querySelector(parent_selector);
+    let width = parent.offsetWidth
+    this.setState({ width })
 
     const calculateWidth = () => {
       this.setState({width: parent.offsetWidth});
@@ -37,37 +37,33 @@ export default class Graph extends Component {
 
     require(['underscore'], (score) => {
       const underscore = window._ || score;
-      window.addEventListener('resize' , underscore.debounce(calculateWidth, 200));
+      window.addEventListener(
+        'resize',
+        underscore.debounce(calculateWidth, 200)
+      )
     })
-
   }
 
   render() {
     const {
       data,
       type,
+      colors,
       id
     } = this.props
 
+    const chartProps = {
+      width: this.state.width,
+      colors,
+      data
+    }
 
     if(type == 'pie') {
-      var graph =
-        <PieChart
-          width={this.state.width}
-          data={data}>
-        </PieChart>
+      var graph = <PieChart {...chartProps}></PieChart>
     } else if (type == 'bar') {
-      var graph =
-        <BarChart
-          width={this.state.width}
-          data={data}>
-        </BarChart>
+      var graph = <BarChart {...chartProps}></BarChart>
     } else {
-      var graph =
-        <LineGraph
-          width={this.state.width}
-          data={data}>
-        </LineGraph>
+      var graph = <LineGraph {...chartProps}></LineGraph>
     }
 
     return  (

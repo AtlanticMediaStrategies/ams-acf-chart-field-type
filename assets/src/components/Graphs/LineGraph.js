@@ -6,15 +6,15 @@ import {
   VictoryAxis
 } from 'victory'
 
-import { colors } from './config.js';
-
 import moment from 'moment'
 
 export default class LineGraph extends Component {
+
   render() {
     let {
       data,
-      width
+      width,
+      colors
     } = this.props;
 
     if(!data) {
@@ -45,7 +45,9 @@ export default class LineGraph extends Component {
         }
       });
       line_data.shift()
+
       return (
+
         <VictoryLine
           style={{
             data: {
@@ -72,9 +74,13 @@ export default class LineGraph extends Component {
       left: 50
     }
 
+    // shift blank first row/column
     x_axis.shift()
 
+    // calculate height and try to keep same ratio
     let height = width / 2.56;
+
+    // min-height for graph
     if(height < 300) {
       height = 300
     }

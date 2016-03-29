@@ -13,9 +13,9 @@ import request from 'reqwest-without-xhr2';
 import classnames from 'classnames';
 import { Radio, Button } from 'rebass';
 import DataTable from '../../components/Table/DataTable.js';
+import RadioGroup from './RadioGroup.js';
 
 import qs from 'qs';
-
 
 import Graph from '../Graph';
 
@@ -111,6 +111,9 @@ export class Home extends Component {
     })
   }
 
+  /**
+   *  Configure Rebass
+   */
   getChildContext() {
     return {
       rebass: {
@@ -176,21 +179,11 @@ export class Home extends Component {
     })
   }
 
-  /**
-   *  Maps redux set_type action
-   */
-  set_type(e) {
-    this.props.save_type(
-      e.target.value,
-      this.state.id,
-      this.state.name,
-      this.props
-    )
-  }
-
   render() {
 
-    const { graphs } = this.props
+    const {
+      graphs
+    } = this.props
 
     if(!graphs || !this.state.name) {
       return <div></div>
@@ -204,63 +197,48 @@ export class Home extends Component {
 
     let {
       type,
-      data
+      data,
+      colors
     } = post_graphs[this.state.name]
 
     if(!type) {
       type = 'line'
     }
 
-
     const main = data && !this.state.edit ? (
-        <div>
-          <h3 for="pie">Chart Type</h3>
-          <form onChange={this.set_type.bind(this)}>
-            <Radio
-              type="radio"
-              checked={type == 'pie'}
-              label="Pie Chart"
-              aria-label="Pie Chart"
-              name="pie"
-              value="pie"
-              readOnly={true}
-              group="type"
-            >
-            </Radio>
-            <Radio
-              label="Line Chart"
-              aria-label="Line Chart"
-              name="line"
-              readOnly={true}
-              checked={type == 'line'}
-              value="line"
-            >
-            </Radio>
-            <Radio
-              aria-label="Bar Chart"
-              label="Bar Chart"
-              name="bar"
-              readOnly={true}
-              checked={type == 'bar'}
-              value="bar"
-            >
-            </Radio>
-          </form>
-          <Graph data={data} type={type} id={this.state.id}></Graph>
+      <div>
+        <h3 for="pie">Chart Type</h3>
+        <RadioGroup
+          post_id={this.state.id}
+          name={this.state.name}
+          type={type}
+          {...this.props}
+        >
+        </RadioGroup>
+        <Graph
+          colors={colors}
+          data={data}
+          type={type}
+          id={this.state.id}
+        >
+        </Graph>
+      </div>
+    ) : (
+      <Dropzone onDrop={this.handleFiles.bind(this)} accept="text/csv">
+        <div className="drop-text">
+          Drop csv files here or click to trigger form.
         </div>
-      ) : (
-        <Dropzone onDrop={this.handleFiles.bind(this)} accept="text/csv">
-          <div className="drop-text">
-            Drop csv files here or click to trigger form.
-          </div>
-        </Dropzone>
-      )
-
+      </Dropzone>
+    )
 
     return (
       <section>
         {main}
-        <DataTable data={data}></DataTable>
+        <DataTable
+          {...this.props}
+          name={this.state.name}
+          data={data}
+        ></DataTable>
         <Button
           backgroundColor={this.state.edit === true ? 'white': 'primary'}
           color={this.state.edit === true ? 'primary': 'white'}

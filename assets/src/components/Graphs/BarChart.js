@@ -5,8 +5,6 @@ import {
   VictoryChart
 } from 'victory';
 
-import { colors } from './config.js';
-
 export default class BarChart extends Component {
 
   static propTypes = {
@@ -17,7 +15,8 @@ export default class BarChart extends Component {
   render() {
     let {
       data,
-      width
+      width,
+      colors
     } = this.props
 
     if(!data) {

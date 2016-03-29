@@ -1,7 +1,11 @@
+import { colors } from '../components/Graphs/config.js';
+import qs from 'qs';
+
 const initialState = {
   edit: false,
   graphs: {}
 }
+
 
 export function app(state = initialState, action) {
   let graph;
@@ -61,6 +65,33 @@ export function app(state = initialState, action) {
         ...state,
         edit: !state.edit
       }
+
+    /**
+     * Sets a color for a given element on a graph
+     *
+     *  @param action.color {string} color to set
+     *  @param action.i   {integer} nth element to manipulate
+     *  @param action.name   {integer} nth element to manipulate
+     */
+    case 'SET_COLOR':
+      const { color, i, name} = action;
+      const post_id = qs.parse(window.location.search.replace('?', '')).post
+
+      graphs = state.graphs[post_id]
+      graph = graphs[action.id]
+
+      graph.colors.splice(i, 1, color)
+
+      Object.assign(graphs, { [action.id]: graph });
+
+      return {
+        ...state,
+        graphs: {
+          ...state.graphs,
+          [post_id]: graphs
+        }
+      }
+
     default:
       return state;
   }

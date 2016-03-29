@@ -1,4 +1,5 @@
 import request from 'reqwest-without-xhr2'
+import { colors } from '../components/Graphs/config.js';
 
 export function push_id(id) {
   return {
@@ -56,8 +57,25 @@ export function init_data(id, name) {
       type: 'json'
     })
     .then(data => {
-      const parsed =  JSON.parse(data);
+      const parsed =  JSON.parse(data)
+      Object.assign(parsed, { colors })
       dispatch(set_data(parsed, id, name))
     })
+  }
+}
+
+/**
+ *  Sets color for specific element
+ *
+ *  @param color {string} color to set
+ *  @param name {string} the key name for the graph
+ *  @param i {integer} nth-element in graph to change color
+ */
+export function set_color(color, name, i) {
+  return {
+    type: 'SET_COLOR',
+    color,
+    name,
+    i
   }
 }
