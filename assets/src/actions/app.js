@@ -128,3 +128,14 @@ export function toggle_color(index, name) {
     name
   }
 }
+
+/**
+ *
+ */
+export function cancel_color(index, name) {
+  return {
+    type: 'CANCEL_COLOR',
+    index,
+    name
+  }
+}
