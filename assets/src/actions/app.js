@@ -58,8 +58,45 @@ export function init_data(id, name) {
     })
     .then(data => {
       const parsed =  JSON.parse(data)
-      Object.assign(parsed, { colors })
+
+      // setup default colors
+      if(!parsed.colors) {
+        Object.assign(parsed, { colors })
+      }
+
       dispatch(set_data(parsed, id, name))
+    })
+  }
+}
+
+function update_graph(graph, id, name) {
+  return {
+    type: 'UPDATE_GRAPH',
+    graph,
+    id,
+    name
+  }
+}
+
+function reset_active() {
+  return {
+    type: 'RESET_ACTIVE'
+  }
+}
+
+export function save_graph(graph, id, name) {
+  const json = JSON.stringify(graph)
+  return function(dispatch) {
+    request({
+      url: `/acf-chart/update/${id}/${name}`,
+      method: 'POST',
+      data: {
+        json
+      }
+    })
+    .then(data => {
+      dispatch(update_graph(graph, id, name))
+      dispatch(reset_active())
     })
   }
 }
@@ -68,14 +105,26 @@ export function init_data(id, name) {
  *  Sets color for specific element
  *
  *  @param color {string} color to set
+ *  @param graph {object} graph to change
+ *  @param row {integer} nth-element in graph to change color
  *  @param name {string} the key name for the graph
- *  @param i {integer} nth-element in graph to change color
+ *  @param id {integer} post_id
  */
-export function set_color(color, name, i) {
+export function set_color(color, graph, row, name, id) {
+  return function (dispatch) {
+    graph.colors.splice(row, 1, color);
+    dispatch(update_graph(graph, id,  name))
+  }
+}
+
+/**
+ *  @param index {integer} row to edit
+ *  @param name {string} key for graph to edit
+ */
+export function toggle_color(index, name) {
   return {
-    type: 'SET_COLOR',
-    color,
-    name,
-    i
+    type: 'TOGGLE_COLOR',
+    index,
+    name
   }
 }

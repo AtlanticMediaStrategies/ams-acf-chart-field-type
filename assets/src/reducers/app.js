@@ -3,9 +3,13 @@ import qs from 'qs';
 
 const initialState = {
   edit: false,
+  stashedColor: '',
+  activeName: '',
+  activeRow: -1,
   graphs: {}
 }
 
+const post_id = qs.parse(window.location.search.replace('?', '')).post
 
 export function app(state = initialState, action) {
   let graph;
@@ -74,16 +78,12 @@ export function app(state = initialState, action) {
      *  @param action.name   {integer} nth element to manipulate
      */
     case 'SET_COLOR':
-      const { color, i, name} = action;
-      const post_id = qs.parse(window.location.search.replace('?', '')).post
+      const { color, name, row } = action;
 
       graphs = state.graphs[post_id]
-      graph = graphs[name]
 
-
-      graph.colors.splice(i, 1, color)
-
-      Object.assign(graphs, { [action.id]: graph });
+      // swap in the new color
+      graphs[activeName].colors.splice(activeRow, 1, color)
 
       return {
         ...state,
@@ -91,6 +91,70 @@ export function app(state = initialState, action) {
           ...state.graphs,
           [post_id]: graphs
         }
+      }
+
+    case 'UPDATE_GRAPH':
+
+      graph = action.graph;
+      graphs = state.graphs[action.id];
+
+      Object.assign(graphs, { [action.name]: graph })
+
+      return {
+        ...state,
+        graphs: {
+          ...state.graphs,
+          [action.id]: graphs
+        }
+      }
+
+
+    /**
+     *  @param action.index {integer} the row to edit
+     */
+    case 'TOGGLE_COLOR':
+      const stashedColor =
+        state.graphs[post_id][action.name].colors[action.index]
+
+      return {
+        ...state,
+        activeName: action.name,
+        activeRow: action.index,
+        stashedColor
+      }
+
+    /**
+     *  @param action.index {integer} row to edit
+     *  @param action.name {string} key for the graph
+     */
+    case 'CANCEL_COLOR':
+      graphs = state.graphs[post_id]
+      graph = graphs[action.name]
+      graph.colors.splice(action.index, 1, state.stashedColor)
+      Object.assign(graphs, {[action.name]: graph })
+
+      const { activeName, activeRow } = initialState;
+
+      return {
+        ...state,
+        // reset
+        stashedColor,
+        activeName,
+        activeRow,
+
+        // update graphs
+        graphs: {
+          ...state.graphs,
+          [post_id]: graphs
+        }
+      }
+
+
+    case 'RESET_ACTIVE':
+      return {
+        ...state,
+        activeName: initialState.activeName,
+        activeRow: initialState.activeRow,
       }
 
     default:

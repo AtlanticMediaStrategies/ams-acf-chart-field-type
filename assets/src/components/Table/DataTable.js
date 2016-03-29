@@ -10,31 +10,71 @@ export default class DataTable extends Component {
     this.state = {
       activeEdit: false
     }
+    // debounce save_color
+    this.set_color = window._.debounce(this.save_color, 200)
   }
 
-  toggle_color(i, e) {
+  /**
+   *  Calls redux action
+   */
+  toggle_color(index, e) {
     e.preventDefault()
-    if(this.state.activeEdit !== false ) {
-      var activeEdit = false
-    } else {
-      var activeEdit = i
-    }
-    this.setState({
-      activeEdit
-    })
+    this.props.toggle_color(index, this.props.name)
   }
 
-  set_color(i, {hex}) {
-    this.props.set_color(`#${hex}`, this.props.name, i - 1)
+  /**
+   *  Calls redux action
+   */
+  cancel_color(index, e) {
+    e.preventDefault()
+    this.props.cancel_color(index, this.props.name)
+  }
+
+  /**
+   *  Calls redux action when 'save' button is clicked
+   */
+  update_graph(e) {
+    e.preventDefault()
+    const { graph, id, name } = this.props
+    this.props.save_graph(graph, id, name)
+  }
+
+  /**
+   *  Calls redux action set_color
+   *
+   *  @param color.hex {string} passed in by react-color
+   */
+  save_color({hex}) {
+    this.props.set_color(
+      `#${hex}`,
+      this.props.graph,
+      this.props.activeRow,
+      this.props.name,
+      this.props.id )
+  }
+
+  /**
+   *  Determines whether the row is active or not
+   *  Useful for displaying picker/save button or edit button
+   *
+   *  @param i {integer} nth row
+   *  @param name { string } key of the graph
+   *
+   *  @return {boolean} whether current row is active
+   */
+  active_row(i) {
+    const { activeRow, activeName, name } = this.props;
+    return i === activeRow && name === activeName;
   }
 
   render() {
-    if(!this.props.data) {
+    if(!this.props.graph) {
       return <div></div>
     }
-    let data = [...this.props.data]
+    let {  colors, data } = this.props.graph;
+    data = [...data]
 
-    const rows = this.props.data.map((row, i) => {
+    const rows = data.map((row, i) => {
       const columns = row.map((column, j) => {
         return (
           <td
@@ -50,22 +90,52 @@ export default class DataTable extends Component {
             key='edit'
             className={styles.tableCell}
            >
+
             <Button
               role="button"
+              backgroundColor={this.props.graph.colors[i]}
+              style={{display: this.active_row(i) ? 'none': 'inline'}}
               onKeyDown={ this.toggle_color.bind(this, i) }
               onClick={ this.toggle_color.bind(this, i) }>
               Edit
             </Button>
+
+            <Button
+              style={{display: this.active_row(i) ? 'inline': 'none'}}
+              onClick={ this.update_graph.bind(this) }
+              theme="success"
+            >
+              Save
+            </Button>
+
+            <Button
+              style={{
+                color: "#111111",
+                marginTop: '8px',
+                display: this.active_row(i) ? 'inline': 'none'
+              }}
+              onClick={ this.cancel_color.bind(this, i) }
+              theme="info"
+            >
+              Cancel
+            </Button>
+
+
+
             <Picker
-              type="sketch"
-              onChange={this.set_color.bind(this, i)}
-              display={ this.state.activeEdit === i }
+              type="chrome"
+              color={ colors[i] }
+              onChange={ this.set_color.bind(this) }
+              display={
+                this.props.activeRow === i &&
+                this.props.activeName === this.props.name
+              }
             >
             </Picker>
           </td>
         )
       } else {
-        columns.unshift(<td key='blank' className={styles.tableCell}></td>)
+        columns.unshift(<td key='label' className={styles.tableCell}>Color</td>)
       }
       return (
         <tr className={styles.tableRow} key={i}>

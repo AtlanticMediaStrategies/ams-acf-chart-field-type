@@ -121,7 +121,7 @@ export class Home extends Component {
           primary: '#4088DD',
           success: '#77CD19',
           error: '#CD051E',
-          cancel: '#FDFDFD'
+          info: '#AAA'
         },
         inverted: '#FDFDFD',
         Button: {
@@ -195,6 +195,8 @@ export class Home extends Component {
       return <div>loading</div>
     }
 
+    const graph = post_graphs[this.state.name]
+
     let {
       type,
       data,
@@ -233,21 +235,29 @@ export class Home extends Component {
 
     return (
       <section>
+
         {main}
+
         <DataTable
-          {...this.props}
           name={this.state.name}
-          data={data}
+          id={this.state.id}
+          graph={graph}
+          {...this.props}
         ></DataTable>
+
         <Button
           backgroundColor={this.state.edit === true ? 'white': 'primary'}
           color={this.state.edit === true ? 'primary': 'white'}
           style={{ marginRight: '8px' }}
-          onClick={this.toggleEdit.bind(this)}>Edit</Button>
+          onClick={this.toggleEdit.bind(this)}>Edit data
+        </Button>
+
         <Button
           rounded='right'
           theme='success'
-          onClick={this.saveImage.bind(this)}>Save Thumbnail</Button>
+          onClick={this.saveImage.bind(this)}>Save as thumbnail
+        </Button>
+
       </section>
     );
   }
