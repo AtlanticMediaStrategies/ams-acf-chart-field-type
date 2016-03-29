@@ -1,13 +1,31 @@
-import React, {Component} from 'react';
-import styles from './style.scss';
+import React, {Component} from 'react'
+import styles from './style.scss'
 import { Button } from 'rebass'
+import Picker from 'react-color'
 
 export default class DataTable extends Component {
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      activeEdit: false
+    }
+  }
 
-  set_color(i, color, e) {
+  toggle_color(i, e) {
     e.preventDefault()
-    this.props.set_color(color, this.props.name, i)
+    if(this.state.activeEdit !== false ) {
+      var activeEdit = false
+    } else {
+      var activeEdit = i
+    }
+    this.setState({
+      activeEdit
+    })
+  }
+
+  set_color(i, {hex}) {
+    this.props.set_color(`#${hex}`, this.props.name, i - 1)
   }
 
   render() {
@@ -32,7 +50,18 @@ export default class DataTable extends Component {
             key='edit'
             className={styles.tableCell}
            >
-            <Button onClick={ this.set_color.bind(this, i - 1, '#000000') }>Edit</Button>
+            <Button
+              role="button"
+              onKeyDown={ this.toggle_color.bind(this, i) }
+              onClick={ this.toggle_color.bind(this, i) }>
+              Edit
+            </Button>
+            <Picker
+              type="sketch"
+              onChange={this.set_color.bind(this, i)}
+              display={ this.state.activeEdit === i }
+            >
+            </Picker>
           </td>
         )
       } else {

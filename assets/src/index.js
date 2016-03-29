@@ -10,10 +10,12 @@ const store = configureStore({});
 const history = syncHistoryWithStore(browserHistory, store);
 import a11y from 'react-a11y';
 
-if(process.env.NODE_ENV !== 'production') {
-  a11y(React);
-}
+// if(process.env.NODE_ENV !== 'production') {
+//   a11y(React);
+// }
 require('es6-shim')
+
+window._.noConflict()
 
 const apps = document.querySelectorAll('.acf-chart');
 

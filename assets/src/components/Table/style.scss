@@ -19,6 +19,7 @@
 :local(.tableCell) {
   padding: 4px 15px;
   border-bottom: 1px solid #ccc;
+  position: relative;
 }
 
 :local(.tableRow) {
