@@ -7,7 +7,8 @@ import { VictoryPie } from 'victory';
 export default class PieChart extends Component {
   render() {
     let {
-      data
+      data,
+      currentColumn
     } = this.props
 
     if(!data) {
@@ -24,7 +25,7 @@ export default class PieChart extends Component {
     // transform data to VictoryPie.data
     const pie_data = data.map((datum, i) => {
       const x = datum[0]
-      const y = parseInt(datum[datum.length - 1]) // use most recent data
+      const y = parseInt(datum[currentColumn])
       return { x , y }
     })
 
@@ -32,7 +33,6 @@ export default class PieChart extends Component {
     if(width > 800) {
       width = 800
     }
-
 
     return (
       <VictoryPie

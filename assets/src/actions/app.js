@@ -64,6 +64,14 @@ export function init_data(id, name) {
         Object.assign(parsed, { colors })
       }
 
+      if(parsed.type === 'pie' && !parsed.currentColumn) {
+        Object.assign(parsed, {
+          columnsConstrained: true,
+          currentColumn: 1
+        })
+        console.log(parsed)
+      }
+
       dispatch(set_data(parsed, id, name))
     })
   }
@@ -130,12 +138,25 @@ export function toggle_color(index, name) {
 }
 
 /**
- *
+ *  @param index {integer} row to edit
+ *  @param name {string} key for graph to edit
  */
 export function cancel_color(index, name) {
   return {
     type: 'CANCEL_COLOR',
     index,
+    name
+  }
+}
+
+/**
+ *  @param column {integer} nth column to edit
+ *  @param name {string} key for graph to edit
+ */
+export function set_current_column(column, name) {
+  return {
+    type: 'SET_CURRENT_COLUMN',
+    column,
     name
   }
 }

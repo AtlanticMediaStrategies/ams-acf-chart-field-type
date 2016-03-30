@@ -49,6 +49,7 @@ export default class Graph extends Component {
       data,
       type,
       colors,
+      currentColumn,
       id
     } = this.props
 
@@ -59,6 +60,7 @@ export default class Graph extends Component {
     }
 
     if(type == 'pie') {
+      Object.assign(chartProps, { currentColumn } )
       var graph = <PieChart {...chartProps}></PieChart>
     } else if (type == 'bar') {
       var graph = <BarChart {...chartProps}></BarChart>

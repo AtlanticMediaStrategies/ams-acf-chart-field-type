@@ -49,14 +49,20 @@ export function app(state = initialState, action) {
     case 'SET_TYPE':
       graphs = state.graphs[action.id]
       graph = graphs[action.name]
+
       Object.assign(graph, {
         type: action.chart_type
       })
+
       Object.assign(graphs, {
         [action.name]: graph
       })
+
       return {
         ...state,
+        columnsConstrained: action.chart_type === 'pie',
+        currentColumn:
+          action.chart_type === 'pie' ? graph.data[0].length - 1 : -1,
         graphs: {
           ...state.graphs,
           [action.id]: graphs
@@ -155,6 +161,31 @@ export function app(state = initialState, action) {
         ...state,
         activeName: initialState.activeName,
         activeRow: initialState.activeRow,
+      }
+
+    /**
+     *  Sets current column to column constrained graphs
+     *  @param action.column {integer} sets current column
+     *  @param action.name {string} key that identifies the graph
+     */
+    case 'SET_CURRENT_COLUMN':
+      graphs = state.graphs[post_id]
+      graph = graphs[action.name]
+
+      Object.assign(graph, {
+        currentColumn: action.column
+      })
+
+      Object.assign(graphs, {
+        [action.name]: graph
+      })
+
+      return {
+        ...state,
+        graphs: {
+          ...state.graphs,
+          [post_id]: graphs
+        }
       }
 
     default:

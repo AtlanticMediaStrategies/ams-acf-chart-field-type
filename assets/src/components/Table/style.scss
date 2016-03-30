@@ -22,6 +22,11 @@
   position: relative;
 }
 
+:local(.tableCellActive) {
+  background: #4088DD;
+  color: white;
+}
+
 :local(.tableRow) {
   &:first-child td {
     border-bottom: 2px solid #111;

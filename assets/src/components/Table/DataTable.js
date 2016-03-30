@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import styles from './style.scss'
 import { Button } from 'rebass'
 import Picker from 'react-color'
+import classnames from 'classnames'
 
 export default class DataTable extends Component {
 
@@ -40,6 +41,17 @@ export default class DataTable extends Component {
   }
 
   /**
+   * Calls redux action
+   */
+  set_current_column(j, e) {
+    e.preventDefault()
+    if(this.props.type !== 'pie') {
+      return
+    }
+    this.props.set_current_column(j, this.props.name)
+  }
+
+  /**
    *  Calls redux action set_color
    *
    *  @param color.hex {string} passed in by react-color
@@ -51,6 +63,20 @@ export default class DataTable extends Component {
       this.props.activeRow,
       this.props.name,
       this.props.id )
+  }
+
+  /**
+   *
+   */
+  cellClasses(j) {
+    const {
+      currentColumn
+    } = this.props
+
+    return classnames({
+      [styles.tableCell]: true,
+      [styles.tableCellActive]: currentColumn === j
+    })
   }
 
   /**
@@ -78,7 +104,8 @@ export default class DataTable extends Component {
       const columns = row.map((column, j) => {
         return (
           <td
-            className={styles.tableCell}
+            className={ this.cellClasses(j) }
+            onClick={ this.set_current_column.bind(this, j) }
             key={j}>
               {column}
           </td>
@@ -90,7 +117,6 @@ export default class DataTable extends Component {
             key='edit'
             className={styles.tableCell}
            >
-
             <Button
               role="button"
               backgroundColor={this.props.graph.colors[i]}

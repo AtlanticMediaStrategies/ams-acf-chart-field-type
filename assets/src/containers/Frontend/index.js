@@ -50,6 +50,7 @@ export default class Frontend extends Component {
     const {
       type,
       colors,
+      currentColumn,
       data
     } = post_graphs[this.state.name]
 
@@ -58,6 +59,7 @@ export default class Frontend extends Component {
         type={type}
         colors={colors}
         data={data}
+        currentColumn={currentColumn}
         id={this.state.id}
       />
     )

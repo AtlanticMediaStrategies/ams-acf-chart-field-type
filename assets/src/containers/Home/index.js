@@ -179,6 +179,11 @@ export class Home extends Component {
     })
   }
 
+  save_graph(graph, e) {
+    e.preventDefault()
+    this.props.save_graph(graph, this.state.id, this.state.name)
+  }
+
   render() {
 
     const {
@@ -200,7 +205,8 @@ export class Home extends Component {
     let {
       type,
       data,
-      colors
+      colors,
+      currentColumn
     } = post_graphs[this.state.name]
 
     if(!type) {
@@ -221,6 +227,7 @@ export class Home extends Component {
           colors={colors}
           data={data}
           type={type}
+          currentColumn={currentColumn}
           id={this.state.id}
         >
         </Graph>
@@ -242,6 +249,8 @@ export class Home extends Component {
           name={this.state.name}
           id={this.state.id}
           graph={graph}
+          type={type}
+          currentColumn={currentColumn}
           {...this.props}
         ></DataTable>
 
@@ -253,9 +262,14 @@ export class Home extends Component {
         </Button>
 
         <Button
-          rounded='right'
           theme='success'
+          style={{ marginRight: '8px' }}
           onClick={this.saveImage.bind(this)}>Save as thumbnail
+        </Button>
+
+        <Button
+          theme='success'
+          onClick={this.save_graph.bind(this, graph)}>Save Graph
         </Button>
 
       </section>
