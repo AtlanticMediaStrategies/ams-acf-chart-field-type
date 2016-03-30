@@ -224,10 +224,7 @@ export class Home extends Component {
         >
         </RadioGroup>
         <Graph
-          colors={colors}
-          data={data}
-          type={type}
-          currentColumn={currentColumn}
+          graph={graph}
           id={this.state.id}
         >
         </Graph>

@@ -52,6 +52,23 @@ export default class DataTable extends Component {
   }
 
   /**
+   *  @param index {integer} row to hide
+   */
+  hide_row( index, e) {
+    e.preventDefault()
+    this.props.hide_row(index, this.props.name);
+  }
+
+  /**
+   *  @param index {integer} row to hide
+   */
+  show_row( index, e) {
+    e.preventDefault()
+    this.props.show_row(index, this.props.name);
+  }
+
+
+  /**
    *  Calls redux action set_color
    *
    *  @param color.hex {string} passed in by react-color
@@ -93,11 +110,23 @@ export default class DataTable extends Component {
     return i === activeRow && name === activeName;
   }
 
+  row_classes(i) {
+    const { graph } = this.props
+    return classnames({
+      [styles.tableRow]: true,
+      [styles.tableRowHidden]: !graph.active[i]
+    })
+  }
+
   render() {
     if(!this.props.graph) {
       return <div></div>
     }
-    let {  colors, data } = this.props.graph;
+    let {
+      colors,
+      data,
+      active
+    } = this.props.graph;
     data = [...data]
 
     const rows = data.map((row, i) => {
@@ -112,6 +141,32 @@ export default class DataTable extends Component {
         )
       })
       if(i > 0) {
+
+        columns.unshift(
+          <td
+            key='display'
+            className={styles.tableCell}
+           >
+            <Button
+              role="button"
+              theme="error"
+              style={{display: active[i] === true ? 'inline' : 'none'}}
+              onKeyDown={ this.hide_row.bind(this, i) }
+              onClick={ this.hide_row.bind(this, i) }>
+              Hide
+            </Button>
+
+            <Button
+              style={{display: active[i] === true ? 'none' : 'inline'}}
+              onClick={ this.show_row.bind(this, i) }
+              theme="success"
+            >
+              Show
+            </Button>
+
+          </td>
+        )
+
         columns.unshift(
           <td
             key='edit'
@@ -146,8 +201,6 @@ export default class DataTable extends Component {
               Cancel
             </Button>
 
-
-
             <Picker
               type="chrome"
               color={ colors[i] }
@@ -161,10 +214,11 @@ export default class DataTable extends Component {
           </td>
         )
       } else {
+        columns.unshift(<td key='hide' className={styles.tableCell}>Hide?</td>)
         columns.unshift(<td key='label' className={styles.tableCell}>Color</td>)
       }
       return (
-        <tr className={styles.tableRow} key={i}>
+        <tr className={this.row_classes(i)} key={i}>
           {columns}
         </tr>
       )

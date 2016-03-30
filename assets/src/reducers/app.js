@@ -188,6 +188,26 @@ export function app(state = initialState, action) {
         }
       }
 
+    /**
+     *  Sets graph.active[index] to false
+     *
+     *  @param action.index {integer} the row to hide
+     *  @param action.name {string} the key that id's the graph
+     *  @param action.value {boolean} whether the row is hidden/shown
+     */
+    case 'SET_ROW_VISIBILITY':
+      graphs = state.graphs[post_id]
+      graph = graphs[action.name]
+      graph.active.splice(action.index, 1, action.value )
+      Object.assign(graphs, {[action.index]: graph})
+      return {
+        ...state,
+        graphs: {
+          ...state.graphs,
+          [post_id]: graphs
+        }
+      }
+
     default:
       return state;
   }

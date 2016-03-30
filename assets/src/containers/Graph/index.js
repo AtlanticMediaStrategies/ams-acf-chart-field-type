@@ -49,14 +49,17 @@ export default class Graph extends Component {
       data,
       type,
       colors,
+      active,
       currentColumn,
       id
-    } = this.props
+    } = this.props.graph
+
+    const filtered_data = data.filter((dat, i) => active[i] === true)
 
     const chartProps = {
       width: this.state.width,
       colors,
-      data
+      data: filtered_data
     }
 
     if(type == 'pie') {

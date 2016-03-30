@@ -64,6 +64,13 @@ export function init_data(id, name) {
         Object.assign(parsed, { colors })
       }
 
+      if(!parsed.active) {
+        const { length } = parsed.data
+        Object.assign(parsed, {
+          active: Array(length).fill(true)
+        })
+      }
+
       if(parsed.type === 'pie' && !parsed.currentColumn) {
         Object.assign(parsed, {
           columnsConstrained: true,
@@ -158,5 +165,30 @@ export function set_current_column(column, name) {
     type: 'SET_CURRENT_COLUMN',
     column,
     name
+  }
+}
+
+/**
+ *  Calls reducer with value = false
+ */
+export function hide_row(index, name) {
+  return {
+    type: 'SET_ROW_VISIBILITY',
+    index,
+    name,
+    value: false
+  }
+}
+
+
+/**
+ *  Calls reducer with value = false
+ */
+export function show_row(index, name) {
+  return {
+    type: 'SET_ROW_VISIBILITY',
+    index,
+    name,
+    value: true
   }
 }
