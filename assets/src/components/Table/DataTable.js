@@ -45,7 +45,7 @@ export default class DataTable extends Component {
    */
   set_current_column(j, e) {
     e.preventDefault()
-    if(this.props.type !== 'pie') {
+    if(this.props.type === 'line') {
       return
     }
     this.props.set_current_column(j, this.props.name)

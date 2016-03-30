@@ -16,7 +16,8 @@ export default class BarChart extends Component {
     let {
       data,
       width,
-      colors
+      colors,
+      currentColumn
     } = this.props
 
     if(!data) {
@@ -30,8 +31,8 @@ export default class BarChart extends Component {
     const bar_data = data.map((datum, x) => {
       return {
         x: x + 2,
-        y: parseInt(datum[datum.length - 1]),
-        label: datum[datum.length - 1],
+        y: parseInt(datum[currentColumn]),
+        label: datum[currentColumn],
         fill: colors[x]
       }
     })

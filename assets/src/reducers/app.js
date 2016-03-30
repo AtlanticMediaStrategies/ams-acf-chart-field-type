@@ -1,5 +1,6 @@
 import { colors } from '../components/Graphs/config.js';
 import qs from 'qs';
+const post_id = qs.parse(window.location.search.replace('?', '')).post
 
 const initialState = {
   edit: false,
@@ -9,7 +10,6 @@ const initialState = {
   graphs: {}
 }
 
-const post_id = qs.parse(window.location.search.replace('?', '')).post
 
 export function app(state = initialState, action) {
   let graph;

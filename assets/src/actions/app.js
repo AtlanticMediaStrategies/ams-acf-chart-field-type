@@ -1,12 +1,6 @@
 import request from 'reqwest-without-xhr2'
-import { colors } from '../components/Graphs/config.js';
-
-export function push_id(id) {
-  return {
-    type: 'PUSH_ID',
-    id
-  }
-}
+import notie from 'notie'
+import { colors } from '../components/Graphs/config.js'
 
 export function set_data(data, id, name) {
   return  {
@@ -71,12 +65,11 @@ export function init_data(id, name) {
         })
       }
 
-      if(parsed.type === 'pie' && !parsed.currentColumn) {
+      if(parsed.type != 'line' && !parsed.currentColumn) {
         Object.assign(parsed, {
           columnsConstrained: true,
           currentColumn: 1
         })
-        console.log(parsed)
       }
 
       dispatch(set_data(parsed, id, name))
@@ -110,8 +103,12 @@ export function save_graph(graph, id, name) {
       }
     })
     .then(data => {
+      notie.alert(1, 'Graph Saved')
       dispatch(update_graph(graph, id, name))
       dispatch(reset_active())
+    })
+    .catch(err  => {
+      notie.alert(2, 'An error occurred')
     })
   }
 }
