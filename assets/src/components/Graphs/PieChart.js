@@ -8,7 +8,8 @@ export default class PieChart extends Component {
   render() {
     let {
       data,
-      currentColumn
+      currentColumn,
+      colors
     } = this.props
 
     if(!data) {
@@ -26,7 +27,8 @@ export default class PieChart extends Component {
     const pie_data = data.map((datum, i) => {
       const x = datum[0]
       const y = parseInt(datum[currentColumn])
-      return { x , y }
+      const fill = colors[i]
+      return { x , y, fill }
     })
 
     let width = this.props.width;
@@ -36,6 +38,11 @@ export default class PieChart extends Component {
 
     return (
       <VictoryPie
+        style={{
+          labels: {
+            fill: '#FDFDFD'
+          }
+        }}
         data={pie_data}
         width={width}
       >
