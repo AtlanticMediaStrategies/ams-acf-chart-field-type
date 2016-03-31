@@ -155,7 +155,7 @@ export class Home extends Component {
           }
         })
         .then(() => {
-          this.props.set_data({data: res}, this.state.id, this.state.name)
+          this.props.create_graph({data: res}, this.state.id, this.state.name)
           this.setState({
             edit: false
           })
@@ -229,19 +229,6 @@ export class Home extends Component {
           id={this.state.id}
         >
         </Graph>
-      </div>
-    ) : (
-      <Dropzone onDrop={this.handleFiles.bind(this)} accept="text/csv">
-        <div className="drop-text">
-          Drop csv files here or click to trigger form.
-        </div>
-      </Dropzone>
-    )
-
-    return (
-      <section>
-
-        {main}
 
         <DataTable
           name={this.state.name}
@@ -263,12 +250,6 @@ export class Home extends Component {
 
         <h1>Update Graph</h1>
 
-        <Button
-          backgroundColor={this.state.edit === true ? 'white': 'primary'}
-          color={this.state.edit === true ? 'primary': 'white'}
-          style={{ marginRight: '8px' }}
-          onClick={this.toggleEdit.bind(this)}>Edit data
-        </Button>
 
         <Button
           theme='success'
@@ -281,8 +262,25 @@ export class Home extends Component {
           onClick={this.save_graph.bind(this, graph)}>Save Graph
         </Button>
 
+      </div>
+    ) : (
+      <Dropzone onDrop={this.handleFiles.bind(this)} accept="text/csv">
+        <div className="drop-text">
+          Drop csv files here or click to trigger form.
+        </div>
+      </Dropzone>
+    )
 
-
+    return (
+      <section>
+        {main}
+        <Divider/>
+        <Button
+          backgroundColor={this.state.edit === true ? 'white': 'primary'}
+          color={this.state.edit === true ? 'primary': 'white'}
+          style={{ marginRight: '8px' }}
+          onClick={this.toggleEdit.bind(this)}>Edit data
+        </Button>
       </section>
     );
   }

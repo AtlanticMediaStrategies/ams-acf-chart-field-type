@@ -43,18 +43,18 @@ export default class AxisFormContainer extends Component {
           onSubmit={this.update_axis.bind(this)}
           style={{marginBottom: '8px'}}>
           <fieldgroup>
-            <Label for="x_axis">X Axis</Label>
             <Input
               onChange={this.update_x_axis.bind(this)}
+              label="X Axis"
               name="x_axis"
               value={this.state.x}
               type="text"
              ></Input>
           </fieldgroup>
           <fieldgroup>
-            <Label for="y_axis">Y Axis</Label>
             <Input
               name="y_axis"
+              label="Y Axis"
               onChange={this.update_y_axis.bind(this)}
               value={this.state.y}
               type="text"

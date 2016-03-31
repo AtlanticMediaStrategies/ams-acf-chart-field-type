@@ -1,6 +1,7 @@
 import request from 'reqwest-without-xhr2'
 import notie from 'notie'
 import { colors } from '../components/Graphs/config.js'
+import { initialGraph } from '../models/graph.js'
 
 export function set_data(data, id, name) {
   return  {
@@ -10,6 +11,16 @@ export function set_data(data, id, name) {
     name
   }
 }
+
+export function create_graph(data, id, name) {
+  return  {
+    type: 'CREATE_GRAPH',
+    data,
+    id,
+    name
+  }
+}
+
 
 export function toggle_edit(fields) {
   return {
@@ -51,14 +62,13 @@ export function init_data(id, name) {
       type: 'json'
     })
     .then(data => {
-      const parsed =  JSON.parse(data)
+      const parsed = JSON.parse(data) || {}
 
-      // setup default colors
       if(!parsed.colors) {
         Object.assign(parsed, { colors })
       }
 
-      if(!parsed.active) {
+      if(!parsed.active && parsed.data) {
         const { length } = parsed.data
         Object.assign(parsed, {
           active: Array(length).fill(true)
@@ -66,18 +76,15 @@ export function init_data(id, name) {
       }
 
       if(!parsed.x_axis) {
-        Object.assign(parsed, { x_axis: ''} )
+        Object.assign(parsed, {x_axis: ''})
       }
 
       if(!parsed.y_axis) {
-        Object.assign(parsed, { y_axis: ''} )
+        Object.assign(parsed, {y_axis: ''})
       }
 
       if(parsed.type != 'line' && !parsed.currentColumn) {
-        Object.assign(parsed, {
-          columnsConstrained: true,
-          currentColumn: 1
-        })
+        Object.assign(parsed, { currentColumn: 1 })
       }
 
       dispatch(set_data(parsed, id, name))

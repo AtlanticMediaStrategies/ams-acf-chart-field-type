@@ -1,8 +1,6 @@
 import { colors } from '../components/Graphs/config.js';
 import qs from 'qs';
-const post_id = qs.parse(window.location.search.replace('?', '')).post
-
-const initialState = {
+const initialState  = {
   edit: false,
   stashedColor: '',
   activeName: '',
@@ -10,6 +8,9 @@ const initialState = {
   graphs: {}
 }
 
+import { initialGraph } from '../models/graph.js'
+
+const post_id = qs.parse(window.location.search.replace('?', '')).post
 
 export function app(state = initialState, action) {
   let graph;
@@ -24,10 +25,33 @@ export function app(state = initialState, action) {
      *  @param action.data{string} stringified jso
      */
     case 'SET_DATA':
-      graphs = state.graphs[action.id] || {};
-      graph = graphs[action.name] || {};
+      graphs = state.graphs[action.id] || {}
+      graph = graphs[action.name] || {}
 
       Object.assign(graph, action.data)
+
+      Object.assign(graphs, {
+        [action.name]: graph
+      })
+
+      return {
+        ...state,
+        graphs:  {
+          ...state.graphs,
+          [action.id]: graphs
+        }
+      };
+
+    case 'CREATE_GRAPH':
+      graphs = state.graphs[action.id] || {}
+
+      const graph_clone = Object.assign({}, initialGraph)
+      graph = Object.assign({}, action.data, graph_clone)
+
+      Object.assign(graph, {
+        active: Array(action.data.data.length).fill(true),
+        colors
+      })
 
       Object.assign(graphs, {
         [action.name]: graph

@@ -77,7 +77,7 @@ export default class LineGraph extends Component {
     }
 
     // shift blank first row/column
-    x_axis.shift()
+    x_values.shift()
 
     // calculate height and try to keep same ratio
     let height = width / 2.56;

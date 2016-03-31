@@ -17,7 +17,6 @@ export default class DataTable extends Component {
 
   update_x_axis(e) {
     const {value} = e.target
-    console.log(value)
   }
 
   /**
