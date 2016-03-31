@@ -65,6 +65,14 @@ export function init_data(id, name) {
         })
       }
 
+      if(!parsed.x_axis) {
+        Object.assign(parsed, { x_axis: ''} )
+      }
+
+      if(!parsed.y_axis) {
+        Object.assign(parsed, { y_axis: ''} )
+      }
+
       if(parsed.type != 'line' && !parsed.currentColumn) {
         Object.assign(parsed, {
           columnsConstrained: true,
@@ -187,5 +195,20 @@ export function show_row(index, name) {
     index,
     name,
     value: true
+  }
+}
+
+/**
+ *   Updates label
+ *   @param label {string} the text of the label
+ *   @param axis {string} the axis (x or y)
+ *   @param name {string}  the key for the graph
+ */
+export function update_label(label, axis, name) {
+  return {
+    type: 'UPDATE_LABEL',
+    label,
+    axis,
+    name
   }
 }

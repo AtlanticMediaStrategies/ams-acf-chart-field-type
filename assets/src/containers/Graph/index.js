@@ -51,16 +51,20 @@ export default class Graph extends Component {
       colors,
       active,
       currentColumn,
-      id
+      id,
+      x_axis,
+      y_axis
     } = this.props.graph
 
     const filtered_data = data.filter((dat, i) => active[i] === true)
 
     const chartProps = {
       width: this.state.width,
-      colors,
       data: filtered_data,
-      currentColumn
+      colors,
+      currentColumn,
+      x_axis,
+      y_axis
     }
 
     if(type == 'pie') {

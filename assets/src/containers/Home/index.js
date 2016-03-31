@@ -11,9 +11,10 @@ import csv from 'csv';
 import styles from './home.scss';
 import request from 'reqwest-without-xhr2';
 import classnames from 'classnames';
-import { Radio, Button } from 'rebass';
+import { Radio, Button, Divider } from 'rebass';
 import DataTable from '../../components/Table/DataTable.js';
 import RadioGroup from './RadioGroup.js';
+import Form from '../../components/Form/AxisForm.js';
 
 import qs from 'qs';
 
@@ -251,6 +252,17 @@ export class Home extends Component {
           {...this.props}
         ></DataTable>
 
+        <Form
+          display={graph.type == 'pie' ? 'none' : 'block'}
+          graph={graph}
+          name={this.state.name}
+          {...this.props}>
+        </Form>
+
+        <Divider/>
+
+        <h1>Update Graph</h1>
+
         <Button
           backgroundColor={this.state.edit === true ? 'white': 'primary'}
           color={this.state.edit === true ? 'primary': 'white'}
@@ -268,6 +280,8 @@ export class Home extends Component {
           theme='success'
           onClick={this.save_graph.bind(this, graph)}>Save Graph
         </Button>
+
+
 
       </section>
     );

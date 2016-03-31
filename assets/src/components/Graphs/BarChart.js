@@ -17,7 +17,9 @@ export default class BarChart extends Component {
       data,
       width,
       colors,
-      currentColumn
+      currentColumn,
+      x_axis,
+      y_axis
     } = this.props
 
     if(!data) {
@@ -47,7 +49,15 @@ export default class BarChart extends Component {
           data={bar_data}>
         </VictoryBar>
 
-        <VictoryAxis tickValues={categories}></VictoryAxis>
+        <VictoryAxis
+          label={x_axis}
+          tickValues={categories}>
+        </VictoryAxis>
+
+        <VictoryAxis
+          dependentAxis
+          label={y_axis}>
+        </VictoryAxis>
 
       </VictoryChart>
     )

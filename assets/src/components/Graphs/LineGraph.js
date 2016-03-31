@@ -14,7 +14,9 @@ export default class LineGraph extends Component {
     let {
       data,
       width,
-      colors
+      colors,
+      x_axis,
+      y_axis
     } = this.props;
 
     if(!data) {
@@ -24,7 +26,7 @@ export default class LineGraph extends Component {
     data = [...data]
 
     const dates = data.shift();
-    const x_axis = dates.map((date, i) => {
+    const x_values = dates.map((date, i) => {
       if(i == 0) return
       const parsed_date = date.replace('/', '/20');
       return new moment(parsed_date, 'M/YYYY').toDate()
@@ -40,7 +42,7 @@ export default class LineGraph extends Component {
         }
         values.push(y)
         return {
-          x: x_axis[j],
+          x: x_values[j],
           y: y
         }
       });
@@ -93,7 +95,13 @@ export default class LineGraph extends Component {
       >
         {lines}
         <VictoryAxis
+          dependentAxis
+          label={y_axis}
+        >
+        </VictoryAxis>
+        <VictoryAxis
           scale="time"
+          label={x_axis}
           tickFormat={(date) => new moment(date).format('MM/YYYY')}
           >
         </VictoryAxis>

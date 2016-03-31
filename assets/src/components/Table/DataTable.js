@@ -15,6 +15,11 @@ export default class DataTable extends Component {
     this.set_color = window._.debounce(this.save_color, 200)
   }
 
+  update_x_axis(e) {
+    const {value} = e.target
+    console.log(value)
+  }
+
   /**
    *  Calls redux action
    */
@@ -60,7 +65,7 @@ export default class DataTable extends Component {
   }
 
   /**
-   *  @param index {integer} row to hide
+   *  @param index {integer} row to show
    */
   show_row( index, e) {
     e.preventDefault()

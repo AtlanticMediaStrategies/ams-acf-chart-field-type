@@ -208,6 +208,22 @@ export function app(state = initialState, action) {
         }
       }
 
+    /**
+     *  Updates label
+     */
+    case 'UPDATE_LABEL':
+      graphs = state.graphs[post_id]
+      graph = graphs[action.name]
+      Object.assign(graph, { [`${action.axis}_axis`]: action.label})
+      Object.assign(graphs, {[action.name]: graph})
+      return {
+        ...state,
+        graphs: {
+          ...state.graphs,
+          [post_id]: graphs
+        }
+      }
+
     default:
       return state;
   }
