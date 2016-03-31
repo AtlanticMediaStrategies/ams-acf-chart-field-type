@@ -24,12 +24,18 @@ export default class PieChart extends Component {
     const dates = data.shift()
 
     // transform data to VictoryPie.data
-    const pie_data = data.map((datum, i) => {
-      const x = datum[0]
-      const y = parseInt(datum[currentColumn])
-      const fill = colors[i]
-      return { x , y, fill }
-    })
+    const pie_data =
+      data
+        .map((datum, i) => {
+          if(datum === false) {
+            return datum
+          }
+          const x = datum[0]
+          const y = parseInt(datum[currentColumn])
+          const fill = colors[i]
+          return { x , y, fill }
+        })
+        .filter((datum) => datum != false)
 
     let width = this.props.width;
     if(width > 800) {

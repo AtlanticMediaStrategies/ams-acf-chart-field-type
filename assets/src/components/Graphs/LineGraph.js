@@ -34,40 +34,46 @@ export default class LineGraph extends Component {
 
     const values = [];
 
-    const lines = data.map((datum, i) => {
-      const label = datum[0]
-      const line_data = datum.map((y, j) => {
-        if(j < 1) {
-          return
-        }
-        values.push(y)
-        return {
-          x: x_values[j],
-          y: y
-        }
-      });
-      line_data.shift()
-
-      return (
-
-        <VictoryLine
-          style={{
-            data: {
-              stroke: colors[i],
-              strokeWidth: 4
+    const lines =
+      data
+        .map((datum, i) => {
+          if(datum === false) {
+            return datum
+          }
+          const label = datum[0]
+          const line_data = datum.map((y, j) => {
+            if(j < 1) {
+              return
             }
-          }}
-          key={i}
-          label={label}
-          padding={100}
-          y={(data) => {
-            return parseInt(data.y)
-          }}
-          interpolation="monotone"
-          data={line_data}>
-        </VictoryLine>
-      );
-    })
+            values.push(y)
+            return {
+              x: x_values[j],
+              y: y
+            }
+          });
+          line_data.shift()
+
+          return (
+            <VictoryLine
+              style={{
+                data: {
+                  stroke: colors[i],
+                  strokeWidth: 4
+                }
+              }}
+              key={i}
+              label={label}
+              padding={100}
+              y={(data) => {
+                return parseInt(data.y)
+              }}
+              interpolation="monotone"
+              data={line_data}>
+            </VictoryLine>
+          );
+        })
+      .filter((datum) => datum !== false)
+
 
     const padding = {
       top: 50,

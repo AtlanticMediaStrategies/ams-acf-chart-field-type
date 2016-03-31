@@ -30,14 +30,20 @@ export default class BarChart extends Component {
 
     const dates = data.shift()
 
-    const bar_data = data.map((datum, x) => {
-      return {
-        x: x + 2,
-        y: parseInt(datum[currentColumn]),
-        label: datum[currentColumn],
-        fill: colors[x]
-      }
-    })
+    const bar_data =
+      data
+        .map((datum, x) => {
+          if(datum === false) {
+            return datum
+          }
+          return {
+            x: x + 2,
+            y: parseInt(datum[currentColumn]),
+            label: datum[currentColumn],
+            fill: colors[x]
+          }
+        })
+        .filter((datum) => datum != false)
 
     const categories = data.map((datum) => datum[0])
     categories.unshift('');

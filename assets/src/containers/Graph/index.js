@@ -56,7 +56,10 @@ export default class Graph extends Component {
       y_axis
     } = this.props.graph
 
-    const filtered_data = data.filter((dat, i) => active[i] === true)
+
+    const filtered_data = data.map((dat, i) =>  {
+      return (active[i] === true) ? dat : false
+    });
 
     const chartProps = {
       width: this.state.width,
@@ -77,6 +80,7 @@ export default class Graph extends Component {
 
     return  (
       <div>
+        <h1> { type } </h1>
         {graph}
       </div>
     )

@@ -3,5 +3,6 @@ export const initialGraph = {
   colors: [],
   x_axis: "",
   y_axis: "",
-  currentColumn: 0
+  type: "line",
+  currentColumn: 1
 }

@@ -91,12 +91,13 @@ export default class DataTable extends Component {
    */
   cellClasses(j) {
     const {
-      currentColumn
+      currentColumn,
+      graph
     } = this.props
 
     return classnames({
       [styles.tableCell]: true,
-      [styles.tableCellActive]: currentColumn === j
+      [styles.tableCellActive]: currentColumn === j && graph.type != 'line'
     })
   }
 
@@ -178,7 +179,7 @@ export default class DataTable extends Component {
            >
             <Button
               role="button"
-              backgroundColor={this.props.graph.colors[i]}
+              backgroundColor={this.props.graph.colors[i - 1]}
               style={{display: this.active_row(i) ? 'none': 'inline'}}
               onKeyDown={ this.toggle_color.bind(this, i) }
               onClick={ this.toggle_color.bind(this, i) }>
