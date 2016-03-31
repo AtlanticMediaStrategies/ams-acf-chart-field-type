@@ -131,9 +131,13 @@ class acf_field_chart extends acf_field {
 	function updateData($post, $params) {
 		header('Content-Type: application/json');
 		$res = update_post_meta($params['id'], $params['name'], $post['json']);
-		if(!$res) {
+		if($res === false) {
 			header('status: 500');
 			die('Error');
+		} else {
+			if(function_exists('clean_post_cache')) {
+				clean_post_cache($params['id']);
+			}
 		}
 		die(json_encode($res));
 	}
