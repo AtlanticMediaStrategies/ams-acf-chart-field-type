@@ -223,7 +223,7 @@ export function app(state = initialState, action) {
       graphs = state.graphs[post_id]
       graph = graphs[action.name]
       graph.active.splice(action.index, 1, action.value )
-      Object.assign(graphs, {[action.index]: graph})
+      Object.assign(graphs, {[action.name]: graph})
       return {
         ...state,
         graphs: {
