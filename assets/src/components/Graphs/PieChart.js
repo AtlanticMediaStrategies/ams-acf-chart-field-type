@@ -5,6 +5,18 @@ import { VictoryPie } from 'victory';
  *  Wrapper around VictoryPie
  */
 export default class PieChart extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      animated: false
+    }
+  }
+
+  componentDidMount() {
+    setTimeout(() => this.setState({animated: true}), 800)
+  }
+
   render() {
     let {
       data,
@@ -31,7 +43,8 @@ export default class PieChart extends Component {
             return datum
           }
           const x = datum[0]
-          const y = parseInt(datum[currentColumn])
+          const y =
+            this.state.animated ? parseInt(datum[currentColumn]) : 90;
           const fill = colors[i + 1]
           return { x , y, fill }
         })
@@ -44,6 +57,7 @@ export default class PieChart extends Component {
 
     return (
       <VictoryPie
+        animate={{duration: 1200}}
         style={{
           labels: {
             fill: '#FDFDFD'

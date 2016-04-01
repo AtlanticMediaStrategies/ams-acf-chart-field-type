@@ -80,7 +80,6 @@ export default class Graph extends Component {
 
     return  (
       <div>
-        <h1> { type } </h1>
         {graph}
       </div>
     )
