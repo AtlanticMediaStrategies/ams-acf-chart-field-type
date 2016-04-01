@@ -10,6 +10,17 @@ import moment from 'moment'
 
 export default class LineGraph extends Component {
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      animated: false
+    }
+  }
+
+  componentDidMount() {
+    setTimeout(() => this.setState({animated: true}), 200)
+  }
+
   render() {
     let {
       data,
@@ -32,9 +43,6 @@ export default class LineGraph extends Component {
       return new moment(parsed_date, 'M/YYYY').toDate()
     })
 
-    const values = [];
-
-
     const lines =
       data
         .map((datum, i) => {
@@ -46,29 +54,34 @@ export default class LineGraph extends Component {
             if(j < 1) {
               return
             }
-            values.push(y)
             return {
               x: x_values[j],
-              y: y
+              y
             }
           });
           line_data.shift() // shift off label
+
+          const translate = this.state.animated ? '0': '100%'
+          const opacity = this.state.animated ? 1 : 0;
 
           return (
             <VictoryLine
               style={{
                 data: {
                   stroke: colors[i + 1],
-                  strokeWidth: 4
+                  strokeWidth: 4,
+                  transition: 'all 0.8s ease',
+                  transform: `translateY(${translate})` ,
+                  opacity
                 }
               }}
               key={i}
               label={label}
+              interpolation='monotone'
               padding={100}
               y={(data) => {
                 return parseInt(data.y)
               }}
-              interpolation="monotone"
               data={line_data}>
             </VictoryLine>
           );
