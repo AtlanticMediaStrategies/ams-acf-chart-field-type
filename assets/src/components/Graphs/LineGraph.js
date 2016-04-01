@@ -2,13 +2,28 @@ import React, {Component} from 'react'
 import {
   VictoryChart,
   VictoryLine,
-  VictoryAnimation,
   VictoryAxis
 } from 'victory'
 
 import moment from 'moment'
+import Vivus from 'vivus'
+import ReactDOM from 'react-dom'
 
 export default class LineGraph extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      animated: false
+    }
+  }
+
+  componentWillReceiveProps({ready}) {
+    if(ready === true) {
+      const elm = ReactDOM.findDOMNode(this)
+      new Vivus(elm)
+    }
+  }
 
   render() {
     let {
@@ -20,7 +35,7 @@ export default class LineGraph extends Component {
       ready
     } = this.props;
 
-    if(!data) {
+    if(!data || !width) {
       return <div></div>
     }
 
@@ -29,6 +44,7 @@ export default class LineGraph extends Component {
     const dates = data.shift();
     const x_values = dates.map((date, i) => {
       if(i == 0) return
+      // TODO: flexible x axis
       const parsed_date = date.replace('/', '/20');
       return new moment(parsed_date, 'M/YYYY').toDate()
     })
@@ -46,33 +62,23 @@ export default class LineGraph extends Component {
             }
             return {
               x: x_values[j],
-              y
+              y: parseInt(y)
             }
           });
           line_data.shift() // shift off label
-
-          const translate = ready ? '0': '100%'
-          const opacity = ready ? 1 : 0;
 
           return (
             <VictoryLine
               style={{
                 data: {
                   stroke: colors[i + 1],
-                  strokeWidth: 4,
-                  transition: 'all 0.6s ease',
-                  transform: `translateY(${translate})` ,
-                  transitionDelay: `${i * 300}ms`,
-                  opacity
+                  strokeWidth: 4
                 }
               }}
               key={i}
               label={label}
               interpolation='monotone'
               padding={100}
-              y={(data) => {
-                return parseInt(data.y)
-              }}
               data={line_data}>
             </VictoryLine>
           );
@@ -98,6 +104,13 @@ export default class LineGraph extends Component {
       height = 300
     }
 
+    const axisPadding = {
+      left: 0,
+      top: 0,
+      right: 0,
+      bottom: 0,
+    }
+
     return (
       <VictoryChart
         height={height}
@@ -106,13 +119,16 @@ export default class LineGraph extends Component {
       >
         {lines}
         <VictoryAxis
+          standalone={true}
           dependentAxis
           label={y_axis}
+          padding={axisPadding}
         >
         </VictoryAxis>
         <VictoryAxis
           scale="time"
           label={x_axis}
+          padding={axisPadding}
           tickFormat={(date) => new moment(date).format('MM/YYYY')}
           >
         </VictoryAxis>
