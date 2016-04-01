@@ -34,6 +34,7 @@ export default class LineGraph extends Component {
 
     const values = [];
 
+
     const lines =
       data
         .map((datum, i) => {
@@ -51,13 +52,13 @@ export default class LineGraph extends Component {
               y: y
             }
           });
-          line_data.shift()
+          line_data.shift() // shift off label
 
           return (
             <VictoryLine
               style={{
                 data: {
-                  stroke: colors[i],
+                  stroke: colors[i + 1],
                   strokeWidth: 4
                 }
               }}

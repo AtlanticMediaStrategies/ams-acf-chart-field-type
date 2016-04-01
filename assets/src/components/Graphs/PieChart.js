@@ -32,7 +32,7 @@ export default class PieChart extends Component {
           }
           const x = datum[0]
           const y = parseInt(datum[currentColumn])
-          const fill = colors[i]
+          const fill = colors[i + 1]
           return { x , y, fill }
         })
         .filter((datum) => datum != false)

@@ -40,7 +40,7 @@ export default class BarChart extends Component {
             x: x + 2,
             y: parseInt(datum[currentColumn]),
             label: datum[currentColumn],
-            fill: colors[x]
+            fill: colors[x + 1]
           }
         })
         .filter((datum) => datum != false)

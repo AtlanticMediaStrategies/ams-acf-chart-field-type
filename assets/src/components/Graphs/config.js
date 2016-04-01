@@ -1,4 +1,5 @@
   export const colors = [
+    '', // offset for first row (likely x values)
     "#008848",
     "#971100",
     "#9C9C9C",
