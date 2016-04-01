@@ -46,7 +46,7 @@ export default class Graph extends Component {
       )
     })
 
-    setTimeout(() => this.setState({ready: true}, 200))
+    setTimeout(() => this.setState({ready: true}), 200)
   }
 
   scrolled() {
@@ -96,7 +96,7 @@ export default class Graph extends Component {
       <div>
         <Waypoint
           onEnter={this.scrolled.bind(this)}
-          >  </Waypoint>
+        />
         {graph}
       </div>
     )
