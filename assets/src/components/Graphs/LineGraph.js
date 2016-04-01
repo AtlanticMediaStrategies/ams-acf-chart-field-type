@@ -70,8 +70,9 @@ export default class LineGraph extends Component {
                 data: {
                   stroke: colors[i + 1],
                   strokeWidth: 4,
-                  transition: 'all 0.8s ease',
+                  transition: 'all 0.6s ease',
                   transform: `translateY(${translate})` ,
+                  transitionDelay: `${i * 300}ms`,
                   opacity
                 }
               }}
