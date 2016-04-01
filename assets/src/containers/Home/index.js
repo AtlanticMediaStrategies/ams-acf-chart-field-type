@@ -226,6 +226,7 @@ export class Home extends Component {
         </RadioGroup>
         <Graph
           graph={graph}
+          disableAnimation={true}
           id={this.state.id}
         >
         </Graph>

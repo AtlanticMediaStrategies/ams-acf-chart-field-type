@@ -6,32 +6,21 @@ import { VictoryPie } from 'victory';
  */
 export default class PieChart extends Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      animated: false
-    }
-  }
-
-  componentDidMount() {
-    setTimeout(() => this.setState({animated: true}), 800)
-  }
-
   render() {
-    let {
-      data,
+    const {
       currentColumn,
-      colors
+      colors,
+      ready
     } = this.props
 
-    if(!data) {
+    if(!this.props.data) {
       return (
         <div></div>
       )
     }
 
     // clone array
-    data = [...data]
+    const data = [...this.props.data]
 
     const dates = data.shift()
 
@@ -43,8 +32,7 @@ export default class PieChart extends Component {
             return datum
           }
           const x = datum[0]
-          const y =
-            this.state.animated ? parseInt(datum[currentColumn]) : 90;
+          const y = ready ? parseInt(datum[currentColumn]) : 90;
           const fill = colors[i + 1]
           return { x , y, fill }
         })

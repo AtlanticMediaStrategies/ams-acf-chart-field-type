@@ -12,17 +12,6 @@ export default class BarChart extends Component {
     width: React.PropTypes.number
   }
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      animated: false
-    }
-  }
-
-  componentDidMount() {
-    setTimeout(() => this.setState({animated: true}), 200)
-  }
-
   render() {
     let {
       data,
@@ -30,7 +19,8 @@ export default class BarChart extends Component {
       colors,
       currentColumn,
       x_axis,
-      y_axis
+      y_axis,
+      ready
     } = this.props
 
     if(!data) {
@@ -49,7 +39,7 @@ export default class BarChart extends Component {
           }
           return {
             x: x + 2,
-            y: this.state.animated ? parseInt(datum[currentColumn]) : 0,
+            y: ready ? parseInt(datum[currentColumn]) : 0,
             label: datum[currentColumn],
             fill: colors[x + 1]
           }

@@ -10,24 +10,14 @@ import moment from 'moment'
 
 export default class LineGraph extends Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      animated: false
-    }
-  }
-
-  componentDidMount() {
-    setTimeout(() => this.setState({animated: true}), 200)
-  }
-
   render() {
     let {
       data,
       width,
       colors,
       x_axis,
-      y_axis
+      y_axis,
+      ready
     } = this.props;
 
     if(!data) {
@@ -61,8 +51,8 @@ export default class LineGraph extends Component {
           });
           line_data.shift() // shift off label
 
-          const translate = this.state.animated ? '0': '100%'
-          const opacity = this.state.animated ? 1 : 0;
+          const translate = ready ? '0': '100%'
+          const opacity = ready ? 1 : 0;
 
           return (
             <VictoryLine

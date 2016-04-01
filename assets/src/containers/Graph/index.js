@@ -3,14 +3,17 @@ import LineGraph from '../../components/Graphs/LineGraph.js'
 import DataTable from '../../components/Table/DataTable.js'
 import PieChart from '../../components/Graphs/PieChart.js'
 import BarChart from '../../components/Graphs/BarChart.js'
+import Waypoint from 'react-waypoint'
 
 import classnames from 'classnames'
+
 
 export default class Graph extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      width: 1280
+      ready: false,
+      scrolled: props.disableAnimation || false,
     }
   }
 
@@ -42,6 +45,14 @@ export default class Graph extends Component {
         underscore.debounce(calculateWidth, 200)
       )
     })
+
+    setTimeout(() => this.setState({ready: true}, 200))
+  }
+
+  scrolled() {
+    this.setState({
+      scrolled: true
+    })
   }
 
   render() {
@@ -49,13 +60,14 @@ export default class Graph extends Component {
       data,
       type,
       colors,
-      active,
       currentColumn,
       id,
       x_axis,
-      y_axis
+      y_axis,
+      active
     } = this.props.graph
 
+    const ready = this.state.scrolled && this.state.ready
 
     const filtered_data = data.map((dat, i) =>  {
       return (active[i] === true) ? dat : false
@@ -64,6 +76,8 @@ export default class Graph extends Component {
     const chartProps = {
       width: this.state.width,
       data: filtered_data,
+      ready,
+      active,
       colors,
       currentColumn,
       x_axis,
@@ -80,6 +94,9 @@ export default class Graph extends Component {
 
     return  (
       <div>
+        <Waypoint
+          onEnter={this.scrolled.bind(this)}
+          >  </Waypoint>
         {graph}
       </div>
     )
