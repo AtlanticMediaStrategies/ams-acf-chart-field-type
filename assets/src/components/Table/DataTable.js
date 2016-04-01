@@ -179,7 +179,7 @@ export default class DataTable extends Component {
            >
             <Button
               role="button"
-              backgroundColor={this.props.graph.colors[i - 1]}
+              backgroundColor={this.props.graph.colors[i]}
               style={{display: this.active_row(i) ? 'none': 'inline'}}
               onKeyDown={ this.toggle_color.bind(this, i) }
               onClick={ this.toggle_color.bind(this, i) }>
