@@ -90,14 +90,11 @@ export default class DataTable extends Component {
    *
    */
   cellClasses(j) {
-    const {
-      currentColumn,
-      graph
-    } = this.props
+    const { currentColumn, type } = this.props.graph
 
     return classnames({
       [styles.tableCell]: true,
-      [styles.tableCellActive]: currentColumn === j && graph.type != 'line'
+      [styles.tableCellActive]: currentColumn === j && type != 'line'
     })
   }
 
@@ -119,7 +116,7 @@ export default class DataTable extends Component {
     const { graph } = this.props
     return classnames({
       [styles.tableRow]: true,
-      [styles.tableRowHidden]: !graph.active[i]
+      [styles.tableRowHidden]: !graph.active_rows[i]
     })
   }
 
@@ -130,7 +127,7 @@ export default class DataTable extends Component {
     let {
       colors,
       data,
-      active
+      active_rows
     } = this.props.graph;
     data = [...data]
 
@@ -155,14 +152,14 @@ export default class DataTable extends Component {
             <Button
               role="button"
               theme="error"
-              style={{display: active[i] === true ? 'inline' : 'none'}}
+              style={{display: active_rows[i] === true ? 'inline' : 'none'}}
               onKeyDown={ this.hide_row.bind(this, i) }
               onClick={ this.hide_row.bind(this, i) }>
               Hide
             </Button>
 
             <Button
-              style={{display: active[i] === true ? 'none' : 'inline'}}
+              style={{display: active_rows[i] === true ? 'none' : 'inline'}}
               onClick={ this.show_row.bind(this, i) }
               theme="success"
             >

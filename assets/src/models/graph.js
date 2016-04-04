@@ -1,5 +1,5 @@
 export const initialGraph = {
-  active: [],
+  active_rows: [],
   colors: [],
   x_axis: "",
   y_axis: "",

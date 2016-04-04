@@ -64,20 +64,20 @@ export default class Graph extends Component {
       id,
       x_axis,
       y_axis,
-      active
+      active_rows
     } = this.props.graph
 
     const ready = this.state.scrolled && this.state.ready
 
     const filtered_data = data.map((dat, i) =>  {
-      return (active[i] === true) ? dat : false
+      return (active_rows[i] === true) ? dat : false
     });
 
     const chartProps = {
       width: this.state.width,
       data: filtered_data,
       ready,
-      active,
+      active_rows,
       colors,
       currentColumn,
       x_axis,
