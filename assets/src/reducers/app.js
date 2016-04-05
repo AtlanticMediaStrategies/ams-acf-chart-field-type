@@ -18,11 +18,11 @@ export function app(state = initialState, action) {
 
   switch (action.type) {
     /**
-     * Sets graph data (on create or update)
+     * Sets and existing graph data on initial load
      *
      *  @param action.id {integer}  id for the post
      *  @param action.name {string} name for the field
-     *  @param action.data{string} stringified jso
+     *  @param action.data{string} stringified json
      */
     case 'SET_DATA':
       graphs = state.graphs[action.id] || {}
@@ -42,6 +42,13 @@ export function app(state = initialState, action) {
         }
       };
 
+    /**
+     * Initialize a graph when uploading a csv
+     *
+     * @param action.id {integer}  id for the post
+     * @param action.name {string} name for the field
+     * @param action.data{string} stringified json
+     */
     case 'CREATE_GRAPH':
       graphs = state.graphs[action.id] || {}
 
@@ -74,6 +81,7 @@ export function app(state = initialState, action) {
       graphs = state.graphs[action.id]
       graph = graphs[action.name]
 
+
       Object.assign(graph, {
         type: action.chart_type
       })
@@ -84,14 +92,39 @@ export function app(state = initialState, action) {
 
       return {
         ...state,
-        columnsConstrained: action.chart_type === 'pie',
-        currentColumn:
-          action.chart_type === 'pie' ? graph.data[0].length - 1 : -1,
         graphs: {
           ...state.graphs,
           [action.id]: graphs
         }
       }
+
+      /**
+       *  Sets type for the graph
+       *  @param val {any} value to set
+       *  @param key {string} option on graph to set
+       *  @param action.id {integer}  id for the post
+       *  @param action.name {string} name for the field
+       */
+      case 'SET_GRAPH_VALUE':
+        graphs = state.graphs[action.id]
+        graph = graphs[action.name]
+
+        Object.assign(graph, {
+          [action.key]: action.val
+        })
+
+        Object.assign(graphs, {
+          [action.name]: graph
+        })
+
+        return {
+          ...state,
+          graphs: {
+            ...state.graphs,
+            [action.id]: graphs
+          }
+        }
+
 
     // TODO: Edit only specific graph
     case 'TOGGLE_EDIT':

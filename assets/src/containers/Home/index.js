@@ -11,7 +11,7 @@ import csv from 'csv';
 import styles from './home.scss';
 import request from 'reqwest-without-xhr2';
 import classnames from 'classnames';
-import { Radio, Button, Divider } from 'rebass';
+import { Radio, Button, Divider, Checkbox } from 'rebass';
 import DataTable from '../../components/Table/DataTable.js';
 import RadioGroup from './RadioGroup.js';
 import Form from '../../components/Form/AxisForm.js';
@@ -244,13 +244,13 @@ export class Home extends Component {
           display={graph.type == 'pie' ? 'none' : 'block'}
           graph={graph}
           name={this.state.name}
+          id={this.state.id}
           {...this.props}>
         </Form>
 
         <Divider/>
 
         <h1>Update Graph</h1>
-
 
         <Button
           theme='success'

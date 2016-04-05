@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import styles from './style.scss'
-import { Button } from 'rebass'
+import { Button, Checkbox } from 'rebass'
 import Picker from 'react-color'
 import classnames from 'classnames'
 
@@ -13,6 +13,8 @@ export default class DataTable extends Component {
     }
     // debounce save_color
     this.set_color = window._.debounce(this.save_color, 200)
+    this.debounced_constrained_columns =
+      window._.debounce(this.constrain_columns, 100)
   }
 
   update_x_axis(e) {
@@ -52,7 +54,8 @@ export default class DataTable extends Component {
     if(this.props.type === 'line' || j < 1) {
       return
     }
-    this.props.set_current_column(j, this.props.name)
+    const { id, name } = this.props
+    this.props.set_graph_value('currentColumn', j, id, name)
   }
 
   /**
@@ -120,10 +123,26 @@ export default class DataTable extends Component {
     })
   }
 
+  /**
+   *
+   */
+   constrain_columns(e) {
+    const { id , name, graph } = this.props
+    const columns_constrained = !graph.columns_constrained
+    this.props
+      .set_graph_value('columns_constrained', columns_constrained, id, name)
+   }
+
   render() {
-    if(!this.props.graph) {
+
+    const {
+      graph
+    } = this.props
+
+    if(!graph) {
       return <div></div>
     }
+
     let {
       colors,
       data,
@@ -236,6 +255,14 @@ export default class DataTable extends Component {
             </tbody>
           </table>
         </div>
+
+
+        <Checkbox
+          label="Constrain columns"
+          name="constrain"
+          onClick={this.debounced_constrained_columns.bind(this)}
+          checked={graph.columns_constrained === true}
+        ></Checkbox>
       </div>
     )
   }

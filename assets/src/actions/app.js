@@ -29,6 +29,23 @@ export function toggle_edit(fields) {
   }
 }
 
+/**
+ *  @param val {any} value to set
+ *  @param key {string} option on graph to set
+ *  @param id  {integer} id of the post
+ *  @param name {string}  key for the graph
+ */
+export function set_graph_value(key, val, id, name) {
+  return {
+    type: 'SET_GRAPH_VALUE',
+    key,
+    val,
+    id,
+    name
+  }
+}
+
+
 export function set_type(chart_type, id, name) {
   return {
     type: 'SET_TYPE',
@@ -36,23 +53,6 @@ export function set_type(chart_type, id, name) {
     id,
     name
   }
-}
-
-export function save_type(chart_type, id, name, {graphs}) {
-  const data = graphs[id][name].data;
-  return function (dispatch) {
-    const json = JSON.stringify({
-      data,
-      type: chart_type
-    })
-    request({
-      url: `/acf-chart/update/${id}/${name}/`,
-      method: 'POST',
-      data: {
-        json
-      }
-    }).then(() => dispatch(set_type(chart_type, id, name)))
-  }.bind(this)
 }
 
 export function init_data(id, name) {
@@ -68,10 +68,16 @@ export function init_data(id, name) {
         Object.assign(parsed, { colors })
       }
 
-      if(!parsed.active && parsed.data) {
+      if(!parsed.active_rows && parsed.data) {
         const { length } = parsed.data
         Object.assign(parsed, {
-          active: Array(length).fill(true)
+          active_rows: Array(length).fill(true)
+        })
+      }
+
+      if(!parsed.columns_constrained) {
+        Object.assign(parsed, {
+          columns_constrained: false
         })
       }
 
