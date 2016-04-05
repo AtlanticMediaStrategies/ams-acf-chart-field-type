@@ -64,10 +64,15 @@ export function init_data(id, name) {
         })
       }
 
-      if(!parsed.columns_constrained) {
+      if(!parsed.columns_constrained && parsed.data) {
         Object.assign(parsed, {
-          columns_constrained: false
+          columns_constrained: false,
+          active_columns: []
         })
+      }
+
+      if(!parsed.active_columns) {
+        parsed.active_columns = []
       }
 
       if(!parsed.x_axis) {
@@ -199,6 +204,14 @@ export function update_label(label, axis, name) {
     type: 'UPDATE_LABEL',
     label,
     axis,
+    name
+  }
+}
+
+export function toggle_column(i, name) {
+  return {
+    type: 'TOGGLE_COLUMN',
+    index: i,
     name
   }
 }

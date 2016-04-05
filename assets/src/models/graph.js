@@ -5,9 +5,10 @@ export const initialGraph = {
    *  Mapping of rows
    */
   active_rows: [],
-  /* Active columns {Array<Boolean>}
+  /*
+   *  Active columns {Array<Boolean>}
    *
-   * Mapping of which columns to pull in
+   *  Mapping of which columns to pull in
    */
   active_columns: [],
   /**

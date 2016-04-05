@@ -84,10 +84,7 @@ export function app(state = initialState, action) {
         graph = graphs[action.name]
 
         Object.assign(graph, action.values)
-
-        Object.assign(graphs, {
-          [action.name]: graph
-        })
+        graphs[action.name] = graph
 
         return {
           ...state,
@@ -245,6 +242,34 @@ export function app(state = initialState, action) {
       graph = graphs[action.name]
       Object.assign(graph, { [`${action.axis}_axis`]: action.label})
       Object.assign(graphs, {[action.name]: graph})
+      return {
+        ...state,
+        graphs: {
+          ...state.graphs,
+          [post_id]: graphs
+        }
+      }
+
+    /**
+     *  Toggles column
+     *
+     *  @param action.index {integer} index of column
+     *  @param action.name {string} key of the graph to edit
+     */
+    case 'TOGGLE_COLUMN':
+      graphs = state.graphs[post_id]
+      graph =  graphs[action.name]
+
+        const index = graph.active_columns.indexOf(action.index)
+
+      if(index > -1) {
+        graph.active_columns.splice(index, 1)
+      } else {
+        graph.active_columns.push(action.index)
+      }
+
+      graphs[action.name] = graph
+
       return {
         ...state,
         graphs: {
