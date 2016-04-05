@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 import styles from './style.scss'
 import { Button, Checkbox } from 'rebass'
-import Picker from 'react-color'
 import classnames from 'classnames'
+import { HideShow, EditColor} from './TableUtils.js'
 
 export default class DataTable extends Component {
 
@@ -11,30 +11,10 @@ export default class DataTable extends Component {
     this.state = {
       activeEdit: false
     }
-    // debounce save_color
-    this.set_color = window._.debounce(this.save_color, 200)
+
+    // debounce constrain_columns
     this.debounced_constrained_columns =
       window._.debounce(this.constrain_columns, 100)
-  }
-
-  update_x_axis(e) {
-    const {value} = e.target
-  }
-
-  /**
-   *  Calls redux action
-   */
-  toggle_color(index, e) {
-    e.preventDefault()
-    this.props.toggle_color(index, this.props.name)
-  }
-
-  /**
-   *  Calls redux action
-   */
-  cancel_color(index, e) {
-    e.preventDefault()
-    this.props.cancel_color(index, this.props.name)
   }
 
   /**
@@ -47,7 +27,8 @@ export default class DataTable extends Component {
   }
 
   /**
-   * Calls redux action
+   * Calls redux action if column is not the first column
+   * Assumes that first-column is the category
    */
   set_current_column(j, e) {
     e.preventDefault()
@@ -59,38 +40,21 @@ export default class DataTable extends Component {
   }
 
   /**
-   *  @param index {integer} row to hide
+   *  Calls redux action when 'save' button is clicked
    */
-  hide_row( index, e) {
+  update_graph(e) {
     e.preventDefault()
-    this.props.hide_row(index, this.props.name);
+    const { graph, id, name } = this.props
+    this.props.save_graph(graph, id, name)
   }
 
   /**
-   *  @param index {integer} row to show
-   */
-  show_row( index, e) {
-    e.preventDefault()
-    this.props.show_row(index, this.props.name);
-  }
-
-
-  /**
-   *  Calls redux action set_color
+   *  Determines whether a column is active or not
    *
-   *  @param color.hex {string} passed in by react-color
-   */
-  save_color({hex}) {
-    this.props.set_color(
-      `#${hex}`,
-      this.props.graph,
-      this.props.activeRow,
-      this.props.name,
-      this.props.id )
-  }
-
-  /**
+   *  Is opaque when row is hidden
+   *  Is blue when column is active
    *
+   *  @param {integer} j, the column
    */
   cellClasses(j) {
     const { currentColumn, type } = this.props.graph
@@ -115,6 +79,11 @@ export default class DataTable extends Component {
     return i === activeRow && name === activeName;
   }
 
+  /**
+   *  Determines styling of current row
+   *
+   *  Is opaque if index in active_rows is false
+   */
   row_classes(i) {
     const { graph } = this.props
     return classnames({
@@ -124,7 +93,7 @@ export default class DataTable extends Component {
   }
 
   /**
-   *
+   *  Toggles the columns_constrained option for graphs
    */
    constrain_columns(e) {
     const { id , name, graph } = this.props
@@ -136,7 +105,9 @@ export default class DataTable extends Component {
   render() {
 
     const {
-      graph
+      graph,
+      activeRow,
+      activeName
     } = this.props
 
     if(!graph) {
@@ -147,7 +118,9 @@ export default class DataTable extends Component {
       colors,
       data,
       active_rows
-    } = this.props.graph;
+    } = graph;
+
+    // clone data so we don't mutate it
     data = [...data]
 
     const rows = data.map((row, i) => {
@@ -164,86 +137,39 @@ export default class DataTable extends Component {
       if(i > 0) {
 
         columns.unshift(
-          <td
-            key='display'
-            className={styles.tableCell}
-           >
-            <Button
-              role="button"
-              theme="error"
-              style={{display: active_rows[i] === true ? 'inline' : 'none'}}
-              onKeyDown={ this.hide_row.bind(this, i) }
-              onClick={ this.hide_row.bind(this, i) }>
-              Hide
-            </Button>
-
-            <Button
-              style={{display: active_rows[i] === true ? 'none' : 'inline'}}
-              onClick={ this.show_row.bind(this, i) }
-              theme="success"
-            >
-              Show
-            </Button>
-
-          </td>
+          <HideShow
+            i={i}
+            key={`hide-show-${i}`}
+            active={active_rows[i] === true}
+            name={this.props.name}
+            show_row={this.props.show_row}
+            hide_row={this.props.hide_row}
+          ></HideShow>
         )
 
         columns.unshift(
-          <td
-            key='edit'
-            className={styles.tableCell}
-           >
-            <Button
-              role="button"
-              backgroundColor={this.props.graph.colors[i]}
-              style={{display: this.active_row(i) ? 'none': 'inline'}}
-              onKeyDown={ this.toggle_color.bind(this, i) }
-              onClick={ this.toggle_color.bind(this, i) }>
-              Edit
-            </Button>
-
-            <Button
-              style={{display: this.active_row(i) ? 'inline': 'none'}}
-              onClick={ this.update_graph.bind(this) }
-              theme="success"
-            >
-              Save
-            </Button>
-
-            <Button
-              style={{
-                color: "#111111",
-                marginTop: '8px',
-                display: this.active_row(i) ? 'inline': 'none'
-              }}
-              onClick={ this.cancel_color.bind(this, i) }
-              theme="info"
-            >
-              Cancel
-            </Button>
-
-            <Picker
-              type="chrome"
-              color={ colors[i] }
-              onChange={ this.set_color.bind(this) }
-              display={
-                this.props.activeRow === i &&
-                this.props.activeName === this.props.name
-              }
-            >
-            </Picker>
-          </td>
+          <EditColor
+            i={i}
+            key={`edit-${i}`}
+            active={this.active_row(i)}
+            colors={colors}
+            update_graph={this.update_graph}
+            {...this.props}
+          ></EditColor>
         )
       } else {
+        // legends
         columns.unshift(<td key='hide' className={styles.tableCell}>Hide?</td>)
         columns.unshift(<td key='label' className={styles.tableCell}>Color</td>)
       }
       return (
-        <tr className={this.row_classes(i)} key={i}>
-          {columns}
+        <tr
+          className={this.row_classes(i)}
+          key={i}>
+            {columns}
         </tr>
       )
-    });
+    })
 
     return (
       <div>
@@ -255,7 +181,6 @@ export default class DataTable extends Component {
             </tbody>
           </table>
         </div>
-
 
         <Checkbox
           label="Constrain columns"
