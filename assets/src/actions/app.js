@@ -35,13 +35,12 @@ export function toggle_edit(fields) {
  *  @param id  {integer} id of the post
  *  @param name {string}  key for the graph
  */
-export function set_graph_value(key, val, id, name) {
+export function set_graph_value(id, name, values) {
   return {
     type: 'SET_GRAPH_VALUE',
-    key,
-    val,
     id,
-    name
+    name,
+    values
   }
 }
 

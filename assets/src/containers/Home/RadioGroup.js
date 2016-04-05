@@ -6,11 +6,10 @@ export default class RadioGroup extends Component {
    *  Maps redux set_type action
    */
   set_type(e) {
-    this.props.set_type(
-      e.target.value,
+    this.props.set_graph_value(
       this.props.post_id,
       this.props.name,
-      this.props
+      {type: e.target.value}
     )
   }
   render() {

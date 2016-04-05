@@ -21,7 +21,7 @@ export default class AxisFormContainer extends Component {
       return
     }
     const { id, name } = this.props
-    this.props.set_graph_value('x_axis', target.value, id, name)
+    this.props.set_graph_value(id, name, {x_axis: target.value })
   }
 
   update_y_axis({target}) {
@@ -29,7 +29,7 @@ export default class AxisFormContainer extends Component {
       return
     }
     const { id, name } = this.props
-    this.props.set_graph_value('y_axis', target.value, id, name)
+    this.props.set_graph_value(id, name, {y_axis: target.value})
   }
 
   render() {

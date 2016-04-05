@@ -72,46 +72,18 @@ export function app(state = initialState, action) {
         }
       };
 
-    /**
-     *  Sets type for the graph
-     *  @param action.id {integer}  id for the post
-     *  @param action.name {string} name for the field
-     */
-    case 'SET_TYPE':
-      graphs = state.graphs[action.id]
-      graph = graphs[action.name]
-
-
-      Object.assign(graph, {
-        type: action.chart_type
-      })
-
-      Object.assign(graphs, {
-        [action.name]: graph
-      })
-
-      return {
-        ...state,
-        graphs: {
-          ...state.graphs,
-          [action.id]: graphs
-        }
-      }
 
       /**
        *  Sets type for the graph
-       *  @param val {any} value to set
-       *  @param key {string} option on graph to set
        *  @param action.id {integer}  id for the post
        *  @param action.name {string} name for the field
+       *  @param action.values {object} param to assign to existing graph
        */
       case 'SET_GRAPH_VALUE':
         graphs = state.graphs[action.id]
         graph = graphs[action.name]
 
-        Object.assign(graph, {
-          [action.key]: action.val
-        })
+        Object.assign(graph, action.values)
 
         Object.assign(graphs, {
           [action.name]: graph
@@ -255,7 +227,7 @@ export function app(state = initialState, action) {
     case 'SET_ROW_VISIBILITY':
       graphs = state.graphs[post_id]
       graph = graphs[action.name]
-      graph.active.splice(action.index, 1, action.value )
+      graph.active_rows.splice(action.index, 1, action.value )
       Object.assign(graphs, {[action.name]: graph})
       return {
         ...state,

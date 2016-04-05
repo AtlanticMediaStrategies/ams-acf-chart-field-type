@@ -130,7 +130,7 @@ export default class DataTable extends Component {
     const { id , name, graph } = this.props
     const columns_constrained = !graph.columns_constrained
     this.props
-      .set_graph_value('columns_constrained', columns_constrained, id, name)
+      .set_graph_value(id, name, { columns_constrained })
    }
 
   render() {
