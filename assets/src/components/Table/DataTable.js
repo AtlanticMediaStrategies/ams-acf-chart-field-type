@@ -32,7 +32,7 @@ export default class DataTable extends Component {
    */
   set_current_column(j, e) {
     e.preventDefault()
-    if(this.props.type === 'line' || j < 1) {
+    if(j < 1 || this.props.graph.columns_constrained !== true) {
       return
     }
     const { id, name } = this.props
@@ -57,11 +57,11 @@ export default class DataTable extends Component {
    *  @param {integer} j, the column
    */
   cellClasses(j) {
-    const { currentColumn, type , active_columns } = this.props.graph
+    const { active_columns , columns_constrained } = this.props.graph
 
     return classnames({
       [styles.tableCell]: true,
-      [styles.tableCellActive]: active_columns.includes(j) && type != 'line'
+      [styles.tableCellActive]: active_columns.includes(j) && columns_constrained === true
     })
   }
 
