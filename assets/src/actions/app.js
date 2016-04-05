@@ -45,16 +45,6 @@ export function set_graph_value(key, val, id, name) {
   }
 }
 
-
-export function set_type(chart_type, id, name) {
-  return {
-    type: 'SET_TYPE',
-    chart_type,
-    id,
-    name
-  }
-}
-
 export function init_data(id, name) {
   return function (dispatch) {
     request({
@@ -170,18 +160,6 @@ export function cancel_color(index, name) {
   return {
     type: 'CANCEL_COLOR',
     index,
-    name
-  }
-}
-
-/**
- *  @param column {integer} nth column to edit
- *  @param name {string} key for graph to edit
- */
-export function set_current_column(column, name) {
-  return {
-    type: 'SET_CURRENT_COLUMN',
-    column,
     name
   }
 }
