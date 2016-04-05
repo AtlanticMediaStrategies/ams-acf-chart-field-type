@@ -36,7 +36,7 @@ export default class DataTable extends Component {
       return
     }
     const { id, name } = this.props
-    this.props.set_graph_value('currentColumn', j, id, name)
+    this.props.toggle_column(j, name)
   }
 
   /**
@@ -57,11 +57,11 @@ export default class DataTable extends Component {
    *  @param {integer} j, the column
    */
   cellClasses(j) {
-    const { currentColumn, type } = this.props.graph
+    const { currentColumn, type , active_columns } = this.props.graph
 
     return classnames({
       [styles.tableCell]: true,
-      [styles.tableCellActive]: currentColumn === j && type != 'line'
+      [styles.tableCellActive]: active_columns.includes(j) && type != 'line'
     })
   }
 
