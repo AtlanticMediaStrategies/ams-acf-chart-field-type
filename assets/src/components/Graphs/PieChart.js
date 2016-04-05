@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { VictoryPie } from 'victory';
+import { VictoryPie, VictoryChart } from 'victory';
+import { Flex, Box } from 'reflexbox'
 
 /**
  *  Wrapper around VictoryPie
@@ -10,7 +11,9 @@ export default class PieChart extends Component {
     const {
       currentColumn,
       colors,
-      ready
+      ready,
+      active_columns,
+      columns_constrained
     } = this.props
 
     if(!this.props.data) {
@@ -24,37 +27,77 @@ export default class PieChart extends Component {
 
     const dates = data.shift()
 
-    // transform data to VictoryPie.data
-    const pie_data =
-      data
-        .map((datum, i) => {
-          if(datum === false) {
-            return datum
-          }
-          const x = datum[0]
-          const y = ready ? parseInt(datum[currentColumn]) : 90;
-          const fill = colors[i + 1]
-          return { x , y, fill }
-        })
-        .filter((datum) => datum != false)
-
     let width = this.props.width;
     if(width > 800) {
       width = 800
     }
 
-    return (
-      <VictoryPie
-        animate={{duration: 1200}}
-        style={{
-          labels: {
-            fill: '#FDFDFD'
-          }
-        }}
-        data={pie_data}
-        width={width}
-      >
-      </VictoryPie>
-    )
+    if(!columns_constrained) {
+
+      // transform data to VictoryPie.data
+      const pie_data =
+        data
+          .map((datum, i) => {
+            if(datum === false) {
+              return datum
+            }
+            const x = datum[0]
+            const y = ready ? parseInt(datum[currentColumn]) : 90;
+            const fill = colors[i + 1]
+            return { x , y, fill }
+          })
+          .filter((datum) => datum != false)
+
+      return (
+          <VictoryPie
+            animate={{duration: 1200}}
+            style={{
+              labels: {
+                fill: '#FDFDFD'
+              }
+            }}
+            data={pie_data}
+            width={width}
+          >
+          </VictoryPie>
+      )
+    } else {
+      const pies = active_columns.map((index) => {
+        let pie_data =
+          data
+            .map((datum, i) => {
+              if(datum === false) {
+                return datum
+              }
+              const x = datum[0]
+              const y = ready ? parseInt(datum[index]) : 90;
+              const fill = colors[i + 1]
+              return { x , y, fill }
+            })
+            .filter((datum) => datum != false)
+
+        return (
+          <Box col="6">
+            <VictoryPie
+              animate={{duration: 1200}}
+              width={(width / 2) - 20}
+              style={{
+                labels: {
+                  fill: '#FDFDFD'
+                }
+              }}
+              data={pie_data}
+            />
+            <h1 style={{textAlign: 'center'}}>{dates[index]}</h1>
+          </Box>
+        )
+      });
+
+      return (
+        <Flex wrap={true}>
+          {pies}
+        </Flex>
+      )
+    }
   }
 }
