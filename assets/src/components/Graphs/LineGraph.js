@@ -18,8 +18,8 @@ export default class LineGraph extends Component {
     }
   }
 
-  componentWillReceiveProps({ready}) {
-    if(ready === true) {
+  componentWillReceiveProps({ready, disableAnimation}) {
+    if(ready === true && disableAnimation !== true) {
       const elm = ReactDOM.findDOMNode(this)
       new Vivus(elm)
     }

@@ -64,7 +64,7 @@ export default class Graph extends Component {
       id,
       x_axis,
       y_axis,
-      active_rows
+      active_rows,
     } = this.props.graph
 
     const ready = this.state.scrolled && this.state.ready
@@ -76,6 +76,7 @@ export default class Graph extends Component {
     const chartProps = {
       width: this.state.width,
       data: filtered_data,
+      disableAnimation: this.props.disableAnimation,
       ready,
       active_rows,
       colors,
