@@ -34,23 +34,8 @@ export default class BarChart extends Component {
     const dates = data.shift()
 
     let bar_data, categories;
-    if(columns_constrained) {
-      bar_data = data.map((datum, i) => {
-        if(datum === false) {
-          return datum
-        }
-        return active_columns.map((column, j) => {
-          return {
-            x: dates[column],
-            y: parseInt(datum[column]),
-            label: datum[column],
-            fill: colors[i + 1]
-          }
-        })
-      }).filter(datum => datum !== false)
-      categories = active_columns.map(column => dates[column])
-      categories.unshift('')
-    } else {
+    if(active_columns.length === 1) {
+      const column = active_column[0]
       bar_data =
         data
           .map((datum, x) => {
@@ -59,18 +44,33 @@ export default class BarChart extends Component {
             }
             return {
               x: datum[0],
-              y: ready ? parseInt(currentColumn) : 0,
+              y: ready ? parseInt(datum[column]) : 0,
               label: datum[currentColumn],
               fill: colors[x + 1]
             }
           })
           .filter((datum) => datum != false)
-
       categories = data.map((datum) => datum[0])
-      categories.unshift('');
+    } else {
+        bar_data =
+          data
+            .map((datum, i) => {
+              if(datum === false) {
+                return datum
+              }
+              return active_columns.map((column, j) => {
+                return {
+                  x: dates[column],
+                  y: parseInt(datum[column]),
+                  label: datum[column],
+                  fill: colors[i + 1]
+                }
+              })
+            })
+            .filter(datum => datum !== false)
+      categories = active_columns.map(column => dates[column])
     }
-
-    console.log(categories)
+    categories.unshift('');
 
     return (
       <VictoryChart width={width}>

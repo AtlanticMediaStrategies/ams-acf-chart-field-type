@@ -12,10 +12,6 @@ export const initialGraph = {
    */
   active_columns: [],
   /**
-   *  Set to true to constrain columns by what's in 'active_columns'
-   */
-  columns_constrained: false,
-  /**
    *  Mapping of rows to graph color
    */
   colors: [],
@@ -31,8 +27,4 @@ export const initialGraph = {
    *  Type for the graph (valid: line, pie, bar)
    */
   type: "line",
-  /**
-   *
-   */
-  currentColumn: 1
 }

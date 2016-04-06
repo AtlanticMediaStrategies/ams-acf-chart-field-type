@@ -47,21 +47,22 @@ export function app(state = initialState, action) {
      *
      * @param action.id {integer}  id for the post
      * @param action.name {string} name for the field
-     * @param action.data{string} stringified json
+     * @param action.graph {object} stringified json
      */
     case 'CREATE_GRAPH':
       graphs = state.graphs[action.id] || {}
 
-      const graph_clone = Object.assign({}, initialGraph)
-      graph = Object.assign({}, action.data, graph_clone)
+      // intialize base colors
+      const graph_colors =
+        action.graph.data.map((color, i) => colors[i % colors.length])
 
-      Object.assign(graph, {
-        active: Array(action.data.data.length).fill(true),
-        colors
+      Object.assign(action.graph, {
+        active_rows: Array(action.graph.data.length).fill(true),
+        colors: graph_colors
       })
 
       Object.assign(graphs, {
-        [action.name]: graph
+        [action.name]: action.graph
       })
 
       return {

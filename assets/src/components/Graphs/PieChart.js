@@ -32,72 +32,45 @@ export default class PieChart extends Component {
       width = 800
     }
 
-    if(!columns_constrained) {
+    if(!active_columns) {
+      return <div><p>Please select one or more column.</p></div>
+    }
 
-      // transform data to VictoryPie.data
-      const pie_data =
+    const pies = active_columns.map((index) => {
+      let pie_data =
         data
           .map((datum, i) => {
             if(datum === false) {
               return datum
             }
             const x = datum[0]
-            const y = ready ? parseInt(datum[currentColumn]) : 90;
+            const y = ready ? parseInt(datum[index]) : 90;
             const fill = colors[i + 1]
             return { x , y, fill }
           })
           .filter((datum) => datum != false)
 
       return (
+        <Box col="6">
           <VictoryPie
             animate={{duration: 1200}}
+            width={(width / 2) - 20}
             style={{
               labels: {
                 fill: '#FDFDFD'
               }
             }}
             data={pie_data}
-            width={width}
-          >
-          </VictoryPie>
+          />
+          <h1 style={{textAlign: 'center'}}>{dates[index]}</h1>
+        </Box>
       )
-    } else {
-      const pies = active_columns.map((index) => {
-        let pie_data =
-          data
-            .map((datum, i) => {
-              if(datum === false) {
-                return datum
-              }
-              const x = datum[0]
-              const y = ready ? parseInt(datum[index]) : 90;
-              const fill = colors[i + 1]
-              return { x , y, fill }
-            })
-            .filter((datum) => datum != false)
+    })
 
-        return (
-          <Box col="6">
-            <VictoryPie
-              animate={{duration: 1200}}
-              width={(width / 2) - 20}
-              style={{
-                labels: {
-                  fill: '#FDFDFD'
-                }
-              }}
-              data={pie_data}
-            />
-            <h1 style={{textAlign: 'center'}}>{dates[index]}</h1>
-          </Box>
-        )
-      });
-
-      return (
-        <Flex wrap={true}>
-          {pies}
-        </Flex>
-      )
-    }
+    return (
+      <Flex wrap={true}>
+        {pies}
+      </Flex>
+    )
   }
 }

@@ -15,6 +15,7 @@ import { Radio, Button, Divider, Checkbox } from 'rebass';
 import DataTable from '../../components/Table/DataTable.js';
 import RadioGroup from './RadioGroup.js';
 import Form from '../../components/Form/AxisForm.js';
+import { initialGraph } from '../../models/graph.js';
 
 import qs from 'qs';
 
@@ -140,12 +141,11 @@ export class Home extends Component {
     const reader = new FileReader()
     reader.onload = () => {
       csv.parse(reader.result, (err, res) => {
-        if(err)
+        if(err) {
           throw err
-        const json = JSON.stringify({
-          data: res,
-          type: 'line'
-        })
+        }
+        const graph = Object.assign({data: res, type: 'line'}, initialGraph);
+        const json = JSON.stringify(graph)
 
         request({
           url: `/acf-chart/update/${this.state.id}/${this.state.name}/`,
@@ -155,7 +155,7 @@ export class Home extends Component {
           }
         })
         .then(() => {
-          this.props.create_graph({data: res}, this.state.id, this.state.name)
+          this.props.create_graph(graph, this.state.id, this.state.name)
           this.setState({
             edit: false
           })
@@ -216,7 +216,7 @@ export class Home extends Component {
 
     const main = data && !this.state.edit ? (
       <div>
-        <h3 for="pie">Chart Type</h3>
+        <h3 for="pie">Chart</h3>
         <RadioGroup
           post_id={this.state.id}
           name={this.state.name}
@@ -284,5 +284,6 @@ export class Home extends Component {
         </Button>
       </section>
     );
+
   }
 }

@@ -65,8 +65,7 @@ export default class Graph extends Component {
       x_axis,
       y_axis,
       active_rows,
-      active_columns,
-      columns_constrained
+      active_columns
     } = this.props.graph
 
     const ready = this.state.scrolled && this.state.ready
@@ -85,16 +84,31 @@ export default class Graph extends Component {
       currentColumn,
       x_axis,
       y_axis,
-      columns_constrained,
       active_columns
     }
 
+
+    if(!active_columns || active_columns.length < 1) {
+      return <div>Please specify columns</div>
+    }
+
     if(type == 'pie') {
-      var graph = <PieChart {...chartProps} ></PieChart>
+      var graph =
+        <PieChart
+          {...chartProps}
+        >
+        </PieChart>
     } else if (type == 'bar') {
-      var graph = <BarChart {...chartProps}></BarChart>
+      var graph =
+        <BarChart
+          {...chartProps}
+        >
+        </BarChart>
     } else {
-      var graph = <LineGraph {...chartProps}></LineGraph>
+      var graph =
+        <LineGraph
+          {...chartProps}>
+        </LineGraph>
     }
 
     return  (

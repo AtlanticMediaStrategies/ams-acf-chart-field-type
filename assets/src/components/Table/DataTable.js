@@ -11,10 +11,6 @@ export default class DataTable extends Component {
     this.state = {
       activeEdit: false
     }
-
-    // debounce constrain_columns
-    this.debounced_constrained_columns =
-      window._.debounce(this.constrain_columns, 100)
   }
 
   /**
@@ -32,11 +28,7 @@ export default class DataTable extends Component {
    */
   set_current_column(j, e) {
     e.preventDefault()
-    const {
-      columns_constrained
-    } = this.props.graph
-
-    if(j < 1 || columns_constrained !== true) {
+    if(j < 1) {
       return
     }
 
@@ -62,17 +54,10 @@ export default class DataTable extends Component {
    *  @param {integer} j, the column
    */
   cellClasses(j) {
-    const {
-      active_columns,
-      columns_constrained,
-      currentColumn
-    } = this.props.graph
-
-    const cell_active = columns_constrained && active_columns.includes(j)
-
+    const { active_columns } = this.props.graph
     return classnames({
       [styles.tableCell]: true,
-      [styles.tableCellActive]: cell_active
+      [styles.tableCellActive]: active_columns.includes(j)
     })
   }
 
@@ -102,16 +87,6 @@ export default class DataTable extends Component {
       [styles.tableRowHidden]: !graph.active_rows[i]
     })
   }
-
-  /**
-   *  Toggles the columns_constrained option for graphs
-   */
-   constrain_columns(e) {
-    const { id , name, graph } = this.props
-    const columns_constrained = !graph.columns_constrained
-    this.props
-      .set_graph_value(id, name, { columns_constrained })
-   }
 
   render() {
 
@@ -192,13 +167,6 @@ export default class DataTable extends Component {
             </tbody>
           </table>
         </div>
-
-        <Checkbox
-          label="Constrain columns"
-          name="constrain"
-          onClick={this.debounced_constrained_columns.bind(this)}
-          checked={graph.columns_constrained === true}
-        ></Checkbox>
       </div>
     )
   }

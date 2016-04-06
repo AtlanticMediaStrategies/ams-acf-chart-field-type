@@ -33,7 +33,6 @@ export default class LineGraph extends Component {
       x_axis,
       y_axis,
       ready,
-      columns_constrained,
       active_columns
     } = this.props;
 
@@ -59,25 +58,12 @@ export default class LineGraph extends Component {
           }
           const label = datum[0]
           let line_data;
-          if(columns_constrained === true) {
-            line_data = active_columns.map((j) => {
-              return {
-                x: x_values[j],
-                y: parseInt(datum[j])
-              }
-            })
-          } else {
-            line_data = datum.map((y, j) => {
-              if(j < 1) {
-                return
-              }
-              return {
-                x: x_values[j],
-                y: parseInt(y)
-              }
-            });
-            line_data.shift() // shift off label
-          }
+          line_data = active_columns.map((j) => {
+            return {
+              x: x_values[j],
+              y: parseInt(datum[j])
+            }
+          })
 
           return (
             <VictoryLine
@@ -94,9 +80,8 @@ export default class LineGraph extends Component {
               data={line_data}>
             </VictoryLine>
           );
-        })
+      })
       .filter((datum) => datum !== false)
-
 
     const padding = {
       top: 50,
