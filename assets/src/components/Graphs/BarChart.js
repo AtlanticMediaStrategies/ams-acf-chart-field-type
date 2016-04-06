@@ -20,7 +20,9 @@ export default class BarChart extends Component {
       currentColumn,
       x_axis,
       y_axis,
-      ready
+      ready,
+      columns_constrained,
+      active_columns
     } = this.props
 
     if(!data) {
@@ -31,43 +33,66 @@ export default class BarChart extends Component {
 
     const dates = data.shift()
 
-    const bar_data =
-      data
-        .map((datum, x) => {
-          if(datum === false) {
-            return datum
-          }
+    let bar_data, categories;
+    if(columns_constrained) {
+      bar_data = data.map((datum, i) => {
+        if(datum === false) {
+          return datum
+        }
+        return active_columns.map((column, j) => {
           return {
-            x: x + 2,
-            y: ready ? parseInt(datum[currentColumn]) : 0,
-            label: datum[currentColumn],
-            fill: colors[x + 1]
+            x: dates[column],
+            y: parseInt(datum[column]),
+            label: datum[column],
+            fill: colors[i + 1]
           }
         })
-        .filter((datum) => datum != false)
+      }).filter(datum => datum !== false)
+      categories = active_columns.map(column => dates[column])
+      categories.unshift('')
+    } else {
+      bar_data =
+        data
+          .map((datum, x) => {
+            if(datum === false) {
+              return datum
+            }
+            return {
+              x: datum[0],
+              y: ready ? parseInt(currentColumn) : 0,
+              label: datum[currentColumn],
+              fill: colors[x + 1]
+            }
+          })
+          .filter((datum) => datum != false)
 
-    const categories = data.map((datum) => datum[0])
-    categories.unshift('');
-    categories.unshift('');
+      categories = data.map((datum) => datum[0])
+      categories.unshift('');
+    }
+
+    console.log(categories)
 
     return (
       <VictoryChart width={width}>
         <VictoryBar
           animate={{velocity: 0.02}}
-          data={bar_data}>
+          data={bar_data}
+        >
         </VictoryBar>
 
         <VictoryAxis
           label={x_axis}
-          tickValues={categories}>
-        </VictoryAxis>
+          tickValues={categories}
+        ></VictoryAxis>
 
         <VictoryAxis
           dependentAxis
-          label={y_axis}>
+          label={y_axis}
+        >
         </VictoryAxis>
 
       </VictoryChart>
+
     )
 
   }

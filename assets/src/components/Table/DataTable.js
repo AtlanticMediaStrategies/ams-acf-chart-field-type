@@ -32,9 +32,14 @@ export default class DataTable extends Component {
    */
   set_current_column(j, e) {
     e.preventDefault()
-    if(j < 1 || this.props.graph.columns_constrained !== true) {
+    const {
+      columns_constrained
+    } = this.props.graph
+
+    if(j < 1 || columns_constrained !== true) {
       return
     }
+
     const { id, name } = this.props
     this.props.toggle_column(j, name)
   }
@@ -57,11 +62,17 @@ export default class DataTable extends Component {
    *  @param {integer} j, the column
    */
   cellClasses(j) {
-    const { active_columns , columns_constrained } = this.props.graph
+    const {
+      active_columns,
+      columns_constrained,
+      currentColumn
+    } = this.props.graph
+
+    const cell_active = columns_constrained && active_columns.includes(j)
 
     return classnames({
       [styles.tableCell]: true,
-      [styles.tableCellActive]: active_columns.includes(j) && columns_constrained === true
+      [styles.tableCellActive]: cell_active
     })
   }
 
