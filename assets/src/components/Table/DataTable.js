@@ -88,6 +88,22 @@ export default class DataTable extends Component {
     })
   }
 
+  /**
+   *  Selects all columns
+   */
+  show_all_columns(e) {
+    e.preventDefault()
+    this.props.show_all_columns(this.props.name)
+  }
+
+  /**
+   *  Hides all columns
+   */
+   hide_all_columns(e) {
+    e.preventDefault()
+    this.props.hide_all_columns(this.props.name)
+   }
+
   render() {
 
     const {
@@ -167,6 +183,21 @@ export default class DataTable extends Component {
             </tbody>
           </table>
         </div>
+        <nav style={{margin: '0.3em 0'}}>
+          <Button
+            style={{marginRight: '0.25em'}}
+            theme='error'
+            onClick={this.hide_all_columns.bind(this)}
+            pill={true}>
+              Hide All Columns
+          </Button>
+          <Button
+            theme='success'
+            onClick={this.show_all_columns.bind(this)}
+            pill={true}>
+            Show All Columns
+          </Button>
+        </nav>
       </div>
     )
   }

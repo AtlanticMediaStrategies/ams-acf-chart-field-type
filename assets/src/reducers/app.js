@@ -14,7 +14,7 @@ const post_id = qs.parse(window.location.search.replace('?', '')).post
 
 export function app(state = initialState, action) {
   let graph;
-  let graphs;
+  const graphs = state.graphs[post_id] || {}
 
   switch (action.type) {
     /**
@@ -25,7 +25,6 @@ export function app(state = initialState, action) {
      *  @param action.data{string} stringified json
      */
     case 'SET_DATA':
-      graphs = state.graphs[action.id] || {}
       graph = graphs[action.name] || {}
 
       Object.assign(graph, action.data)
@@ -50,7 +49,6 @@ export function app(state = initialState, action) {
      * @param action.graph {object} stringified json
      */
     case 'CREATE_GRAPH':
-      graphs = state.graphs[action.id] || {}
 
       // intialize base colors
       const graph_colors =
@@ -81,7 +79,6 @@ export function app(state = initialState, action) {
        *  @param action.values {object} param to assign to existing graph
        */
       case 'SET_GRAPH_VALUE':
-        graphs = state.graphs[action.id]
         graph = graphs[action.name]
 
         Object.assign(graph, action.values)
@@ -113,8 +110,6 @@ export function app(state = initialState, action) {
     case 'SET_COLOR':
       const { color, name, row } = action;
 
-      graphs = state.graphs[post_id]
-
       // swap in the new color
       graphs[activeName].colors.splice(activeRow, 1, color)
 
@@ -129,7 +124,6 @@ export function app(state = initialState, action) {
     case 'UPDATE_GRAPH':
 
       graph = action.graph;
-      graphs = state.graphs[action.id];
 
       Object.assign(graphs, { [action.name]: graph })
 
@@ -147,7 +141,7 @@ export function app(state = initialState, action) {
      */
     case 'TOGGLE_COLOR':
       const stashedColor =
-        state.graphs[post_id][action.name].colors[action.index]
+        graphs[action.name].colors[action.index]
 
       return {
         ...state,
@@ -161,10 +155,9 @@ export function app(state = initialState, action) {
      *  @param action.name {string} key for the graph
      */
     case 'CANCEL_COLOR':
-      graphs = state.graphs[post_id]
       graph = graphs[action.name]
       graph.colors.splice(action.index, 1, state.stashedColor)
-      Object.assign(graphs, {[action.name]: graph })
+      graphs[action.name] =  graph
 
       const { activeName, activeRow } = initialState;
 
@@ -196,16 +189,13 @@ export function app(state = initialState, action) {
      *  @param action.name {string} key that identifies the graph
      */
     case 'SET_CURRENT_COLUMN':
-      graphs = state.graphs[post_id]
       graph = graphs[action.name]
 
       Object.assign(graph, {
         currentColumn: action.column
       })
 
-      Object.assign(graphs, {
-        [action.name]: graph
-      })
+      graphs[action.name] = graph
 
       return {
         ...state,
@@ -223,26 +213,9 @@ export function app(state = initialState, action) {
      *  @param action.value {boolean} whether the row is hidden/shown
      */
     case 'SET_ROW_VISIBILITY':
-      graphs = state.graphs[post_id]
       graph = graphs[action.name]
       graph.active_rows.splice(action.index, 1, action.value )
-      Object.assign(graphs, {[action.name]: graph})
-      return {
-        ...state,
-        graphs: {
-          ...state.graphs,
-          [post_id]: graphs
-        }
-      }
-
-    /**
-     *  Updates label
-     */
-    case 'UPDATE_LABEL':
-      graphs = state.graphs[post_id]
-      graph = graphs[action.name]
-      Object.assign(graph, { [`${action.axis}_axis`]: action.label})
-      Object.assign(graphs, {[action.name]: graph})
+      graphs[action.name] = graph
       return {
         ...state,
         graphs: {
@@ -258,11 +231,8 @@ export function app(state = initialState, action) {
      *  @param action.name {string} key of the graph to edit
      */
     case 'TOGGLE_COLUMN':
-      graphs = state.graphs[post_id]
       graph =  graphs[action.name]
-
-        const index = graph.active_columns.indexOf(action.index)
-
+      const index = graph.active_columns.indexOf(action.index)
       if(index > -1) {
         graph.active_columns.splice(index, 1)
       } else {
@@ -278,6 +248,37 @@ export function app(state = initialState, action) {
           [post_id]: graphs
         }
       }
+
+    case 'SHOW_ALL_COLUMNS':
+      graph = graphs[action.name]
+      graph.active_columns =
+        graph.data[0]
+          .map((row, index) => index)
+          .filter(val => val !== 0)
+
+      graphs[action.name] = graph
+
+      return {
+        ...state,
+        graphs: {
+          ...state.graphs,
+          [post_id]: graphs
+        }
+      }
+
+    case 'HIDE_ALL_COLUMNS':
+      graph = graphs[action.name]
+      Object.assign(graphs, {
+        [action.name]: {
+          ...graph,
+          active_columns: []
+        }
+      })
+
+      return {...state, graphs: {
+        ...state.graphs,
+        [post_id]: graphs
+      }}
 
     default:
       return state;

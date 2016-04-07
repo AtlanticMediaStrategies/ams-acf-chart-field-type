@@ -207,3 +207,17 @@ export function toggle_column(i, name) {
     name
   }
 }
+
+export function show_all_columns(name) {
+  return {
+    type: 'SHOW_ALL_COLUMNS',
+    name
+  }
+}
+
+export function hide_all_columns(name) {
+  return {
+    type: 'HIDE_ALL_COLUMNS',
+    name
+  }
+}
