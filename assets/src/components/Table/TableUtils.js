@@ -61,6 +61,9 @@ export class EditColor extends Component {
   constructor() {
     super()
     this.set_color = window._.debounce(this.save_color, 200)
+    this.state = {
+      picker_open: false
+    }
   }
 
   /**
@@ -82,6 +85,7 @@ export class EditColor extends Component {
    */
   toggle_color(index, e) {
     e.preventDefault()
+    this.setState({picker_open: true})
     this.props.toggle_color(index, this.props.name)
   }
 
@@ -93,6 +97,10 @@ export class EditColor extends Component {
     this.props.cancel_color(index, this.props.name)
   }
 
+  picker_closed() {
+    this.setState({picker_open: false})
+  }
+
   render() {
 
     const {
@@ -100,17 +108,18 @@ export class EditColor extends Component {
       active,
       colors,
       activeRow,
-      activeName
+      activeName,
+      name
     } = this.props
 
     return (
       <td
         key='edit'
-        className={styles.tableCell}
+        className={ styles.tableCell }
        >
         <Button
           role="button"
-          backgroundColor={colors[i]}
+          backgroundColor={ colors[i] }
           style={{display: active ? 'none': 'inline'}}
           onKeyDown={ this.toggle_color.bind(this, i) }
           onClick={ this.toggle_color.bind(this, i) }>
@@ -119,7 +128,7 @@ export class EditColor extends Component {
 
         <Button
           style={{display: active ? 'inline': 'none'}}
-          onClick={ this.props.update_graph.bind(this) }
+          onClick={this.props.update_graph.bind(this)}
           theme="success"
         >
           Save
@@ -127,7 +136,7 @@ export class EditColor extends Component {
 
         <Button
           style={{
-            color: "#111111",
+            color: "#111",
             marginTop: '8px',
             display: active ? 'inline': 'none'
           }}
@@ -141,10 +150,8 @@ export class EditColor extends Component {
           type="chrome"
           color={ colors[i] }
           onChange={ this.set_color.bind(this) }
-          display={
-            this.props.activeRow === i &&
-            this.props.activeName === this.props.name
-          }
+          onClose={ this.picker_closed.bind(this) }
+          display= { this.state.picker_open }
         >
         </Picker>
       </td>
