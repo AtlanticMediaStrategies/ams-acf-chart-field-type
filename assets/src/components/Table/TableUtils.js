@@ -97,6 +97,9 @@ export class EditColor extends Component {
     this.props.cancel_color(index, this.props.name)
   }
 
+  /**
+   *  Hides the picker so user can click save or cancel
+   */
   picker_closed() {
     this.setState({picker_open: false})
   }
@@ -111,6 +114,8 @@ export class EditColor extends Component {
       activeName,
       name
     } = this.props
+
+    const presetColors = ['#0062ff', '#ffc000', '#ff004c', '#cbcbcb', '#000000'];
 
     return (
       <td
@@ -147,10 +152,11 @@ export class EditColor extends Component {
         </Button>
 
         <Picker
-          type="chrome"
+          type="sketch"
           color={ colors[i] }
           onChange={ this.set_color.bind(this) }
           onClose={ this.picker_closed.bind(this) }
+          presetColors={presetColors}
           display= { this.state.picker_open }
         >
         </Picker>
