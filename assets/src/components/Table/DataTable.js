@@ -9,8 +9,15 @@ export default class DataTable extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      activeEdit: false
+      activeEdit: false,
+      mousedown: false
     }
+    window.addEventListener('mousedown', () => {
+      this.setState({mousedown: true})
+    })
+    window.addEventListener('mouseup', () => {
+      this.setState({mousedown: false})
+    })
   }
 
   /**
@@ -26,14 +33,14 @@ export default class DataTable extends Component {
    * Calls redux action if column is not the first column
    * Assumes that first-column is the category
    */
-  set_current_column(j, e) {
+  set_current_column(row, column, e) {
     e.preventDefault()
-    if(j < 1) {
+    if(column < 1 && row === 0) {
       return
     }
 
     const { id, name } = this.props
-    this.props.toggle_column(j, name)
+    this.props.toggle_column(column, name)
   }
 
   /**
@@ -104,6 +111,13 @@ export default class DataTable extends Component {
     this.props.hide_all_columns(this.props.name)
    }
 
+
+   mouse_over(row, column) {
+    if(row === 0 && this.state.mousedown)  {
+      this.props.toggle_column(column, this.props.name)
+    }
+   }
+
   render() {
 
     const {
@@ -130,7 +144,8 @@ export default class DataTable extends Component {
         return (
           <td
             className={ this.cellClasses(j) }
-            onClick={ this.set_current_column.bind(this, j) }
+            onMouseDown={ this.set_current_column.bind(this, i, j) }
+            onMouseOver={ this.mouse_over.bind(this, i, j) }
             key={j}>
               {column}
           </td>
