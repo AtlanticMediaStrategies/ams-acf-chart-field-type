@@ -34,6 +34,8 @@ import Graph from '../Graph';
 export class Home extends Component {
   constructor(props) {
     super(props)
+    // disable prompt acf has when navigating away from page
+    Object.assign(window.acf.unload, {active: false})
     this.state = {
       id: null,
       edit: false,
