@@ -35,7 +35,7 @@ export default class BarChart extends Component {
 
     let bar_data, categories;
     if(active_columns.length === 1) {
-      const column = active_column[0]
+      const column = active_columns[0]
       bar_data =
         data
           .map((datum, x) => {
