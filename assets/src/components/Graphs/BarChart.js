@@ -45,8 +45,9 @@ export default class BarChart extends Component {
             return {
               x: datum[0],
               y: ready ? parseInt(datum[column]) : 0,
-              label: datum[currentColumn],
-              fill: colors[x + 1]
+              label: datum[column],
+              fill: colors[x + 1],
+              width: 28,
             }
           })
           .filter((datum) => datum != false)
@@ -63,19 +64,22 @@ export default class BarChart extends Component {
                   x: dates[column],
                   y: parseInt(datum[column]),
                   label: datum[column],
-                  fill: colors[i + 1]
+                  width: 20,
+                  fill: colors[i + 1],
+                  strokeWidth: 1,
+                  stroke: '#FAFAFA'
                 }
               })
             })
             .filter(datum => datum !== false)
       categories = active_columns.map(column => dates[column])
     }
-    categories.unshift('');
 
     return (
       <VictoryChart width={width}>
         <VictoryBar
           animate={{velocity: 0.02}}
+          domainPadding={18}
           data={bar_data}
         >
         </VictoryBar>
