@@ -11,7 +11,7 @@ import csv from 'csv';
 import styles from './home.scss';
 import request from 'reqwest-without-xhr2';
 import classnames from 'classnames';
-import { Radio, Button, Divider, Checkbox } from 'rebass';
+import { Radio, Button, Divider, Checkbox, Overlay, Close } from 'rebass';
 import DataTable from '../../components/Table/DataTable.js';
 import RadioGroup from './RadioGroup.js';
 import Form from '../../components/Form/AxisForm.js';
@@ -36,7 +36,8 @@ export class Home extends Component {
     super(props)
     this.state = {
       id: null,
-      edit: false
+      edit: false,
+      overlay_open: false
     }
   }
 
@@ -68,13 +69,14 @@ export class Home extends Component {
    */
   saveImage(e) {
     e.preventDefault()
+    this.setState({overlay_open: true})
     require(['fabric-webpack', 'notie'], ({fabric}, notie) => {
       const {
         Canvas
       } = fabric;
 
       const elm = ReactDOM.findDOMNode(this)
-      const svg = elm.querySelector('svg')
+      const svg = elm.querySelector('.Overlay svg')
 
       const can = new Canvas();
 
@@ -107,7 +109,10 @@ export class Home extends Component {
             base64: data
           }
         })
-        .then(() => notie.alert(1, 'Success!', 2))
+        .then(() => {
+          notie.alert(1, 'Success!', 2)
+          this.setState({overlay_open: false})
+        })
         .fail(() => notie.alert(2, 'An error occurred', 2))
       })
     })
@@ -183,6 +188,11 @@ export class Home extends Component {
   save_graph(graph, e) {
     e.preventDefault()
     this.props.save_graph(graph, this.state.id, this.state.name)
+  }
+
+  toggleOverlay(e) {
+    e.preventDefault()
+    this.setState({overlay_open: !this.state.overlay_open})
   }
 
   render() {
@@ -282,6 +292,31 @@ export class Home extends Component {
           style={{ marginRight: '8px' }}
           onClick={this.toggleEdit.bind(this)}>Edit data
         </Button>
+        <Overlay
+          style={{
+            backgroundColor: '#FDFDFD',
+            textAlign: 'center'
+          }}
+          open={this.state.overlay_open}
+          dark={true}
+          box={true}
+        >
+          <div style={{border: '2px double #111111'}}>
+            <Graph
+              graph={graph}
+              disableAnimation={true}
+              width={1080}
+              id={this.state.id}
+            >
+            <h1 style={{textAlign: 'center'}}>Generating graph...</h1>
+            </Graph>
+            <Close
+              style={{position: 'absolute', right: '10px', top: '10px'}}
+              onClick={this.toggleOverlay.bind(this)}>
+            </Close>
+          </div>
+        </Overlay>
+        <Button onClick={this.toggleOverlay.bind(this)}>Test</Button>
       </section>
     );
 

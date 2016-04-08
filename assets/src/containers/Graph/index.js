@@ -32,7 +32,7 @@ export default class Graph extends Component {
 
     const parent = document.querySelector(parent_selector);
     let width = parent.offsetWidth
-    this.setState({ width })
+    this.setState({ width: this.props.width || width })
 
     const calculateWidth = () => {
       this.setState({width: parent.offsetWidth});
