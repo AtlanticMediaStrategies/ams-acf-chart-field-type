@@ -2,6 +2,10 @@
 // exit if accessed directly
 if( ! defined( 'ABSPATH' ) ) exit;
 
+use Monolog\Logger;
+use Monolog\Handler\ChromePHPHandler;
+use Monolog\Handler\ErrorLogHandler;
+
 if(! class_exists('Routes')) {
 	die('Router needed');
 }
@@ -64,6 +68,13 @@ class acf_field_chart extends acf_field {
 		);
 
 		$this::map_routes();
+
+
+		$debug = new Logger('acf');
+		$debug->pushHandler(new ChromePHPHandler());
+		$debug->pushHandler(new ErrorLogHandler());
+
+		$this->debug = $debug;
 
 		// do not delete!
   	parent::__construct();
@@ -195,16 +206,13 @@ class acf_field_chart extends acf_field {
 	*/
 
 	function render_field( $field ) {
-		preg_match('/\[(\d)+\]/', $field['name'], $matches);
-		if(!$matches) {
-			echo '<div><p>Please click "update" to update a csv in this area.</p></div>';
-			return;
-		}
-		$order = $matches[1];
-		if($order != '0' && !$order) {
-			return; // don't render
-		}
-		echo '<div id="app" class="acf-chart" data-name="modules_'.$order.'_chart"></div>';
+		$name = $field['name'];
+		$value = $field['value'];
+		echo "<div data-name=\"$name\" class=\"acf-chart-name\"></div>$value";
+	}
+
+	function update_field( $field ) {
+
 	}
 
 
@@ -250,10 +258,34 @@ class acf_field_chart extends acf_field {
 	*/
 
 	function load_value( $value, $post_id, $field ) {
-		return '<div class="acf-chart" data-id="'. $post_id .'" data-name="'.$field['name'].'"></div>';
+		$value = esc_attr($value);
+		$name = $field['name'];
+		return "<div class=\"acf-chart\" data-id=\"$post_id\"><div><input
+		class=\"acf-chart-input\" data-id=\"$post_id\" data-name=\"$name\"
+		value=\"{$value}\" type=\"hidden\"/></div></div>";
 	}
 
-
+	/*
+	 *  update_value()
+	 *
+	 *  This filter is applied to the $value before it is saved in the db
+	 *
+	 *  @type	filter
+	 *  @since	3.6
+	 *  @date	23/01/13
+	 *
+	 *  @param	$value (mixed) the value found in the database
+	 *  @param	$post_id (mixed) the $post_id from which the value was loaded
+	 *  @param	$field (array) the field array holding all the field options
+	 *  @return	$value
+	 */
+	function update_value( $value, $post_id, $field ) {
+		$esc_value = str_replace('\"', '"', $value);
+		if(json_decode($esc_value) === NULL) {
+			return '{"title": "'. $value .'"}';
+		}
+		return $value;
+	}
 
 	/*
 	*  delete_value()
