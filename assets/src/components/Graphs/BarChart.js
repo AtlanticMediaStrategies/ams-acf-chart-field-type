@@ -51,7 +51,10 @@ export default class BarChart extends Component {
             }
           })
           .filter((datum) => datum != false)
-      categories = data.map((datum) => datum[0])
+      categories =
+        data
+          .map((datum) => datum[0])
+          .filter((datum) => typeof datum !== 'undefined')
     } else {
         bar_data =
           data
