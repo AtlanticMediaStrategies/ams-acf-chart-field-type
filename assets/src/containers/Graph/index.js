@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import ReactDOM from 'react-dom'
 import LineGraph from '../../components/Graphs/LineGraph.js'
 import DataTable from '../../components/Table/DataTable.js'
 import PieChart from '../../components/Graphs/PieChart.js'
@@ -21,17 +22,11 @@ export default class Graph extends Component {
    *  Bind resize function for responsive graphs
    */
   componentDidMount() {
-
     const { id } = this.props;
 
-    // differing parent based on whether in wp-admin or not
-    let parent_selector = `.acf-chart[data-id="${id}"]`;
-    if(document.querySelector('.values')) {
-      parent_selector = `.values ${parent_selector}`
-    }
-
-    const parent = document.querySelector(parent_selector);
-    let width = parent.offsetWidth
+    const svg = ReactDOM.findDOMNode(this);
+    const parent = svg.parentNode;
+    const width = parent.offsetWidth;
     this.setState({ width: this.props.width || width })
 
     const calculateWidth = () => {
@@ -45,7 +40,6 @@ export default class Graph extends Component {
         underscore.debounce(calculateWidth, 200)
       )
     })
-
     setTimeout(() => this.setState({ready: true}), 200)
   }
 
@@ -65,10 +59,17 @@ export default class Graph extends Component {
       x_axis,
       y_axis,
       active_rows,
-      active_columns
+      active_columns,
+      title,
+      subtitle,
+      source
     } = this.props.graph
 
     const ready = this.state.scrolled && this.state.ready
+
+    if(!data) {
+      return <div></div>
+    }
 
     const filtered_data = data.map((dat, i) =>  {
       return (active_rows[i] === true) ? dat : false
@@ -116,7 +117,10 @@ export default class Graph extends Component {
         <Waypoint
           onEnter={this.scrolled.bind(this)}
         />
+        <h1>{ title }</h1>
+        <h3>{ subtitle }</h3>
         {graph}
+        <p><i>Source: { source }</i></p>
       </div>
     )
   }

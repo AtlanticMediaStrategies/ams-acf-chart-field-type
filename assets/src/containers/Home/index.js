@@ -31,13 +31,16 @@ import Graph from '../Graph';
   state => state.app,
   dispatch => bindActionCreators(actionCreators, dispatch)
 )
-export class Home extends Component {
+export default class Home extends Component {
   constructor(props) {
     super(props)
     // disable prompt acf has when navigating away from page
     Object.assign(window.acf.unload, {active: false})
+    const { id, name, created, data } = props;
     this.state = {
-      id: null,
+      id,
+      name,
+      created,
       edit: false,
       overlay_open: false
     }
@@ -51,18 +54,10 @@ export class Home extends Component {
    *  Calculate which graph to pull in
    */
   componentDidMount() {
-    const section = ReactDOM.findDOMNode(this)
-    let parent = section.parentNode;
-    while(!parent.classList.contains('acf-chart')) {
-      parent = parent.parentNode;
+    const { id, name, data, created } = this.props
+    if(created === false) {
+      this.props.set_data(data, id, name)
     }
-    const location = qs.parse(window.location.search.replace('?', ''))
-    const id_param = parent.getAttribute('data-id');
-    const id = location.post || id_param
-    parent.setAttribute(`data-id`, id)
-    const name = parent.getAttribute('data-name')
-    this.props.init_data(id, name)
-    this.setState({id, name})
   }
 
   /**
@@ -79,7 +74,6 @@ export class Home extends Component {
 
       const elm = ReactDOM.findDOMNode(this)
       const svg = elm.querySelector('.Overlay svg')
-
       const can = new Canvas();
 
       let {
@@ -152,24 +146,9 @@ export class Home extends Component {
           throw err
         }
         const graph = Object.assign({data: res, type: 'line'}, initialGraph);
-        const json = JSON.stringify(graph)
-
-        request({
-          url: `/acf-chart/update/${this.state.id}/${this.state.name}/`,
-          method: 'POST',
-          data: {
-            json
-          }
-        })
-        .then(() => {
-          this.props.create_graph(graph, this.state.id, this.state.name)
-          this.setState({
-            edit: false
-          })
-          this.saveImage()
-        })
-        .catch(err => {
-          console.log(err)
+        this.props.create_graph(graph, this.state.id, this.state.name)
+        this.setState({
+          edit: false
         })
       })
     }
@@ -187,40 +166,45 @@ export class Home extends Component {
     })
   }
 
-  save_graph(graph, e) {
-    e.preventDefault()
-    this.props.save_graph(graph, this.state.id, this.state.name)
-  }
-
   toggleOverlay(e) {
     e.preventDefault()
     this.setState({overlay_open: !this.state.overlay_open})
   }
 
   render() {
-
-    const {
-      graphs
-    } = this.props
-
-    if(!graphs || !this.state.name) {
-      return <div></div>
+    // cloned from acfcloneindex
+    if(this.state.created === true) {
+      return (<div>
+        <fieldset>
+          <label htmlFor={this.state.name}>Title</label>
+          <input type="text" name={this.state.name}/>
+        </fieldset>
+        <p>
+          Enter the title for the graph, you will be able to upload the chart
+          after updating the post.
+        </p>
+      </div>)
     }
 
-    const post_graphs = graphs[this.state.id]
+    const {graphs, id , name } = this.props
+    const post_graph = graphs[id];
+    if(!post_graph) {
+      return <div>loading...</div>
+    }
 
-    if(!post_graphs || !post_graphs[this.state.name]) {
+    const graph = graphs[id][name]
+
+    if(!graph) {
       return <div>loading</div>
     }
 
-    const graph = post_graphs[this.state.name]
 
     let {
       type,
       data,
       colors,
       currentColumn
-    } = post_graphs[this.state.name]
+    } = graph
 
     if(!type) {
       type = 'line'
@@ -269,12 +253,6 @@ export class Home extends Component {
           style={{ marginRight: '8px' }}
           onClick={this.saveImage.bind(this)}>Save as thumbnail
         </Button>
-
-        <Button
-          theme='success'
-          onClick={this.save_graph.bind(this, graph)}>Save Graph
-        </Button>
-
       </div>
     ) : (
       <Dropzone onDrop={this.handleFiles.bind(this)} accept="text/csv">
@@ -318,7 +296,11 @@ export class Home extends Component {
             </Close>
           </div>
         </Overlay>
-        <Button onClick={this.toggleOverlay.bind(this)}>Test</Button>
+        <input
+          readOnly
+          type="hidden"
+          name={this.state.name}
+          value={JSON.stringify(graph)} />
       </section>
     );
 
