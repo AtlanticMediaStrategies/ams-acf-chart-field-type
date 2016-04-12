@@ -9,13 +9,20 @@ const store = configureStore({});
 require('es6-shim')
 import Frontend from './containers/Frontend';
 
-const apps = document.querySelectorAll('.acf-chart');
+const inputs = document.querySelectorAll('.acf-chart-input');
 
-Array.from(apps).forEach(app => {
+Array.from(inputs).forEach(input => {
+  const id = input.getAttribute('data-id')
+  const name = input.getAttribute('data-name')
+  const data = JSON.parse(input.value)
   ReactDOM.render(
     <Provider store={store}>
-      <Frontend></Frontend>
+      <Frontend
+        id={id}
+        name={name}
+        data={data}
+      ></Frontend>
     </Provider>,
-    app
+    input.parentNode
   )
 })
