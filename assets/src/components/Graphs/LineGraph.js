@@ -18,8 +18,8 @@ export default class LineGraph extends Component {
     }
   }
 
-  componentWillReceiveProps({ready}) {
-    if(ready === true) {
+  componentWillReceiveProps({ready, disableAnimation}) {
+    if(ready === true && disableAnimation !== true) {
       const elm = ReactDOM.findDOMNode(this)
       new Vivus(elm)
     }
@@ -32,7 +32,8 @@ export default class LineGraph extends Component {
       colors,
       x_axis,
       y_axis,
-      ready
+      ready,
+      active_columns
     } = this.props;
 
     if(!data || !width) {
@@ -46,7 +47,8 @@ export default class LineGraph extends Component {
       if(i == 0) return
       // TODO: flexible x axis
       const parsed_date = date.replace('/', '/20');
-      return new moment(parsed_date, 'M/YYYY').toDate()
+      const moment_date = new moment(parsed_date, 'M/YYYY').toDate()
+      return moment_date;
     })
 
     const lines =
@@ -56,16 +58,13 @@ export default class LineGraph extends Component {
             return datum
           }
           const label = datum[0]
-          const line_data = datum.map((y, j) => {
-            if(j < 1) {
-              return
-            }
+          let line_data;
+          line_data = active_columns.map((j) => {
             return {
               x: x_values[j],
-              y: parseInt(y)
+              y: parseInt(datum[j])
             }
-          });
-          line_data.shift() // shift off label
+          })
 
           return (
             <VictoryLine
@@ -77,14 +76,13 @@ export default class LineGraph extends Component {
               }}
               key={i}
               label={label}
-              interpolation='monotone'
+              interpolation='cardinal'  
               padding={100}
               data={line_data}>
             </VictoryLine>
           );
-        })
+      })
       .filter((datum) => datum !== false)
-
 
     const padding = {
       top: 50,

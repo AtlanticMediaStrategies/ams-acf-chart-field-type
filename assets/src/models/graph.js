@@ -1,8 +1,42 @@
 export const initialGraph = {
-  active: [],
+  /**
+   *  Active rows {Array<Boolean>}
+   *
+   *  Mapping of rows
+   */
+  active_rows: [],
+  /*
+   *  Active columns {Array<Boolean>}
+   *
+   *  Mapping of which columns to pull in
+   */
+  active_columns: [],
+  /**
+   *  Mapping of rows to graph color
+   */
   colors: [],
+  /**
+   *  Label for the x axis
+   */
   x_axis: "",
+  /**
+   * Label for the y axis
+   */
   y_axis: "",
+  /**
+   *  Type for the graph (valid: line, pie, bar)
+   */
   type: "line",
-  currentColumn: 1
+  /**
+   *  Appears above graph
+   */
+   title: "",
+   /**
+    *  Appears below title
+    */
+   subtitle: "",
+   /**
+    *  Appears under graph
+    */
+   source: "",
 }
