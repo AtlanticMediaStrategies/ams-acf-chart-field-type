@@ -2,27 +2,27 @@ import React, { Component } from 'react';
 import {
   VictoryBar,
   VictoryAxis,
+  VictoryGroup,
   VictoryChart
 } from 'victory';
 
 export default class BarChart extends Component {
 
   static propTypes = {
-    data: React.PropTypes.array,
-    width: React.PropTypes.number
+    data: React.PropTypes.array
   }
 
   render() {
     let {
       data,
-      width,
       colors,
       currentColumn,
       x_axis,
       y_axis,
       ready,
       columns_constrained,
-      active_columns
+      active_columns,
+      width
     } = this.props
 
     if(!data) {
@@ -33,7 +33,7 @@ export default class BarChart extends Component {
 
     const dates = data.shift()
 
-    let bar_data, categories;
+    let bar_data, categories, bars;
     if(active_columns.length === 1) {
       const column = active_columns[0]
       bar_data =
@@ -44,7 +44,7 @@ export default class BarChart extends Component {
             }
             return {
               x: datum[0],
-              y: ready ? parseInt(datum[column]) : 0,
+              y: parseInt(datum[column]),
               label: datum[column],
               fill: colors[x + 1],
               width: 28,
@@ -55,6 +55,16 @@ export default class BarChart extends Component {
         data
           .map((datum) => datum[0])
           .filter((datum) => typeof datum !== 'undefined')
+
+      bars = (
+        <VictoryBar
+          animate={{velocity: 0.02}}
+          domainPadding={18}
+          data={bar_data}
+        >
+        </VictoryBar>
+      )
+
     } else {
         bar_data =
           data
@@ -76,17 +86,29 @@ export default class BarChart extends Component {
             })
             .filter(datum => datum !== false)
       categories = active_columns.map(column => dates[column])
+
+      const multiple_bars = bar_data.map((data, i) => {
+        return (
+          <VictoryBar
+            animate={{velocity: 0.02}}
+            key={i}
+            domainPadding={18}
+            data={data}
+          >
+          </VictoryBar>
+        )
+      })
+      bars = <VictoryGroup>{ multiple_bars }</VictoryGroup>
     }
 
     return (
-      <VictoryChart width={width}>
-        <VictoryBar
-          animate={{velocity: 0.02}}
-          domainPadding={18}
-          data={bar_data}
-        >
-        </VictoryBar>
+      <VictoryChart
+        width={width}
+        domainPadding={{x: 32}}
+      >
 
+        { bars }
+        
         <VictoryAxis
           label={x_axis}
           tickValues={categories}

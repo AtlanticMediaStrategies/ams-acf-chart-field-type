@@ -28,18 +28,6 @@ export default class Graph extends Component {
     const parent = svg.parentNode;
     const width = parent.offsetWidth;
     this.setState({ width: this.props.width || width })
-
-    const calculateWidth = () => {
-      this.setState({width: parent.offsetWidth});
-    }
-
-    require(['underscore'], (score) => {
-      const underscore = window._ || score;
-      window.addEventListener(
-        'resize',
-        underscore.debounce(calculateWidth, 200)
-      )
-    })
     setTimeout(() => this.setState({ready: true}), 200)
   }
 

@@ -47,7 +47,8 @@ export default class LineGraph extends Component {
       if(i == 0) return
       // TODO: flexible x axis
       const parsed_date = date.replace('/', '/20');
-      return new moment(parsed_date, 'M/YYYY').toDate()
+      const moment_date = new moment(parsed_date, 'M/YYYY').toDate()
+      return moment_date;
     })
 
     const lines =
@@ -75,7 +76,7 @@ export default class LineGraph extends Component {
               }}
               key={i}
               label={label}
-              interpolation='monotone'
+              interpolation='cardinal'  
               padding={100}
               data={line_data}>
             </VictoryLine>

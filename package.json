@@ -108,7 +108,7 @@
     "reflexbox": "^1.1.0",
     "reqwest-without-xhr2": "^2.0.2",
     "underscore": "^1.8.3",
-    "victory": "^0.4.0",
+    "victory": "^0.6.0",
     "vivus": "rbvea/vivus"
   }
 }
