@@ -50,8 +50,18 @@ export default class PieChart extends Component {
           })
           .filter((datum) => datum != false)
 
+      if(width < 768) {
+        var BoxProps = {
+          col: 12
+        }
+      } else {
+        var BoxProps = {
+          auto: true
+        }
+      }
+
       return (
-        <Box col="6">
+        <Box {...BoxProps}>
           <VictoryPie
             animate={{duration: 1200}}
             width={(width / 2) - 20}
@@ -67,8 +77,13 @@ export default class PieChart extends Component {
       )
     })
 
+    const FlexProps = {}
+    if(width < 768) {
+      Object.assign(FlexProps, {wrap: true})
+    }
+
     return (
-      <Flex wrap={true}>
+      <Flex {...FlexProps} >
         {pies}
       </Flex>
     )
