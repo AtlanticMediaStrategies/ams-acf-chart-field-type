@@ -174,19 +174,14 @@ export default class Home extends Component {
   render() {
     // cloned from acfcloneindex
     if(this.state.created === true) {
-      return (<div>
-        <fieldset>
-          <label htmlFor={this.state.name}>Title</label>
-          <input type="text" name={this.state.name}/>
-        </fieldset>
+      return (
         <p>
-          Enter the title for the graph, you will be able to upload the chart
-          after updating the post.
+          Please update post to upload the csv files.
         </p>
-      </div>)
+      )
     }
 
-    const {graphs, id , name } = this.props
+    const { graphs, id , name } = this.props
     const post_graph = graphs[id];
     if(!post_graph) {
       return <div>loading...</div>
@@ -246,7 +241,7 @@ export default class Home extends Component {
 
         <Divider/>
 
-        <h1>Update Graph</h1>
+        <h1> Graph Settings </h1>
 
         <Button
           theme='success'
@@ -265,13 +260,16 @@ export default class Home extends Component {
     return (
       <section>
         {main}
+
         <Divider/>
+
         <Button
           backgroundColor={this.state.edit === true ? 'white': 'primary'}
           color={this.state.edit === true ? 'primary': 'white'}
           style={{ marginRight: '8px' }}
           onClick={this.toggleEdit.bind(this)}>Edit data
         </Button>
+
         <Overlay
           style={{
             backgroundColor: '#FDFDFD',
@@ -296,11 +294,13 @@ export default class Home extends Component {
             </Close>
           </div>
         </Overlay>
+
         <input
           readOnly
           type="hidden"
           name={this.state.name}
           value={JSON.stringify(graph)} />
+
       </section>
     );
 

@@ -47,10 +47,7 @@ export default class Graph extends Component {
       x_axis,
       y_axis,
       active_rows,
-      active_columns,
-      title,
-      subtitle,
-      source
+      active_columns
     } = this.props.graph
 
     const ready = this.state.scrolled && this.state.ready
@@ -105,10 +102,7 @@ export default class Graph extends Component {
         <Waypoint
           onEnter={this.scrolled.bind(this)}
         />
-        <h1>{ title }</h1>
-        <h3>{ subtitle }</h3>
         {graph}
-        <p><i>Source: { source }</i></p>
       </div>
     )
   }

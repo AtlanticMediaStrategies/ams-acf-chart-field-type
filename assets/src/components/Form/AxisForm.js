@@ -1,17 +1,14 @@
 import React, { Component } from 'react'
 import AxisForm from '../../components/Form/AxisForm.js'
-import { Label, Input, Button } from 'rebass'
+import { Label, Input, Button, Divider } from 'rebass'
 import styles from './styles.scss'
-import { Flex, Box} from 'reflexbox';
+import { Flex, Box } from 'reflexbox';
 
 export default class AxisFormContainer extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      title: props.graph.title || "",
-      subtitle: props.graph.subtitle || "",
-      subtitle: props.graph.source || "",
       x_axis: props.graph.x_axis,
       y_axis: props.graph.y_axis,
     }
@@ -26,13 +23,10 @@ export default class AxisFormContainer extends Component {
 
   update_graph(e) {
     e.preventDefault()
-    const { title, subtitle, x_axis, y_axis, source } = this.state;
+    const { x_axis, y_axis } = this.state;
     this.props.set_graph_value(this.props.id, this.props.name,  {
-      title,
-      subtitle,
       x_axis,
-      y_axis,
-      source
+      y_axis
     })
   }
 
@@ -58,39 +52,12 @@ export default class AxisFormContainer extends Component {
     }
 
     const { x_axis, y_axis } = this.props.graph
-    const title = this.props.graph.title || ""
-    const subtitle = this.props.graph.subtitle || ""
 
     return (
       <div className={styles.wrapper}>
+        <Divider></Divider>
+        <h1>Axis Labels</h1>
         <Flex wrap={true}>
-          <Box col={6} px={1}>
-            <Input
-              label="Title"
-              name="title"
-              onChange={this.update_state.bind(this, 'title')}
-              defaultValue={title}
-            >
-            </Input>
-          </Box>
-          <Box col={6} px={1}>
-            <Input
-              label="Subtitle"
-              name="subtitle"
-              onChange={this.update_state.bind(this, 'subtitle')}
-              defaultValue={subtitle}
-            >
-            </Input>
-          </Box>
-          <Box col={12} px={1}>
-            <Input
-              label="Source"
-              name="source"
-              onChange={this.update_state.bind(this, 'source')}
-              defaultValue={subtitle}
-            >
-            </Input>
-          </Box>
           <Box col={6} px={1}>
             <Input
               label="X Axis"
@@ -111,7 +78,7 @@ export default class AxisFormContainer extends Component {
           </Box>
         </Flex>
         <Button theme='success' onClick={this.update_graph.bind(this)}>
-          Update Graph
+          Update Graph Labels
         </Button>
       </div>
     )
