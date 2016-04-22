@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { axis_styles } from './config.js';
 import {
   VictoryBar,
   VictoryAxis,
@@ -33,6 +34,12 @@ export default class BarChart extends Component {
 
     const dates = data.shift()
 
+    const bar_styles = {
+      labels: {
+        fontFamily: 'allstate-sans, sans-serif'
+      }
+    }
+
     let bar_data, categories, bars;
     if(active_columns.length === 1) {
       const column = active_columns[0]
@@ -60,6 +67,7 @@ export default class BarChart extends Component {
         <VictoryBar
           animate={{velocity: 0.02}}
           domainPadding={18}
+          style={ bar_styles }
           data={bar_data}
         >
         </VictoryBar>
@@ -93,6 +101,7 @@ export default class BarChart extends Component {
             animate={{velocity: 0.02}}
             key={i}
             domainPadding={18}
+            style={ bar_styles }
             data={data}
           >
           </VictoryBar>
@@ -108,15 +117,17 @@ export default class BarChart extends Component {
       >
 
         { bars }
-        
+
         <VictoryAxis
-          label={x_axis}
-          tickValues={categories}
+          label={ x_axis }
+          style={ axis_styles }
+          tickValues={ categories }
         ></VictoryAxis>
 
         <VictoryAxis
           dependentAxis
-          label={y_axis}
+          style={ axis_styles }
+          label={ y_axis }
         >
         </VictoryAxis>
 

@@ -67,7 +67,8 @@ export default class PieChart extends Component {
             width={(width / 2) - 20}
             style={{
               labels: {
-                fill: '#FDFDFD'
+                fill: '#FDFDFD',
+                fontFamily: 'allstate-sans, sans-serif'
               }
             }}
             data={pie_data}

@@ -17,3 +17,12 @@
     "#8BC4FF",
     "#FF00A2"
   ];
+
+const axis_styles = {
+  tickLabels: {
+    fontFamily: "allstate-sans, sans-serif"
+  },
+  axisLabels: {
+    fontFamily: "allstate-sans, sans-serif"
+  }
+}

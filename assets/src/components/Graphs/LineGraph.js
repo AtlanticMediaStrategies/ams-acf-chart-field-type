@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import { axis_styles } from './config.js'
 import {
   VictoryChart,
   VictoryLine,
@@ -72,11 +73,14 @@ export default class LineGraph extends Component {
                 data: {
                   stroke: colors[i + 1],
                   strokeWidth: 4
+                },
+                labels: {
+                  fontFamily: "allstate-sans, sans-serif"
                 }
               }}
               key={i}
               label={label}
-              interpolation='cardinal'  
+              interpolation='cardinal'
               padding={100}
               data={line_data}>
             </VictoryLine>
@@ -120,13 +124,15 @@ export default class LineGraph extends Component {
           standalone={true}
           dependentAxis
           label={y_axis}
-          padding={axisPadding}
+          styles={ axis_styles }
+          padding={ axisPadding }
         >
         </VictoryAxis>
         <VictoryAxis
           scale="time"
-          label={x_axis}
-          padding={axisPadding}
+          label={ x_axis }
+          padding={ axisPadding }
+          styles={ axis_styles }
           tickFormat={(date) => new moment(date).format('MM/YYYY')}
           >
         </VictoryAxis>
