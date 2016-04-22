@@ -40,8 +40,22 @@ export default class BarChart extends Component {
       }
     }
 
+
+    const bar_count = data.filter(data => data !== false).length
+    const gutter = 120
+    let bar_width = ( width / bar_count ) - gutter
+
+    if(bar_width > 120) {
+      bar_width = 120
+    }
+
+    if(bar_width < 80) {
+      bar_width = 80
+    }
+
     let bar_data, categories, bars;
     if(active_columns.length === 1) {
+
       const column = active_columns[0]
       bar_data =
         data
@@ -54,7 +68,7 @@ export default class BarChart extends Component {
               y: parseInt(datum[column]),
               label: datum[column],
               fill: colors[x + 1],
-              width: 28,
+              width: bar_width,
             }
           })
           .filter((datum) => datum != false)
@@ -65,9 +79,7 @@ export default class BarChart extends Component {
 
       bars = (
         <VictoryBar
-          horizontal
           animate={{velocity: 0.02}}
-          domainPadding={18}
           style={ bar_styles }
           data={bar_data}
         >
@@ -75,6 +87,8 @@ export default class BarChart extends Component {
       )
 
     } else {
+
+
         bar_data =
           data
             .map((datum, i) => {
@@ -86,7 +100,7 @@ export default class BarChart extends Component {
                   x: dates[column],
                   y: parseInt(datum[column]),
                   label: datum[column],
-                  width: 20,
+                  width: bar_width,
                   fill: colors[i + 1],
                   strokeWidth: 1,
                   stroke: '#FAFAFA'
@@ -96,13 +110,12 @@ export default class BarChart extends Component {
             .filter(datum => datum !== false)
       categories = active_columns.map(column => dates[column])
 
+      console.log(bar_data)
+
       const multiple_bars = bar_data.map((data, i) => {
         return (
           <VictoryBar
-            horizontal
-            animate={{velocity: 0.02}}
             key={i}
-            domainPadding={18}
             style={ bar_styles }
             data={data}
           >
@@ -115,7 +128,7 @@ export default class BarChart extends Component {
     return (
       <VictoryChart
         width={width}
-        domainPadding={{x: 32}}
+        domainPadding={{ x: gutter }}
       >
 
         { bars }
