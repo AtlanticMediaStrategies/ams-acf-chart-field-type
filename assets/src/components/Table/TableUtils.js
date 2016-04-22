@@ -27,7 +27,7 @@ export class HideShow extends Component {
     }
 
     render() {
-      const { i, active } = this.props
+      const { i, active, colors } = this.props
 
       return (
         <td
@@ -115,8 +115,6 @@ export class EditColor extends Component {
       name
     } = this.props
 
-    const presetColors = ['#0062ff', '#ffc000', '#ff004c', '#cbcbcb', '#000000'];
-
     return (
       <td
         key='edit'
@@ -133,7 +131,7 @@ export class EditColor extends Component {
 
         <Button
           style={{display: active ? 'inline': 'none'}}
-          onClick={this.props.update_graph.bind(this)}
+          onClick={this.props.reset_active.bind(this)}
           theme="success"
         >
           Save
@@ -152,11 +150,11 @@ export class EditColor extends Component {
         </Button>
 
         <Picker
-          type="sketch"
+          type="compact"
           color={ colors[i] }
           onChange={ this.set_color.bind(this) }
           onClose={ this.picker_closed.bind(this) }
-          presetColors={presetColors}
+          colors={ colors }
           display= { this.state.picker_open }
         >
         </Picker>

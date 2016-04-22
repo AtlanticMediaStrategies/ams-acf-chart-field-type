@@ -123,7 +123,8 @@ export default class DataTable extends Component {
     const {
       graph,
       activeRow,
-      activeName
+      activeName,
+      reset_active
     } = this.props
 
     if(!graph) {
@@ -166,11 +167,11 @@ export default class DataTable extends Component {
 
         columns.unshift(
           <EditColor
-            i={i}
+            i={ i }
             key={`edit-${i}`}
-            active={this.active_row(i)}
-            colors={colors}
-            update_graph={this.update_graph}
+            active={ this.active_row(i) }
+            colors={ colors }
+            reset_active={ this.props.reset_active }
             {...this.props}
           ></EditColor>
         )

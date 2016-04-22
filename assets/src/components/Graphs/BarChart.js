@@ -65,6 +65,7 @@ export default class BarChart extends Component {
 
       bars = (
         <VictoryBar
+          horizontal
           animate={{velocity: 0.02}}
           domainPadding={18}
           style={ bar_styles }
@@ -98,6 +99,7 @@ export default class BarChart extends Component {
       const multiple_bars = bar_data.map((data, i) => {
         return (
           <VictoryBar
+            horizontal
             animate={{velocity: 0.02}}
             key={i}
             domainPadding={18}
