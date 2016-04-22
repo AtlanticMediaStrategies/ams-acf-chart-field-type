@@ -71,7 +71,6 @@ class acf_field_chart extends acf_field {
 
 
 		$debug = new Logger('acf');
-		$debug->pushHandler(new ChromePHPHandler());
 		$debug->pushHandler(new ErrorLogHandler());
 
 		$this->debug = $debug;
@@ -85,13 +84,6 @@ class acf_field_chart extends acf_field {
 	 *  Maps upstatement/router
 	 */
 	function map_routes() {
-		Routes::map('/acf-chart/update/:id/:name', function($params) {
-			$this::updateData($_POST, $params);
-		});
-		Routes::map('/acf-chart/:id/:name', function($params) {
-			$this::readData($params);
-		});
-
 		Routes::map('/acf-chart/thumbnail/:id/:name', function($params) {
 			$this::saveThumbnail($_POST, $params);
 		});
@@ -124,33 +116,6 @@ class acf_field_chart extends acf_field {
 		}
 		update_post_meta($params['id'], 'thumbnail', $file_return['url']);
 		die(json_encode($file_return));
-	}
-
-	/**
-	 *  @param $params {array} param array
-	 */
-	function readData($params) {
-		header('Content-Type: application/json');
-		$data = get_post_meta($params['id'], $params['name']);
-		die(json_encode(array_shift($data)));
-	}
-
-	/**
-	 *  @param $post {array}  the $_POST php array
-	 *  @param $params {array} route array
-	 */
-	function updateData($post, $params) {
-		header('Content-Type: application/json');
-		$res = update_post_meta($params['id'], $params['name'], $post['json']);
-		if($res === false) {
-			header('status: 500');
-			die('Error');
-		} else {
-			if(function_exists('clean_post_cache')) {
-				clean_post_cache($params['id']);
-			}
-		}
-		die(json_encode($res));
 	}
 
 	/*
@@ -210,11 +175,6 @@ class acf_field_chart extends acf_field {
 		$value = $field['value'];
 		echo "<div data-name=\"$name\" class=\"acf-chart-name\"></div>$value";
 	}
-
-	function update_field( $field ) {
-
-	}
-
 
 	/*
 	*  input_admin_enqueue_scripts()
