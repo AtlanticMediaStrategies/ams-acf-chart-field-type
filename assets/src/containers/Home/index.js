@@ -283,7 +283,6 @@ export default class Home extends Component {
             <Graph
               graph={graph}
               disableAnimation={true}
-              width={1080}
               id={this.state.id}
             >
             <h1 style={{textAlign: 'center'}}>Generating graph...</h1>
