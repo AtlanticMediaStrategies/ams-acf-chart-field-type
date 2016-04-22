@@ -93,30 +93,10 @@ function update_graph(graph, id, name) {
   }
 }
 
-function reset_active() {
+export function reset_active(e) {
+  e.preventDefault()
   return {
     type: 'RESET_ACTIVE'
-  }
-}
-
-export function save_graph(graph, id, name) {
-  const json = JSON.stringify(graph)
-  return function(dispatch) {
-    request({
-      url: `/acf-chart/update/${id}/${name}`,
-      method: 'POST',
-      data: {
-        json
-      }
-    })
-    .then(data => {
-      notie.alert(1, 'Graph Saved')
-      dispatch(update_graph(graph, id, name))
-      dispatch(reset_active())
-    })
-    .catch(err  => {
-      notie.alert(2, 'An error occurred')
-    })
   }
 }
 
