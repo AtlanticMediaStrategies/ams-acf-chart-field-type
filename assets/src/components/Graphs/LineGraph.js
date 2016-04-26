@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
-import { axis_styles } from './config.js'
+import { axis_styles, date_format } from './config.js'
+import { parse_date } from './utils.js'
 import {
   VictoryChart,
   VictoryLine,
@@ -22,6 +23,13 @@ export default class LineGraph extends Component {
   componentWillReceiveProps({ready, disableAnimation}) {
     if(ready === true && disableAnimation !== true) {
       const elm = ReactDOM.findDOMNode(this)
+      let biggest = -9999;
+      Array.from(elm.querySelectorAll('text[data-reactid*=line-label]')).forEach(label => {
+        if(label.getBoundingClientRect().width > biggest) {
+          biggest = label.getBoundingClientRect().width
+        }
+      })
+      Object.assign(elm.style, {paddingRight: `${biggest}px`})
       new Vivus(elm)
     }
   }
@@ -35,7 +43,7 @@ export default class LineGraph extends Component {
       y_axis,
       ready,
       active_columns
-    } = this.props;
+    } = this.props
 
     if(!data || !width) {
       return <div></div>
@@ -44,13 +52,7 @@ export default class LineGraph extends Component {
     data = [...data]
 
     const dates = data.shift();
-    const x_values = dates.map((date, i) => {
-      if(i == 0) return
-      // TODO: flexible x axis
-      const parsed_date = date.replace('/', '/20');
-      const moment_date = new moment(parsed_date, 'M/YYYY').toDate()
-      return moment_date;
-    })
+    const x_values = dates.map(parse_date)
 
     const lines =
       data
@@ -58,11 +60,10 @@ export default class LineGraph extends Component {
           if(datum === false) {
             return datum
           }
-          const label = datum[0]
           let line_data;
           line_data = active_columns.map((j) => {
             return {
-              x: x_values[j],
+              x: x_values[j].toDate(),
               y: parseInt(datum[j])
             }
           })
@@ -72,34 +73,42 @@ export default class LineGraph extends Component {
               style={{
                 data: {
                   stroke: colors[i + 1],
-                  strokeWidth: 4
+                  strokeWidth: 2
                 },
                 labels: {
-                  fontFamily: "allstate-sans, sans-serif"
+                  fontFamily: "allstate-sans, sans-serif",
+                  fontSize: 14
                 }
               }}
-              key={i}
-              label={label}
+              key={ i }
+              label={ (width > 768) ? datum[0] : null }
               interpolation='cardinal'
-              padding={100}
-              data={line_data}>
+              padding={ 100 }
+              data={ line_data }>
             </VictoryLine>
           );
       })
       .filter((datum) => datum !== false)
 
-    const padding = {
+    const chart_padding = {
       top: 50,
-      right: 120,
+      right: 0, // make this dynamic
       bottom: 50,
       left: 50
+    }
+
+    if(width < 768) {
+      Object.assign(chart_padding, {
+        right: 32,
+        left: 32
+      })
     }
 
     // shift blank first row/column
     x_values.shift()
 
     // calculate height and try to keep same ratio
-    let height = width / 2.56;
+    let height = width * .721088435
 
     // min-height for graph
     if(height < 300) {
@@ -117,24 +126,34 @@ export default class LineGraph extends Component {
       <VictoryChart
         height={height}
         width={width}
-        padding={padding}
+        padding={ chart_padding }
       >
+
         {lines}
+
         <VictoryAxis
-          standalone={true}
           dependentAxis
           label={y_axis}
-          styles={ axis_styles }
+          style={ axis_styles }
           padding={ axisPadding }
         >
         </VictoryAxis>
+
+
         <VictoryAxis
           scale="time"
           label={ x_axis }
           padding={ axisPadding }
-          styles={ axis_styles }
-          tickFormat={(date) => new moment(date).format('MM/YYYY')}
-          >
+          style={ axis_styles }
+          tickFormat={(date, i) => {
+            if(width < 768) {
+              if(i != 0 && i != 6) {
+                return
+              }
+            }
+            return date.format(date_format)}
+          }
+        >
         </VictoryAxis>
       </VictoryChart>
     )
