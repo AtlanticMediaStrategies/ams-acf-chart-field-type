@@ -1,11 +1,12 @@
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
-import LineGraph from '../../components/Graphs/LineGraph.js'
+import LineGraph from '../../components/Graphs/LineGraph/LineGraph.js'
 import DataTable from '../../components/Table/DataTable.js'
 import PieChart from '../../components/Graphs/PieChart.js'
 import BarChart from '../../components/Graphs/BarChart.js'
-import Waypoint from 'react-waypoint'
+import Table from '../../components/Graphs/Table.js'
 
+import Waypoint from 'react-waypoint'
 import classnames from 'classnames'
 
 
@@ -78,18 +79,25 @@ export default class Graph extends Component {
       return <div>Please specify columns</div>
     }
 
-    if(type == 'pie') {
+    if(type === 'pie') {
       var graph =
         <PieChart
           {...chartProps}
         >
         </PieChart>
-    } else if (type == 'bar') {
+    } else if (type === 'bar') {
       var graph =
         <BarChart
           {...chartProps}
         >
         </BarChart>
+    } else if (type === 'table') {
+
+      var graph =
+        <Table
+          {...chartProps}
+        >
+        </Table>
     } else {
       var graph =
         <LineGraph

@@ -11,20 +11,18 @@ const store = configureStore({});
 const history = syncHistoryWithStore(browserHistory, store);
 import a11y from 'react-a11y';
 import qs from 'qs';
-
-// if(process.env.NODE_ENV !== 'production') {
-//   a11y(React);
-// }
+require('scrollsnap-polyfill/dist/scrollsnap-polyfill.bundled.js')
 require('es6-shim')
+require('flexibility')
 
 // handle underscore conflicts
 window._.noConflict()
 
-const apps = document.querySelectorAll('.acf-chart-name');
+const apps = document.querySelectorAll('.acf-chart');
 
 Array.from(apps).forEach(app => {
-  const input = app.parentNode.querySelector('input')
-  const name = app.getAttribute('data-name')
+  const name = app.parentNode.querySelector('.acf-chart-name').getAttribute('data-name')
+  const input = app.querySelector('input')
   let id, data, created;
   if(!input) {
     const location = qs.parse(window.location.search.replace('?', ''))
@@ -33,7 +31,11 @@ Array.from(apps).forEach(app => {
     data = {}
   } else {
     id = input.getAttribute('data-id')
-    data = JSON.parse(input.value)
+    try {
+      data = JSON.parse(input.value)
+    } catch (e) {
+      data = {}
+    }
     created = false
   }
 
@@ -45,6 +47,6 @@ Array.from(apps).forEach(app => {
         created={created}
         data={data}/>
     </Provider>,
-    app.parentNode
+    app
   )
 })

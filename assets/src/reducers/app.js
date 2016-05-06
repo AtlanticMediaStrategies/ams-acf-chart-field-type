@@ -1,4 +1,4 @@
-import { colors } from '../components/Graphs/config.js';
+import { chart_colors } from '../components/Graphs/config.js';
 import qs from 'qs';
 const initialState  = {
   edit: false,
@@ -52,7 +52,7 @@ export function app(state = initialState, action) {
 
       // intialize base colors
       const graph_colors =
-        action.graph.data.map((color, i) => colors[i % colors.length])
+        action.graph.data.map((color, i) => chart_colors[i % chart_colors.length])
 
       Object.assign(action.graph, {
         active_rows: Array(action.graph.data.length).fill(true),

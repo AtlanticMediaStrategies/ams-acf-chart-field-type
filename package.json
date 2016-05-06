@@ -83,10 +83,12 @@
   },
   "dependencies": {
     "csv": "^0.4.6",
+    "d3-shape": "^0.6.0",
     "dropzone": "^4.3.0",
     "es6-shim": "^0.35.0",
     "fabric-webpack": "^1.6.0-rc.1",
     "famous-polyfills": "^0.3.0",
+    "flexibility": "^1.0.5",
     "json-loader": "^0.5.4",
     "moment": "^2.11.2",
     "notie": "^2.1.0",
@@ -99,16 +101,20 @@
     "react-colors-picker": "^2.3.0",
     "react-document-meta": "^2.0.2",
     "react-dropzone": "^3.3.2",
+    "react-hammerjs": "^0.4.6",
     "react-modal": "^0.6.1",
     "react-redux": "^4.0.6",
     "react-router": "^2.0.0",
     "react-router-redux": "^4.0.0",
+    "react-swipeable": "^3.3.1",
     "rebass": "^0.2.4",
     "redux": "^3.1.4",
     "reflexbox": "^1.1.0",
     "reqwest-without-xhr2": "^2.0.2",
+    "scrollsnap-polyfill": "^0.1.0",
     "underscore": "^1.8.3",
     "victory": "^0.6.1",
+    "victory-core": "^1.4.3",
     "vivus": "rbvea/vivus"
   }
 }

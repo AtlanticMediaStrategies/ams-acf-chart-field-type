@@ -47,6 +47,15 @@ export default class RadioGroup extends Component {
           value="bar"
         >
         </Radio>
+        <Radio
+          aria-label="Table"
+          label="Table"
+          name="table"
+          readOnly={ true }
+          checked={type == 'table'}
+          value="table"
+        >
+        </Radio>
       </form>
     )
   }
