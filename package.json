@@ -107,14 +107,18 @@
     "react-router": "^2.0.0",
     "react-router-redux": "^4.0.0",
     "react-swipeable": "^3.3.1",
+    "react-waypoint": "^2.0.2",
     "rebass": "^0.2.4",
     "redux": "^3.1.4",
     "reflexbox": "^1.1.0",
     "reqwest-without-xhr2": "^2.0.2",
     "scrollsnap-polyfill": "^0.1.0",
     "underscore": "^1.8.3",
-    "victory": "^0.6.1",
+    "velocity": "^0.7.2",
+    "velocity-animate": "^1.2.3",
+    "victory": "^0.7.0",
     "victory-core": "^1.4.3",
-    "vivus": "rbvea/vivus"
+    "vivus": "rbvea/vivus",
+    "web-animations-js": "^2.2.1"
   }
 }

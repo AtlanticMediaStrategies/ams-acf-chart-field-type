@@ -14,6 +14,8 @@ export default class Graph extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      width: 0,
+      bodyWidth: 0,
       ready: false,
       scrolled: props.disableAnimation || false,
     }
@@ -28,7 +30,10 @@ export default class Graph extends Component {
     const svg = ReactDOM.findDOMNode(this);
     const parent = svg.parentNode;
     const width = parent.offsetWidth;
-    this.setState({ width: this.props.width || width })
+    this.setState({
+      width: this.props.width || width,
+      bodyWidth: document.querySelector('body').offsetWidth
+    })
     setTimeout(() => this.setState({ready: true}), 200)
   }
 
@@ -61,8 +66,11 @@ export default class Graph extends Component {
       return (active_rows[i] === true) ? dat : false
     });
 
+    const { width, bodyWidth } = this.state
+
     const chartProps = {
-      width: this.state.width,
+      width,
+      bodyWidth,
       data: filtered_data,
       disableAnimation: this.props.disableAnimation,
       ready,

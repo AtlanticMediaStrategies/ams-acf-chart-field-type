@@ -8,29 +8,30 @@ export const chart_colors = [
 ];
 
 const gray = '#A5B3BE'
+const textPrimary = '#2f353e'
 
 export const axis_styles = {
   axis: {
-    stroke: '#D2D8DD',
+    stroke: gray,
     strokeWidth: 1
   },
   tickLabels: {
     fontFamily: "allstate-sans, sans-serif",
-    fill: '#A5B3BE',
+    fill: gray,
     fontSize: 14
   },
   ticks: {
-    stroke: '#D2D8DD',
+    stroke: gray,
     strokeWidth: 1
   },
-  axisLabels: {
-    stroke: '#A5B3BE',
+  axisLabel: {
+    fill: textPrimary,
     fontFamily: "allstate-sans, sans-serif",
     fontSize: 18
   },
   grid: {
     strokeWidth: 1,
-    stroke: '#D2D8DD',
+    stroke: gray,
   }
 }
 
@@ -44,3 +45,5 @@ export const y_axis_styles =
   )
 
 export const date_format = 'MMM \'YY'
+
+export const DESKTOP_WIDTH = 768

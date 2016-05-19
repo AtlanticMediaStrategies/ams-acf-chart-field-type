@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { VictoryPie, VictoryChart } from 'victory';
 import { Flex, Box } from 'reflexbox'
 import Legend from './Legend.js'
-import { parse_date } from './utils.js'
-import { date_format } from './config.js'
+import { parse_date, sort_by_index } from './utils.js'
+import { date_format, DESKTOP_WIDTH } from './config.js'
 import styles from './style.scss'
 
 /**
@@ -18,7 +18,8 @@ export default class PieChart extends Component {
       colors,
       ready,
       active_columns,
-      columns_constrained
+      columns_constrained,
+      bodyWidth
     } = this.props
 
     if(!this.props.data) {
@@ -37,11 +38,7 @@ export default class PieChart extends Component {
       width = 800
     }
 
-    // sort by index, indexes aren't even duplicated so just sort
-    // by lessthan/greaterthan
-    const sort_by_num = (one, two) => (one < two) ? -1 : 1
-
-    const pies = active_columns.sort(sort_by_num).map((index) => {
+    const pies = active_columns.sort(sort_by_index).map((index) => {
       let pie_data =
         data
           .map((datum, i) => {
@@ -49,13 +46,13 @@ export default class PieChart extends Component {
               return datum
             }
             const x = `${datum[index]}%`
-            const y = ready ? parseInt(datum[index]) : 90;
+            const y = parseInt(datum[index]);
             const fill = colors[i + 1]
             return { x , y, fill }
           })
           .filter((datum) => datum != false)
 
-      if(width < 769) {
+      if(bodyWidth < DESKTOP_WIDTH) {
         var BoxProps = {
           col: 12
         }
@@ -70,13 +67,13 @@ export default class PieChart extends Component {
         top: 50
       }
 
-      const pie_width = (width < 728)  ? width : width / 2
+      const pie_width = (bodyWidth < DESKTOP_WIDTH )  ? width : width / 2
 
       return (
         <Box {...BoxProps}>
           <VictoryPie
-            animate={{duration: 1200}}
-            width={pie_width}
+            width={ pie_width }
+            height={ bodyWidth }
             standalone={ true }
             style={{
               labels: {
@@ -98,7 +95,7 @@ export default class PieChart extends Component {
     })
 
     const FlexProps = {}
-    if(width < 768) {
+    if(bodyWidth < DESKTOP_WIDTH ) {
       Object.assign(FlexProps, {wrap: true})
     }
 

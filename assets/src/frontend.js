@@ -1,4 +1,6 @@
 require('es6-shim')
+require('flexibility')
+
 const inputs = document.querySelectorAll('.acf-chart-input');
 
 Array.from(inputs).forEach(input => {

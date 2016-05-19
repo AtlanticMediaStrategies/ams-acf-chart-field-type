@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { axis_styles, y_axis_styles } from './config.js'
+import { axis_styles, y_axis_styles, DESKTOP_WIDTH } from './config.js'
 import Legend from './Legend.js'
-import { parse_date } from './utils.js'
+import { parse_date, sort_by_index } from './utils.js'
 import {Flex, Box} from 'reflexbox'
 import { date_format } from './config.js'
+import styles from './style.scss'
 
 import {
   VictoryBar,
@@ -26,10 +27,10 @@ export default class BarChart extends Component {
       currentColumn,
       x_axis,
       y_axis,
-      ready,
       columns_constrained,
       active_columns,
-      width
+      width,
+      bodyWidth
     } = this.props
 
     if(!data) {
@@ -50,7 +51,12 @@ export default class BarChart extends Component {
     }
 
     const bar_count = data.filter(data => data !== false).length
-    const gutter = 120
+    let gutter = 120
+
+    if(bodyWidth < DESKTOP_WIDTH) {
+      gutter = 70
+    }
+
 
     let bar_width = ( width / bar_count ) - gutter
 
@@ -58,13 +64,10 @@ export default class BarChart extends Component {
       bar_width = 120
     }
 
-    if(bar_width < 80) {
-      bar_width = 80
-    }
+    // if(bar_width < 80) {
+    //   bar_width = 80
+    // }
 
-    if(width < 768) {
-      bar_width = 32
-    }
 
     let bar_data, categories, bars, legend;
     if(active_columns.length === 1) {
@@ -114,7 +117,7 @@ export default class BarChart extends Component {
               if(datum === false) {
                 return datum
               }
-              return active_columns.sort().map((column, j) => {
+              return active_columns.sort(sort_by_index).map((column, j) => {
                 return {
                   x: j + 1,
                   y: parseInt(datum[column]),
@@ -128,7 +131,7 @@ export default class BarChart extends Component {
 
       categories =
         active_columns
-          .sort()
+          .sort(sort_by_index)
           .map(column => dates[column].format(date_format))
 
       const multiple_bars = bar_data.map((data, i) => {
@@ -156,10 +159,16 @@ export default class BarChart extends Component {
       )
     }
 
-
-
     const wrap = width < 768;
     const height = (width < 768) ? 400 : 600
+
+    const bar_axis_styles = Object.assign({}, axis_styles, {
+      grid: {
+        strokeWidth: 0
+      }
+    })
+
+    const x_axis_label = (bodyWidth < 768) ? '' : x_axis
 
     return (
       <div>
@@ -171,17 +180,18 @@ export default class BarChart extends Component {
               domainPadding={{ x: gutter }}
             >
               <VictoryAxis
-                label={ x_axis }
-                style={ axis_styles }
+                label={ x_axis_label }
+                standalone={ false }
+                style={ bar_axis_styles }
                 tickValues={ categories }
                 tickFormat={(cat, i) => {
                   return categories[cat - 1]
                 }}
-
               ></VictoryAxis>
 
               <VictoryAxis
                 dependentAxis
+                standalone={ false }
                 tickCount={3}
                 style={ y_axis_styles }
                 label={ y_axis }
@@ -192,6 +202,7 @@ export default class BarChart extends Component {
               { bars }
 
             </VictoryChart>
+            <p className="mobileBarChartAxis"> { x_axis }</p>
           </Box>
           { legend }
         </Flex>

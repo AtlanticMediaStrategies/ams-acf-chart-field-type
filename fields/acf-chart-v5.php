@@ -198,6 +198,9 @@ class acf_field_chart extends acf_field {
 		wp_register_script( 'acf-input-chart', "{$dir}/assets/dist/bundle.js", '' , '', true);
 		wp_enqueue_script('acf-input-chart');
 
+		wp_register_style('acf-input-styles', "${dir}/assets/dist/bundle.css");
+		wp_enqueue_style('acf-input-styles');
+
 		// wp_register_script( 'acf-input-chart', "http://local.allstate.com:8080/assets/dist/bundle.js", '' , '', true);
 		// wp_enqueue_script('acf-input-chart');
 	}

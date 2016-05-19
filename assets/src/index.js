@@ -11,7 +11,6 @@ const store = configureStore({});
 const history = syncHistoryWithStore(browserHistory, store);
 import a11y from 'react-a11y';
 import qs from 'qs';
-require('scrollsnap-polyfill/dist/scrollsnap-polyfill.bundled.js')
 require('es6-shim')
 require('flexibility')
 
