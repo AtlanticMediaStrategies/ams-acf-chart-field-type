@@ -244,9 +244,6 @@ class acf_field_chart extends acf_field {
 	 */
 	function update_value( $value, $post_id, $field ) {
 		$esc_value = str_replace('\"', '"', $value);
-		if(json_decode($esc_value) === NULL) {
-			return '{"title": "'. $value .'"}';
-		}
 		return $value;
 	}
 
