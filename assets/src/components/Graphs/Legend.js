@@ -18,7 +18,7 @@ export default class Legend extends Component {
       if(datum === false) {
         return false
       }
-      return (<div className={styles.legendBoxList}>
+      return (<div className={styles.legendBoxList} key={i}>
         <div
           className={styles.legendBox}
           style={{ backgroundColor: colors[i + 1] }}></div>

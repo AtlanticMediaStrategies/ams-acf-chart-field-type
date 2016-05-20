@@ -33,6 +33,8 @@ export default class PieChart extends Component {
 
     const processed_dates = data.shift().map(parse_date)
 
+    const pie_colors = [];
+
     let width = this.props.width;
     if(width > 800) {
       width = 800
@@ -46,11 +48,15 @@ export default class PieChart extends Component {
               return datum
             }
             const x = `${datum[index]}%`
-            const y = parseInt(datum[index]);
-            const fill = colors[i + 1]
-            return { x , y, fill }
+            const y = parseInt(datum[index])
+            return { x , y }
           })
-          .filter((datum) => datum != false)
+          .filter((datum, i) => {
+            if(datum !== false) {
+              pie_colors.push(colors[i + 1])
+            }
+            return datum != false)
+          })
 
       if(bodyWidth < DESKTOP_WIDTH) {
         var BoxProps = {
@@ -69,12 +75,14 @@ export default class PieChart extends Component {
 
       const pie_width = (bodyWidth < DESKTOP_WIDTH )  ? width : width / 2
 
+      const height = (bodyWidth < DESKTOP_WIDTH) ? bodyWidth : undefined
       return (
-        <Box {...BoxProps}>
+        <Box key={index} {...BoxProps}>
           <VictoryPie
             width={ pie_width }
-            height={ bodyWidth }
+            height={ height }
             standalone={ true }
+            colorScale={ colors }
             style={{
               labels: {
                 fill: '#FDFDFD',
