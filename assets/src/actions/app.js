@@ -33,10 +33,9 @@ export function toggle_edit(fields) {
 }
 
 /**
- *  @param val {any} value to set
- *  @param key {string} option on graph to set
  *  @param id  {integer} id of the post
  *  @param name {string}  key for the graph
+ *  @param values {array} array of key/val objects
  */
 export function set_graph_value(id, name, values) {
   return {

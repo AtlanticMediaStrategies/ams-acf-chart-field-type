@@ -44,6 +44,11 @@ export default class Graph extends Component {
   }
 
   render() {
+
+    const {
+      show_export
+    } = this.props
+
     const {
       data,
       type,
@@ -53,7 +58,8 @@ export default class Graph extends Component {
       x_axis,
       y_axis,
       active_rows,
-      active_columns
+      active_columns,
+      thumbnail
     } = this.props.graph
 
     const ready = this.state.scrolled && this.state.ready
@@ -113,12 +119,30 @@ export default class Graph extends Component {
         </LineGraph>
     }
 
+    if(thumbnail && show_export) {
+      var download = (
+        <a href={ thumbnail } download="export.png">
+          Export
+          <svg style={{
+            width: '20px',
+            height: '20px',
+            position: 'relative',
+            top: '4px',
+            marginLeft: '8px'
+          }}>
+            <use xlinkHref="#download"/>
+          </svg>
+          </a>
+      )
+    }
+
     return  (
       <div>
         <Waypoint
           onEnter={this.scrolled.bind(this)}
         />
         {graph}
+        { download }
       </div>
     )
   }

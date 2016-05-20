@@ -27,4 +27,8 @@ export const initialGraph = {
    *  Type for the graph (valid: line, pie, bar)
    */
   type: "pie",
+  /**
+   *  URL for the image export
+   */
+   thumbnail: ""
 }

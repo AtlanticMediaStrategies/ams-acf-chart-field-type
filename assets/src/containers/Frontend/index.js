@@ -5,9 +5,10 @@ import Graph from '../Graph';
 const Frontend = ({id, data, name}) => {
   return (
     <Graph
-      graph={data}
-      name={name}
-      id={id}
+      graph={ data }
+      name={ name }
+      id={ id }
+      show_export={ true }
     />
   )
 }

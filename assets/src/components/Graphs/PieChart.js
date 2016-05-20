@@ -55,7 +55,7 @@ export default class PieChart extends Component {
             if(datum !== false) {
               pie_colors.push(colors[i + 1])
             }
-            return datum != false)
+            return datum != false
           })
 
       if(bodyWidth < DESKTOP_WIDTH) {

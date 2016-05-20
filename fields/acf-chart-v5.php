@@ -112,9 +112,10 @@ class acf_field_chart extends acf_field {
 
 		$file_return = wp_handle_sideload( $file, array( 'test_form' => false ) );
 		if(!$file_return) {
+			header('status: 500');
 			die('ERROR');
 		}
-		update_post_meta($params['id'], 'thumbnail', $file_return['url']);
+		// update_post_meta($params['id'], 'thumbnail', $file_return['url']);
 		die(json_encode($file_return));
 	}
 

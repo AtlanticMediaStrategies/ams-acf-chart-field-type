@@ -64,52 +64,147 @@ export default class Home extends Component {
    *  @function saveImage
    *  @description parses with fabric and posts
    */
-  saveImage(e) {
+  saveImage(graph, e) {
     e.preventDefault()
-    this.setState({overlay_open: true})
+    // this.setState({overlay_open: true})
     require(['fabric-webpack', 'notie'], ({fabric}, notie) => {
       const {
-        Canvas
+        Canvas,
+        Image,
+        Text,
+        Rect
       } = fabric;
 
       const elm = ReactDOM.findDOMNode(this)
-      const svg = elm.querySelector('.Overlay svg')
+      let parent = elm.parentNode;
+      while(!parent.classList.contains('acf-fields')) {
+        parent = parent.parentNode;
+      }
+
+      const title = parent.querySelector('div[data-name="title"] input').value
+      const subtitle = parent.querySelector('div[data-name="subtitle"] input').value
+      const description = parent.querySelector('div[data-name="description"] textarea').textContent
+
+      const svg = elm.querySelector('svg')
       const can = new Canvas();
 
-      let {
-        height,
-        width
-      } = svg.style;
+      const viewbox = svg.getAttribute('viewBox').split(/\s+/)
 
-      height = parseInt(height.replace('px', ''))
-      width = parseInt(width.replace('px', ''))
+      const width = parseInt(viewbox[2])
+      const height = parseInt(viewbox[3])
 
-      can.setWidth(width);
-      can.setHeight(height);
+      can.setWidth(width + 200)
+      can.setHeight(height + 400)
+      can.setBackgroundColor('white')
+
+      const {
+        type,
+        data,
+        active_rows,
+        colors
+      } = graph
+
+      const rows_clone = [...active_rows]
+
+      if(type === 'bar' || type === 'line') {
+        // generate legend
+        let n = 0;
+        rows_clone.reverse().forEach((row, i) => {
+          if(row === true && i > 0) {
+            console.log(`row: ${row}, i: ${i}`)
+            const color = colors[colors.length - i]
+            const label = data[data.length - i][0]
+
+            const top = can.getHeight() - (n++ * 30) - 60
+
+            const rect = new Rect({
+              fill: color,
+              width: 16,
+              height: 16
+            })
+            rect.setTop(top)
+            rect.setLeft(20)
+            can.add(rect)
+
+            const text = new Text(label, {
+              fontFamily: 'allstate-sans',
+              fontSize: 14,
+              lineheight: 16
+            })
+            text.setLeft(55)
+            text.setTop(top + 2)
+            can.add(text)
+          }
+        })
+      }
 
       const id = elm.parentNode.getAttribute('id')
       fabric.parseSVGDocument(svg, (layers) => {
-        layers.forEach(layer => can.add(layer))
-        let data = can.toDataURL()
-        if(data === 'data:,') {
-          notie.alert(3, 'Failed to parse svg', 2);
-          return
-        }
-
-        data = data.replace('data:image/png;base64,', '')
-
-        request({
-          method: 'POST',
-          url: `/acf-chart/thumbnail/${this.state.id}/${this.state.name}/`,
-          data: {
-            base64: data
+        layers.forEach((layer) => {
+          if(type === 'line' && layer.text && layer.fill != '#A5B3BE') {
+            layer.setLeft(layer.getLeft() + 9000) //remove label
+          } else {
+            layer.setLeft(layer.getLeft() + 80)
           }
+          if(type === 'bar' && layer.text && layer.fill === 'white') {
+            layer.setTop(layer.getTop() + 130)
+          } else {
+            layer.setTop(layer.getTop() + 120)
+          }
+          can.add(layer)
         })
-        .then(() => {
-          notie.alert(1, 'Success!', 2)
-          this.setState({overlay_open: false})
+
+        const titleElement = new Text(title, {
+          fill: '#E12C8A',
+          fontSize: 32,
+          fontWeight: 'bold',
+          fontFamily: 'allstate-sans, sans-serif'
         })
-        .fail(() => notie.alert(2, 'An error occurred', 2))
+        titleElement.setTop(20)
+        titleElement.setLeft(20)
+        can.add(titleElement)
+
+        const subtitleElement = new Text(subtitle, {
+          fill: '#2F353E',
+          fontSize: 24,
+          fontFamily: 'allstate-sans, sans-serif'
+        })
+
+        subtitleElement.setTop(64)
+        subtitleElement.setLeft(20)
+        can.add(subtitleElement)
+
+        Image.fromURL('/wp-content/themes/renewal-project/img/export-logo.png', (img) => {
+          img.setTop(can.getHeight() - img.getHeight() - 20)
+          img.setLeft(can.getWidth() - img.getWidth() - 20)
+
+          can.add(img)
+
+          let data = can.toDataURL()
+          if(data === 'data:,') {
+            notie.alert(3, 'Failed to parse svg', 2);
+            return
+          }
+
+          data = data.replace('data:image/png;base64,', '')
+
+          request({
+            method: 'POST',
+            url: `/acf-chart/thumbnail/${this.state.id}/${this.state.name}/`,
+            data: {
+              base64: data
+            }
+          })
+          .then((res) => {
+            const json = JSON.parse(res)
+            const { id, name } = this.state
+            this.props.set_graph_value(id, name, {
+              thumbnail: json.url
+            })
+            notie.alert(1, 'Success!', 2)
+          })
+          .fail(() => notie.alert(2, 'An error occurred', 2))
+        })
       })
     })
   }
@@ -164,11 +259,6 @@ export default class Home extends Component {
     this.setState({
       edit: !this.state.edit
     })
-  }
-
-  toggleOverlay(e) {
-    e.preventDefault()
-    this.setState({overlay_open: !this.state.overlay_open})
   }
 
   render() {
@@ -246,8 +336,11 @@ export default class Home extends Component {
         <Button
           theme='success'
           style={{ marginRight: '8px' }}
-          onClick={this.saveImage.bind(this)}>Save as thumbnail
+          onClick={this.saveImage.bind(this, graph)}>Generate image export
         </Button>
+        <div>
+          <img src={graph.thumbnail} style={{width: '100%', height: 'auto'}}/>
+        </div>
       </div>
     ) : (
       <Dropzone onDrop={this.handleFiles.bind(this)} accept="text/csv">
@@ -279,19 +372,6 @@ export default class Home extends Component {
           dark={true}
           box={true}
         >
-          <div style={{border: '2px double #111111'}}>
-            <Graph
-              graph={graph}
-              disableAnimation={true}
-              id={this.state.id}
-            >
-            <h1 style={{textAlign: 'center'}}>Generating graph...</h1>
-            </Graph>
-            <Close
-              style={{position: 'absolute', right: '10px', top: '10px'}}
-              onClick={this.toggleOverlay.bind(this)}>
-            </Close>
-          </div>
         </Overlay>
 
         <input
