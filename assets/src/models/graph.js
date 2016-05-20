@@ -26,17 +26,5 @@ export const initialGraph = {
   /**
    *  Type for the graph (valid: line, pie, bar)
    */
-  type: "line",
-  /**
-   *  Appears above graph
-   */
-   title: "",
-   /**
-    *  Appears below title
-    */
-   subtitle: "",
-   /**
-    *  Appears under graph
-    */
-   source: "",
+  type: "pie",
 }
