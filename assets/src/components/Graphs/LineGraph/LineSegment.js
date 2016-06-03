@@ -19,7 +19,8 @@ export default class LineSegment extends React.Component {
     interpolation: PropTypes.string,
     removeTooltip: PropTypes.any,
     scale: PropTypes.object,
-    style: PropTypes.object
+    style: PropTypes.object,
+    disableAnimation: PropTypes.boolean
   };
 
   toNewName(interpolation) {
@@ -47,7 +48,7 @@ export default class LineSegment extends React.Component {
         const diff = this.props.lineX - xScale(data.x)
         const IS_ACTIVE  = (diff > (LIMIT * -1) && diff < LIMIT)
 
-        if(body.offsetWidth <= 768 || props.animated !== true) {
+        if(body.offsetWidth <= 768 || this.props.disableAnimation ) {
           return yScale(data.y)
         }
         circles.push(

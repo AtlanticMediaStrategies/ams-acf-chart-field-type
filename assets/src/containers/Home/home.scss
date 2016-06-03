@@ -8,10 +8,16 @@
   transform: translateY(-50%);
 }
 
-:local(.container) {
-  overflow: visible;
-}
+.preview {
+  width: calc(100% - 16px);
+  border-radius: 4px;
+  padding: 8px;
+  margin: 1em 0.5em;
 
-:local(.containerActive) {
-  overflow: hidden;
+  &__image {
+    width: 400px;
+    height: 400px;
+    opacity: 0.8;
+    border: 1px solid gray;
+  }
 }

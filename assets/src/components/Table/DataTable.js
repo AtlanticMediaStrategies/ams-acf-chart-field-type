@@ -63,8 +63,8 @@ export default class DataTable extends Component {
   cellClasses(j) {
     const { active_columns } = this.props.graph
     return classnames({
-      [styles.tableCell]: true,
-      [styles.tableCellActive]: active_columns.includes(j)
+      tableCell: true,
+      tableCellActive: active_columns.includes(j)
     })
   }
 
@@ -90,8 +90,8 @@ export default class DataTable extends Component {
   row_classes(i) {
     const { graph } = this.props
     return classnames({
-      [styles.tableRow]: true,
-      [styles.tableRowHidden]: !graph.active_rows[i]
+      tableRow: true,
+      tableRowHidden: !graph.active_rows[i]
     })
   }
 
@@ -177,8 +177,8 @@ export default class DataTable extends Component {
         )
       } else {
         // legends
-        columns.unshift(<td key='hide' className={styles.tableCell}>Hide?</td>)
-        columns.unshift(<td key='label' className={styles.tableCell}>Color</td>)
+        columns.unshift(<td key='hide' className="tableCell">Hide?</td>)
+        columns.unshift(<td key='label' className="tableCell">Color</td>)
       }
       return (
         <tr
@@ -192,8 +192,8 @@ export default class DataTable extends Component {
     return (
       <div>
         <h1>Data Table</h1>
-        <div className={styles.tableContainer}>
-          <table className={styles.table}>
+        <div className="tableContainer">
+          <table className="table">
             <tbody>
               {rows}
             </tbody>

@@ -5,19 +5,33 @@ import { parse_date, sort_by_index } from './utils.js'
 import {Flex, Box} from 'reflexbox'
 import { date_format } from './config.js'
 import styles from './style.scss'
+import ReactDOM from 'react-dom'
 
 import {
   VictoryBar,
   VictoryAxis,
   VictoryGroup,
   VictoryChart,
-  VictoryStack
+  VictoryStack,
+  VictoryLabel,
 } from 'victory';
 
 export default class BarChart extends Component {
 
   static propTypes = {
     data: React.PropTypes.array
+  }
+
+  componentDidMount() {
+    const elm = ReactDOM.findDOMNode(this)
+    const svg = elm.querySelector('svg')
+
+    if('ActiveXObject' in window) { // is window
+      Object.assign(svg.style, {
+        minHeight: '25em'
+      })
+    }
+
   }
 
   render() {
@@ -39,14 +53,22 @@ export default class BarChart extends Component {
 
     data = [...data]
 
-    const dates = data.shift().map( parse_date )
+    const dates =
+      data
+        .shift()
+        .map( parse_date )
+
+    const fontSize = (bodyWidth < DESKTOP_WIDTH) ? 12 : 20
 
     const bar_styles = {
       labels: {
         fontFamily: 'allstate-sans, sans-serif',
+        fontWeight: 100,
+        fontSize: 18,
         stroke: 'none',
         fill: 'white',
-        transform: 'translateY(20px)'
+        padding: 0,
+        fontSize
       }
     }
 
@@ -64,11 +86,6 @@ export default class BarChart extends Component {
       bar_width = 120
     }
 
-    // if(bar_width < 80) {
-    //   bar_width = 80
-    // }
-
-
     let bar_data, categories, bars, legend;
     if(active_columns.length === 1) {
 
@@ -79,10 +96,12 @@ export default class BarChart extends Component {
             if(datum === false) {
               return datum
             }
+            const val = parseInt(datum[column])
             return {
               x: datum[0],
-              y: parseInt(datum[column]),
-              label: `${datum[column]}%`,
+              y: val,
+              width: bar_width,
+              label: (val < 8) ? '' : `${val}%`,
               fill: colors[x + 1]
             }
           })
@@ -95,15 +114,7 @@ export default class BarChart extends Component {
       bars = (
         <VictoryBar
           style={ bar_styles }
-          animate={{
-            onEnter: {
-              before: () => {
-                return {
-                  y: 0
-                }
-              }
-            }
-          }}
+          labelComponent={ <VictoryLabel verticalAnchor="bottom" /> }
           data={bar_data}
         >
         </VictoryBar>
@@ -118,10 +129,13 @@ export default class BarChart extends Component {
                 return datum
               }
               return active_columns.sort(sort_by_index).map((column, j) => {
+
+                const val = parseInt(datum[column])
+
                 return {
                   x: j + 1,
-                  y: parseInt(datum[column]),
-                  label: `${datum[column]}%`,
+                  y: val,
+                  label: (val < 8) ? '' : `${val}%`,
                   width: bar_width,
                   fill: colors[i + 1]
                 }
@@ -139,6 +153,7 @@ export default class BarChart extends Component {
           <VictoryBar
             key={i}
             style={ bar_styles }
+            labelComponent={ <VictoryLabel verticalAnchor="bottom" dy={0.5} /> }
             data={ data }
           >
           </VictoryBar>
@@ -146,21 +161,8 @@ export default class BarChart extends Component {
       })
 
       bars = <VictoryStack width={width}>{ multiple_bars }</VictoryStack>
-
-      const legend_col = (width < 768) ? 12 : 4
-
-      legend = (
-        <Box col={legend_col}>
-          <Legend
-            data={data}
-            colors={colors}
-          ></Legend>
-        </Box>
-      )
     }
 
-    const wrap = width < 768;
-    const height = (width < 768) ? 400 : 600
 
     const bar_axis_styles = Object.assign({}, axis_styles, {
       grid: {
@@ -168,23 +170,28 @@ export default class BarChart extends Component {
       }
     })
 
-    const x_axis_label = (bodyWidth < 768) ? '' : x_axis
+    const wrap = bodyWidth < 1025;
+    const height = (bodyWidth < 1025) ? 400 : 600
+    const x_axis_label = (bodyWidth < 1025) ? '' : x_axis
+    const bar_col = (bodyWidth < 1025) ? 12 : 12;
+    const legend_col = (bodyWidth < 1025) ? 12 : 3
+    const legend_order = (bodyWidth < 1025 ) ? 0 : 2
 
     return (
-      <div>
-        <Flex wrap={wrap}>
-          <Box auto={true} lg={12}>
+      <div className="bar">
+        <Flex wrap={ wrap }>
+          <Box auto={true} order={1} lg={12}>
             <VictoryChart
-              width={width}
+              width={ width }
               height={ height }
               domainPadding={{ x: gutter }}
             >
               <VictoryAxis
                 label={ x_axis_label }
-                standalone={ false }
                 style={ bar_axis_styles }
+                axisLabelComponent={ <VictoryLabel lineHeight={2} />}
                 tickValues={ categories }
-                tickFormat={(cat, i) => {
+                    tickFormat={(cat, i) => {
                   return categories[cat - 1]
                 }}
               ></VictoryAxis>
@@ -192,19 +199,23 @@ export default class BarChart extends Component {
               <VictoryAxis
                 dependentAxis
                 standalone={ false }
+                axisLabelComponent={ <VictoryLabel lineHeight={3} />}
                 tickCount={3}
-                style={ y_axis_styles }
+                  style={ y_axis_styles }
                 label={ y_axis }
                 tickFormat={(perc) => `${perc}%`}
               >
               </VictoryAxis>
-
               { bars }
-
             </VictoryChart>
             <p className="mobileBarChartAxis"> { x_axis }</p>
           </Box>
-          { legend }
+          <Box col={ legend_col } order={ legend_order }>
+            <Legend
+              data={data}
+              colors={colors}
+            ></Legend>
+          </Box>
         </Flex>
       </div>
 

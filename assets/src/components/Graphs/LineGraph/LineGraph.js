@@ -1,22 +1,25 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
+
 import {
   y_axis_styles,
   axis_styles,
   date_format,
   DESKTOP_WIDTH
 } from '../config.js'
+
 import { parse_date, sort_by_index } from '../utils.js'
+
 import {
   VictoryChart,
   VictoryLine,
-  VictoryAxis
+  VictoryAxis,
+  VictoryLabel
 } from 'victory'
 
 import LineSegment from './LineSegment.js'
 import Tooltip from './Tooltip.js'
 
 import moment from 'moment'
-import Vivus from 'vivus'
 import ReactDOM from 'react-dom'
 import Legend from '../Legend.js'
 import Filters from './Filters.js'
@@ -27,37 +30,28 @@ export default class LineGraph extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      animated: false,
       tooltip_coords: null,
       tooltip_active: false,
       tooltip_value: null
     }
+
+    this.removeTooltip = this.removeTooltip.bind(this)
+    this.setTooltip = this.setTooltip.bind(this)
   }
 
-  componentWillReceiveProps({disableAnimation}) {
-    console.log(disableAnimation)
-    const { bodyWidth } = this.props
-    if(bodyWidth < DESKTOP_WIDTH || disableAnimation === true) {
-      return true
-    }
+  componentWillReceiveProps() {
     const elm = ReactDOM.findDOMNode(this)
     const svg = elm.querySelector('svg')
-    new Vivus(svg, {
-      duration: 120,
-      start: 'autostart'
-    }, () => this.setState({animated: true}))
 
-    const biggest = Array.from(elm.querySelectorAll('text[data-reactid*=line-label]'))
-      .reduce((prev, label, i) => {
-        if(label.getBoundingClientRect().width > prev ) {
-          return label.getBoundingClientRect().width
-        }
-        return prev
-      }, -9999)
+    if(!svg) {
+      return true
+    }
 
-    const pad = bodyWidth > 1280 ? 0 : biggest;
-
-    Object.assign(svg.style, {paddingRight: `${pad}px`})
+    if('ActiveXObject' in window) { // is IE, make sure it has a min-height
+      Object.assign(svg.style, {
+        minHeight: '25em'
+      })
+    }
   }
 
   /**
@@ -73,7 +67,6 @@ export default class LineGraph extends Component {
       tooltip_coords: [clientX - left, clientY - top + 81],
       tooltip_active: true,
       tooltip_value,
-
     })
   }
 
@@ -122,8 +115,6 @@ export default class LineGraph extends Component {
             }
           })
 
-          const label = (bodyWidth < DESKTOP_WIDTH) ? null : datum[0]
-
           return (
             <VictoryLine
               style={{
@@ -138,12 +129,11 @@ export default class LineGraph extends Component {
                 }
               }}
               dataComponent={ <LineSegment
-                               animated = { this.state.animated }
                                order = { i }
-                               removeTooltip={this.removeTooltip.bind(this)}
-                               setActiveLine={this.setTooltip.bind(this)} />
+                               disableAnimation={ this.props.disableAnimation }
+                               removeTooltip={ this.removeTooltip }
+                               setActiveLine={ this.setTooltip } />
                             }
-              label={ label }
               key={ i }
               interpolation='cardinal'
               padding={ 100 }
@@ -200,15 +190,15 @@ export default class LineGraph extends Component {
 
     return (
       <div className="line">
-        <Legend
-          data={data}
-          colors={colors}></Legend>
-
         <div className="line__container">
           <Tooltip
               coords={this.state.tooltip_coords}
               active={this.state.tooltip_active}
               value={this.state.tooltip_value} />
+
+          <Legend
+            data={data}
+            colors={colors}></Legend>
 
           <VictoryChart
             height={height}
@@ -220,6 +210,7 @@ export default class LineGraph extends Component {
               label={y_axis}
               style={ axis_styles }
               padding={ axisPadding }
+              axisLabelComponent={ <VictoryLabel lineHeight={4} />}
               tickCount={4}
               tickFormat={(val) => `${val}%` }
             >
@@ -229,6 +220,7 @@ export default class LineGraph extends Component {
               label={ x_axis }
               padding={ axisPadding }
               style={ line_y_axis_styles }
+              axisLabelComponent={ <VictoryLabel lineHeight={4} />}
               tickValues={ values }
               tickFormat={(val, i) => {
                 if(bodyWidth < DESKTOP_WIDTH) {

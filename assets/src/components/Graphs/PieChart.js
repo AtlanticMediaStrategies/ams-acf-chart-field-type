@@ -41,13 +41,13 @@ export default class PieChart extends Component {
     }
 
     const pies = active_columns.sort(sort_by_index).map((index) => {
-      let pie_data =
+      const pie_data =
         data
           .map((datum, i) => {
             if(datum === false) {
               return datum
             }
-            const x = `${datum[index]}%`
+            const x = datum[index] > 15  ? `${datum[index]}%` : ' '
             const y = parseInt(datum[index])
             return { x , y }
           })
@@ -76,25 +76,29 @@ export default class PieChart extends Component {
       const pie_width = (bodyWidth < DESKTOP_WIDTH )  ? width : width / 2
 
       const height = (bodyWidth < DESKTOP_WIDTH) ? bodyWidth : undefined
+
+      const fontSize = (bodyWidth < DESKTOP_WIDTH) ? 22 : 32
+
       return (
         <Box key={index} {...BoxProps}>
           <VictoryPie
             width={ pie_width }
             height={ height }
             standalone={ true }
-            colorScale={ colors }
+            colorScale={ pie_colors }
             style={{
               labels: {
                 fill: '#FDFDFD',
                 fontFamily: 'allstate-sans, sans-serif',
-                fontSize: 14
+                fontWeight: 100,
+                fontSize
               },
             }}
             padding={ padding }
             data={ pie_data }
           />
         <p
-          className={ styles.pieLabel }
+          className="pieLabel"
           style={{textAlign: 'center'}}>
             { processed_dates[index].format(date_format) }
         </p>

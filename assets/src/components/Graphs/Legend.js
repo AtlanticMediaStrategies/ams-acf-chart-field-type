@@ -18,17 +18,17 @@ export default class Legend extends Component {
       if(datum === false) {
         return false
       }
-      return (<div className={styles.legendBoxList} key={i}>
+      return (<div className="legendBoxList" key={i}>
         <div
-          className={styles.legendBox}
+          className="legendBox"
           style={{ backgroundColor: colors[i + 1] }}></div>
-        <span className={styles.legendLabel}> { datum[0] } </span>
+        <span className="legendLabel"> { datum[0] } </span>
         </div>
       )
     }).filter(datum => datum != false)
 
     return (
-      <nav className={ styles.legend }>
+      <nav className="legend">
         { legends }
       </nav>
     )

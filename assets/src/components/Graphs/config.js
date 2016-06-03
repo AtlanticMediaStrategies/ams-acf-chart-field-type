@@ -7,7 +7,8 @@ export const chart_colors = [
   '#97D429',
 ];
 
-const gray = '#A5B3BE'
+const gray = '#D2D9DE'
+const grayDark = '#A5B3BE'
 const textPrimary = '#2f353e'
 
 export const axis_styles = {
@@ -17,21 +18,23 @@ export const axis_styles = {
   },
   tickLabels: {
     fontFamily: "allstate-sans, sans-serif",
-    fill: gray,
-    fontSize: 14
+    fill: grayDark,
+    fontSize: 14,
+    fontWeight: 100
   },
   ticks: {
     stroke: gray,
     strokeWidth: 1
   },
   axisLabel: {
-    fill: textPrimary,
     fontFamily: "allstate-sans, sans-serif",
-    fontSize: 18
+    fill: '#505A6A',
+    fontSize: 14,
+    textTransform: 'uppercase'
   },
   grid: {
     strokeWidth: 1,
-    stroke: gray,
+    stroke: gray
   }
 }
 

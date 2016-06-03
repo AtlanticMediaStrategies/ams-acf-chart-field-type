@@ -33,7 +33,7 @@ export class HideShow extends Component {
       return (
         <td
           key='display'
-          className={styles.tableCell}
+          className="tableCell"
          >
           <Button
             role="button"
@@ -119,7 +119,7 @@ export class EditColor extends Component {
     return (
       <td
         key='edit'
-        className={ styles.tableCell }
+        className="tableCell" 
        >
         <Button
           role="button"

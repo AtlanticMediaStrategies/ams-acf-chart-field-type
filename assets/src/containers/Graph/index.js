@@ -5,7 +5,7 @@ import DataTable from '../../components/Table/DataTable.js'
 import PieChart from '../../components/Graphs/PieChart.js'
 import BarChart from '../../components/Graphs/BarChart.js'
 import Table from '../../components/Graphs/Table.js'
-
+import styles from './style.scss'
 import Waypoint from 'react-waypoint'
 import classnames from 'classnames'
 
@@ -121,15 +121,12 @@ export default class Graph extends Component {
 
     if(thumbnail && show_export) {
       var download = (
-        <a href={ thumbnail } download="export.png">
-          Export
-          <svg style={{
-            width: '20px',
-            height: '20px',
-            position: 'relative',
-            top: '4px',
-            marginLeft: '8px'
-          }}>
+        <a
+          href={ thumbnail }
+          className="graph__download"
+          download={`${this.props.graph.title}.png`}>
+          Download
+          <svg className="graph__download-icon">
             <use xlinkHref="#download"/>
           </svg>
           </a>
@@ -141,8 +138,7 @@ export default class Graph extends Component {
         <Waypoint
           onEnter={this.scrolled.bind(this)}
         />
-        {graph}
-        { download }
+        { graph }
       </div>
     )
   }

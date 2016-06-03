@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom'
 import styles from './style.scss'
 import classnames from 'classnames'
 import moment from 'moment'
-import { parse_date } from './utils.js'
+import { date_format } from './config.js'
+import { parse_date, sort_by_index } from './utils.js'
 
 /**
  *  Table component
@@ -19,18 +20,16 @@ export default class Table extends Component {
 
   componentDidMount()  {
     const elm = ReactDOM.findDOMNode(this)
-    const legends = [...elm.querySelectorAll(`.${styles.tableCellLegend} div`)]
-
+    const legends = [...elm.querySelectorAll(`.tableGraphCellLegend div`)]
     const { data } = this.props
-
     legends.forEach((cell, i) => {
-      if(cell.classList.contains(styles.tableRowHeader)) {
+      if(cell.classList.contains('tableGraphRowHeader')) {
         return
       }
       const textHeight = cell.querySelector('p').offsetHeight + 35
       cell.style.height = `${textHeight}px`
 
-      Array.from(document.querySelectorAll(`.tableColumnsContainer .${styles.tableCell}:nth-child(${i + 1})`))
+      Array.from(document.querySelectorAll(`.tableGraphColumnsContainer .tableGraphCell:nth-child(${i + 1})`))
       .forEach(child =>  {
         Object.assign(child.style, {
           height: `${textHeight}px`
@@ -53,9 +52,8 @@ export default class Table extends Component {
 
     const columns =
       active_columns
-        .sort()
+        .sort(sort_by_index)
         .map(col => {
-
           const rows =
             active_rows
               .map((row_included, row)  => {
@@ -67,14 +65,14 @@ export default class Table extends Component {
                 const dat = data[row][col]
 
                 const colClasses = classnames({
-                  [styles.tableCell]: true,
-                  [styles.tableRowHeader]: row == 0,
-                  [styles.tableCellCurrent]: col == this.state.current_column
+                  tableGraphCell: true,
+                  tableGraphRowHeader: row == 0,
+                  tableGraphCellCurrent: col == this.state.current_column
                 })
 
                 if(row == 0) {
                   var date = parse_date(dat)
-                  var val = date.format('MMM \'YY')
+                  var val = date.format(date_format)
                   var metric = ''
                 } else {
                   const is_not_numeric = dat.toString().match(/\W/)
@@ -89,21 +87,21 @@ export default class Table extends Component {
             })
             .filter(row => row != false)
 
-        return <div className={styles.tableColumn}>{ rows }</div>
+        return <div className="tableGraphColumn">{ rows }</div>
       })
 
 
     const metric_classes = classnames({
-      [styles.tableColumn]: true,
-      [styles.tableCellLegend]: true
+      tableGraphColumn: true,
+      tableGraphCellLegend: true
     })
 
     const first_columns =
       data.map((datum, row) => {
         const val = (row == 0) ? x_axis : data[row][0]
         const classes = classnames({
-          [styles.tableCell]: true,
-          [styles.tableRowHeader]: row == 0
+          tableGraphCell: true,
+          tableGraphRowHeader: row == 0
         })
         return (
           <div className={ classes }>
@@ -115,11 +113,11 @@ export default class Table extends Component {
     const legend = <div className={ metric_classes }>{ first_columns }</div>
 
     return (
-      <div className={ styles.table }>
-        <div className="tableLegendContainer">
+      <div className="tableGraph">
+        <div className="tableGraphLegendContainer">
           { legend }
         </div>
-        <div className="tableColumnsContainer">
+        <div className="tableGraphColumnsContainer">
           { columns }
         </div>
       </div>

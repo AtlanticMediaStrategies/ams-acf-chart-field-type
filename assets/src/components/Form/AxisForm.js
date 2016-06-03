@@ -54,7 +54,7 @@ export default class AxisFormContainer extends Component {
     const { x_axis, y_axis } = this.props.graph
 
     return (
-      <div className={styles.wrapper}>
+      <div className="axisWrapper">
         <Divider></Divider>
         <h1>Axis Labels</h1>
         <Flex wrap={true}>

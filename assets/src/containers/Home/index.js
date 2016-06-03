@@ -16,6 +16,7 @@ import DataTable from '../../components/Table/DataTable.js';
 import RadioGroup from './RadioGroup.js';
 import Form from '../../components/Form/AxisForm.js';
 import { initialGraph } from '../../models/graph.js';
+import { parse_graph } from './utils.js'
 
 import qs from 'qs';
 
@@ -42,6 +43,8 @@ export default class Home extends Component {
       name,
       created,
       edit: false,
+      title: false,
+      parent: null,
       overlay_open: false
     }
   }
@@ -58,6 +61,18 @@ export default class Home extends Component {
     if(created === false) {
       this.props.set_data(data, id, name)
     }
+    const elm = ReactDOM.findDOMNode(this)
+    let parent = elm.parentNode;
+    while(!parent.classList.contains('acf-fields')) {
+      parent = parent.parentNode;
+    }
+    this.setState({
+      parent,
+      elm
+    })
+    this.props.set_graph_value(id, name, {
+      title: parent.querySelector('div[data-name="title"] input').value
+    })
   }
 
   /**
@@ -68,127 +83,17 @@ export default class Home extends Component {
     e.preventDefault()
     // this.setState({overlay_open: true})
     require(['fabric-webpack', 'notie'], ({fabric}, notie) => {
-      const {
-        Canvas,
-        Image,
-        Text,
-        Rect
-      } = fabric;
-
+      const { parent } = this.state
       const elm = ReactDOM.findDOMNode(this)
-      let parent = elm.parentNode;
-      while(!parent.classList.contains('acf-fields')) {
-        parent = parent.parentNode;
-      }
-
-      const title = parent.querySelector('div[data-name="title"] input').value
-      const subtitle = parent.querySelector('div[data-name="subtitle"] input').value
-      const description = parent.querySelector('div[data-name="description"] textarea').textContent
-
       const svg = elm.querySelector('svg')
-      const can = new Canvas();
+      parse_graph(fabric, svg, graph, parent).then(data => {
+        if(data === 'data:,') {
+          notie.alert(3, 'Failed to parse svg', 2);
+          return
+        }
 
-      const viewbox = svg.getAttribute('viewBox').split(/\s+/)
-
-      const width = parseInt(viewbox[2])
-      const height = parseInt(viewbox[3])
-
-      can.setWidth(width + 200)
-      can.setHeight(height + 400)
-      can.setBackgroundColor('white')
-
-      const {
-        type,
-        data,
-        active_rows,
-        colors
-      } = graph
-
-      const rows_clone = [...active_rows]
-
-      if(type === 'bar' || type === 'line') {
-        // generate legend
-        let n = 0;
-        rows_clone.reverse().forEach((row, i) => {
-          if(row === true && i > 0) {
-            console.log(`row: ${row}, i: ${i}`)
-            const color = colors[colors.length - i]
-            const label = data[data.length - i][0]
-
-            const top = can.getHeight() - (n++ * 30) - 60
-
-            const rect = new Rect({
-              fill: color,
-              width: 16,
-              height: 16
-            })
-            rect.setTop(top)
-            rect.setLeft(20)
-            can.add(rect)
-
-            const text = new Text(label, {
-              fontFamily: 'allstate-sans',
-              fontSize: 14,
-              lineheight: 16
-            })
-            text.setLeft(55)
-            text.setTop(top + 2)
-            can.add(text)
-          }
-        })
-      }
-
-      const id = elm.parentNode.getAttribute('id')
-      fabric.parseSVGDocument(svg, (layers) => {
-        layers.forEach((layer) => {
-          if(type === 'line' && layer.text && layer.fill != '#A5B3BE') {
-            layer.setLeft(layer.getLeft() + 9000) //remove label
-          } else {
-            layer.setLeft(layer.getLeft() + 80)
-          }
-          if(type === 'bar' && layer.text && layer.fill === 'white') {
-            layer.setTop(layer.getTop() + 130)
-          } else {
-            layer.setTop(layer.getTop() + 120)
-          }
-          can.add(layer)
-        })
-
-        const titleElement = new Text(title, {
-          fill: '#E12C8A',
-          fontSize: 32,
-          fontWeight: 'bold',
-          fontFamily: 'allstate-sans, sans-serif'
-        })
-        titleElement.setTop(20)
-        titleElement.setLeft(20)
-        can.add(titleElement)
-
-        const subtitleElement = new Text(subtitle, {
-          fill: '#2F353E',
-          fontSize: 24,
-          fontFamily: 'allstate-sans, sans-serif'
-        })
-
-        subtitleElement.setTop(64)
-        subtitleElement.setLeft(20)
-        can.add(subtitleElement)
-
-        Image.fromURL('/wp-content/themes/renewal-project/img/export-logo.png', (img) => {
-          img.setTop(can.getHeight() - img.getHeight() - 20)
-          img.setLeft(can.getWidth() - img.getWidth() - 20)
-
-          can.add(img)
-
-          let data = can.toDataURL()
-          if(data === 'data:,') {
-            notie.alert(3, 'Failed to parse svg', 2);
-            return
-          }
-
-          data = data.replace('data:image/png;base64,', '')
-
-          request({
+        data = data.replace('data:image/png;base64,', '')
+        const res = request({
             method: 'POST',
             url: `/acf-chart/thumbnail/${this.state.id}/${this.state.name}/`,
             data: {
@@ -205,7 +110,6 @@ export default class Home extends Component {
           })
           .fail(() => notie.alert(2, 'An error occurred', 2))
         })
-      })
     })
   }
 
@@ -283,7 +187,6 @@ export default class Home extends Component {
       return <div>loading</div>
     }
 
-
     let {
       type,
       data,
@@ -307,6 +210,7 @@ export default class Home extends Component {
         </RadioGroup>
         <Graph
           graph={graph}
+          title={ this.state.title }
           disableAnimation={true}
           id={this.state.id}
         >
@@ -331,15 +235,17 @@ export default class Home extends Component {
 
         <Divider/>
 
-        <h1> Graph Settings </h1>
-
+        <h1> Graph Download </h1>
+        <p> This section generates a chart export for use in social media. </p>
         <Button
           theme='success'
-          style={{ marginRight: '8px' }}
-          onClick={this.saveImage.bind(this, graph)}>Generate image export
+          style={{marginRight: '4px'}}
+          onClick={this.saveImage.bind(this, graph)}>Generate graph download
         </Button>
-        <div>
-          <img src={graph.thumbnail} style={{width: '100%', height: 'auto'}}/>
+        <Button href={graph.thumbnail} download={graph.title}>Download</Button>
+        <div className="preview">
+          <h3>Preview</h3>
+          <img className="preview__image" src={graph.thumbnail} />
         </div>
       </div>
     ) : (
@@ -353,15 +259,6 @@ export default class Home extends Component {
     return (
       <section>
         {main}
-
-        <Divider/>
-
-        <Button
-          backgroundColor={this.state.edit === true ? 'white': 'primary'}
-          color={this.state.edit === true ? 'primary': 'white'}
-          style={{ marginRight: '8px' }}
-          onClick={this.toggleEdit.bind(this)}>Edit data
-        </Button>
 
         <Overlay
           style={{
@@ -382,6 +279,5 @@ export default class Home extends Component {
 
       </section>
     );
-
   }
 }

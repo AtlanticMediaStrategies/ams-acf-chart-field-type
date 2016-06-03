@@ -11,7 +11,7 @@ require('babel-polyfill').default;
 const TARGET = process.env.npm_lifecycle_event;
 
 const PATHS = {
-  app: path.resolve('./assets/src'),
+  app: ['babel-polyfill', path.resolve('./assets/src')],
   frontend: path.resolve('./assets/src/frontend.js'),
   build: path.join(__dirname, '/assets/dist'),
 };
