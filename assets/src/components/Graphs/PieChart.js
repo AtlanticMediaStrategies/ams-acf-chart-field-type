@@ -58,16 +58,6 @@ export default class PieChart extends Component {
             return datum != false
           })
 
-      if(bodyWidth < DESKTOP_WIDTH) {
-        var BoxProps = {
-          col: 12
-        }
-      } else {
-        var BoxProps = {
-          auto: true
-        }
-      }
-
       const padding = {
         bottom: 0,
         top: 50
@@ -79,8 +69,10 @@ export default class PieChart extends Component {
 
       const fontSize = (bodyWidth < DESKTOP_WIDTH) ? 22 : 32
 
+      const perc = (bodyWidth < 769) ? '100%' : `${(1 / active_columns.length) * 100}%`
+
       return (
-        <Box key={index} {...BoxProps}>
+        <div className="pie" style={{float: 'left', width: perc}}>
           <VictoryPie
             width={ pie_width }
             height={ height }
@@ -97,12 +89,12 @@ export default class PieChart extends Component {
             padding={ padding }
             data={ pie_data }
           />
-        <p
-          className="pieLabel"
-          style={{textAlign: 'center'}}>
-            { processed_dates[index].format(date_format) }
-        </p>
-        </Box>
+          <p
+            className="pieLabel"
+            style={{textAlign: 'center'}}>
+              { processed_dates[index].format(date_format) }
+          </p>
+        </div>
       )
     })
 
@@ -113,14 +105,14 @@ export default class PieChart extends Component {
 
     return (
       <div className="pie">
+        <div className="pie__container">
+          { pies }
+        </div>
         <Legend
           data={ data }
           colors={ colors }
         >
         </Legend>
-        <Flex {...FlexProps} >
-          { pies }
-        </Flex>
       </div>
     )
   }

@@ -31,7 +31,6 @@ export default class BarChart extends Component {
         minHeight: '25em'
       })
     }
-
   }
 
   render() {
@@ -73,7 +72,7 @@ export default class BarChart extends Component {
     }
 
     const bar_count = data.filter(data => data !== false).length
-    let gutter = 120
+    let gutter = 180
 
     if(bodyWidth < DESKTOP_WIDTH) {
       gutter = 70
@@ -106,6 +105,7 @@ export default class BarChart extends Component {
             }
           })
           .filter((datum) => datum != false)
+
       categories =
         data
           .map((datum) => datum[0])
@@ -122,45 +122,58 @@ export default class BarChart extends Component {
 
     } else {
 
+      categories =
+        active_columns
+          .sort(sort_by_index)
+          .map(column => dates[column].format(date_format))
+
         bar_data =
-          data
-            .map((datum, i) => {
-              if(datum === false) {
-                return datum
-              }
-              return active_columns.sort(sort_by_index).map((column, j) => {
+          data.map((datum, i) => {
+
+            if(datum === false) {
+              return datum
+            }
+            return active_columns
+              .sort(sort_by_index)
+              .map((column, j) => {
 
                 const val = parseInt(datum[column])
 
                 return {
                   x: j + 1,
                   y: val,
-                  label: (val < 8) ? '' : `${val}%`,
-                  width: bar_width,
+                  label: `${val}%`,
                   fill: colors[i + 1]
                 }
               })
-            })
-            .filter(datum => datum !== false)
+          })
+          .filter(datum => datum !== false)
 
-      categories =
-        active_columns
-          .sort(sort_by_index)
-          .map(column => dates[column].format(date_format))
 
       const multiple_bars = bar_data.map((data, i) => {
         return (
           <VictoryBar
             key={i}
             style={ bar_styles }
-            labelComponent={ <VictoryLabel verticalAnchor="bottom" dy={0.5} /> }
+            labelComponent={ <VictoryLabel dy={1.5} /> }
             data={ data }
           >
           </VictoryBar>
         )
       })
 
-      bars = <VictoryStack width={width}>{ multiple_bars }</VictoryStack>
+      bars =
+        <VictoryGroup
+          width={width}
+          offset={100}
+          style={{
+            data: {
+              width: 80
+            }
+          }}
+        >
+          { multiple_bars }
+        </VictoryGroup>
     }
 
 
@@ -189,11 +202,8 @@ export default class BarChart extends Component {
               <VictoryAxis
                 label={ x_axis_label }
                 style={ bar_axis_styles }
-                axisLabelComponent={ <VictoryLabel lineHeight={2} />}
                 tickValues={ categories }
-                    tickFormat={(cat, i) => {
-                  return categories[cat - 1]
-                }}
+                axisLabelComponent={ <VictoryLabel lineHeight={2} />}
               ></VictoryAxis>
 
               <VictoryAxis
