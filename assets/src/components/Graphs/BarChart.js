@@ -79,13 +79,10 @@ export default class BarChart extends Component {
     }
 
 
-    let bar_width = ( width / bar_count ) - gutter
+    let bar_data, categories, bars, legend, bar_width;
 
-    if(bar_width > 120) {
-      bar_width = 120
-    }
+    bar_width = bodyWidth < 768 ? 40 : 80
 
-    let bar_data, categories, bars, legend;
     if(active_columns.length === 1) {
 
       const column = active_columns[0]
@@ -165,17 +162,16 @@ export default class BarChart extends Component {
       bars =
         <VictoryGroup
           width={width}
-          offset={100}
+          offset={bar_width + 15}
           style={{
             data: {
-              width: 80
+              width: bar_width
             }
           }}
         >
           { multiple_bars }
         </VictoryGroup>
     }
-
 
     const bar_axis_styles = Object.assign({}, axis_styles, {
       grid: {
