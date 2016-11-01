@@ -10,7 +10,7 @@
     ],
     "require": {
         "composer/installers": "~1.0",
-        "upstatement/routes": "0.3.*",
+        "upstatement/routes": "0.4.*",
         "vlucas/phpdotenv": "~2.2"
     },
     "require-dev": {
