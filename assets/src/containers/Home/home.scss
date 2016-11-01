@@ -1,0 +1,23 @@
+@font-face{font-family:allstate-sans;font-style:normal;font-weight:100;src:url(/wp-content/themes/renewal-project/fonts/allstatesansw-light.eot?#iefix) format("embedded-opentype"),url(/wp-content/themes/renewal-project/fonts/allstatesansw-light.woff) format("woff"),url(/wp-content/themes/renewal-project/fonts/allstatesansw-light.ttf) format("truetype"),url(/wp-content/themes/renewal-project/fonts/allstatesansw-light.svg#allstate-sans) format("svg")}@font-face{font-family:allstate-sans;font-style:italic;font-weight:100;src:url(/wp-content/themes/renewal-project/fonts/allstatesansw-lightitalic.eot?#iefix) format("embedded-opentype"),url(/wp-content/themes/renewal-project/fonts/allstatesansw-lightitalic.woff) format("woff"),url(/wp-content/themes/renewal-project/fonts/allstatesansw-lightitalic.ttf) format("truetype"),url(/wp-content/themes/renewal-project/fonts/allstatesansw-lightitalic.svg#allstate-sans) format("svg")}@font-face{font-family:allstate-sans;font-style:normal;font-weight:400;src:url(/wp-content/themes/renewal-project/fonts/allstatesansw-regular.eot?#iefix) format("embedded-opentype"),url(/wp-content/themes/renewal-project/fonts/allstatesansw-regular.woff) format("woff"),url(/wp-content/themes/renewal-project/fonts/allstatesansw-regular.ttf) format("truetype"),url(/wp-content/themes/renewal-project/fonts/allstatesansw-regular.svg#allstate-sans) format("svg")}@font-face{font-family:allstate-sans;font-style:italic;font-weight:400;src:url(/wp-content/themes/renewal-project/fonts/allstatesansw-regularitalic.eot?#iefix) format("embedded-opentype"),url(/wp-content/themes/renewal-project/fonts/allstatesansw-regularitalic.woff) format("woff"),url(/wp-content/themes/renewal-project/fonts/allstatesansw-regularitalic.ttf) format("truetype"),url(/wp-content/themes/renewal-project/fonts/allstatesansw-regularitalic.svg#allstate-sans) format("svg")}@font-face{font-family:allstate-sans;font-style:normal;font-weight:500;src:url(/wp-content/themes/renewal-project/fonts/allstatesansw-medium.eot?#iefix) format("embedded-opentype"),url(/wp-content/themes/renewal-project/fonts/allstatesansw-medium.woff) format("woff"),url(/wp-content/themes/renewal-project/fonts/allstatesansw-medium.ttf) format("truetype"),url(/wp-content/themes/renewal-project/fonts/allstatesansw-medium.svg#allstate-sans) format("svg")}@font-face{font-family:allstate-sans;font-style:italic;font-weight:500;src:url(/wp-content/themes/renewal-project/fonts/allstatesansw-mediumitalic.eot?#iefix) format("embedded-opentype"),url(/wp-content/themes/renewal-project/fonts/allstatesansw-mediumitalic.woff) format("woff"),url(/wp-content/themes/renewal-project/fonts/allstatesansw-mediumitalic.ttf) format("truetype"),url(/wp-content/themes/renewal-project/fonts/allstatesansw-mediumitalic.svg#allstate-sans) format("svg")}@font-face{font-family:allstate-sans;font-style:normal;font-weight:600;src:url(/wp-content/themes/renewal-project/fonts/allstatesansw-bold.eot?#iefix) format("embedded-opentype"),url(/wp-content/themes/renewal-project/fonts/allstatesansw-bold.woff) format("woff"),url(/wp-content/themes/renewal-project/fonts/allstatesansw-bold.ttf) format("truetype"),url(/wp-content/themes/renewal-project/fonts/allstatesansw-bold.svg#allstate-sans) format("svg")}@font-face{font-family:allstate-sans;font-style:italic;font-weight:600;src:url(/wp-content/themes/renewal-project/fonts/allstatesansw-bolditalic.eot?#iefix) format("embedded-opentype"),url(/wp-content/themes/renewal-project/fonts/allstatesansw-bolditalic.woff) format("woff"),url(/wp-content/themes/renewal-project/fonts/allstatesansw-bolditalic.ttf) format("truetype"),url(/wp-content/themes/renewal-project/fonts/allstatesansw-bolditalic.svg#allstate-sans) format("svg")}@font-face{font-family:advant-garde;font-style:normal;font-weight:400;src:url(/wp-content/themes/renewal-project/fonts/ITCAvantGardeStd-Bold.eot?#iefix) format("embedded-opentype"),url(/wp-content/themes/renewal-project/fonts/ITCAvantGardeStd-Bold.woff) format("woff"),url(/wp-content/themes/renewal-project/fonts/ITCAvantGardeStd-Bold.ttf) format("truetype"),url(/wp-content/themes/renewal-project/fonts/ITCAvantGardeStd-Bold.svg#advant-garde) format("svg")};
+
+.drop-text {
+  margin-top: -8px;
+  padding: 0 8px;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.preview {
+  width: calc(100% - 16px);
+  border-radius: 4px;
+  padding: 8px;
+  margin: 1em 0.5em;
+
+  &__image {
+    width: 400px;
+    height: 400px;
+    opacity: 0.8;
+    border: 1px solid gray;
+  }
+}

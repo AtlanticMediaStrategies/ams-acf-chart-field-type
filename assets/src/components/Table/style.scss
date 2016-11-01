@@ -1,0 +1,39 @@
+.table.table {
+  border-spacing: 0;
+  font-size: 14px;
+  line-height: 1.25;
+  max-width: 100%;
+  overflow-x: scroll;
+  width: 100%;
+  border: none;
+}
+
+.tableContainer {
+  border-color: rgba(0, 0, 0, .25);
+  box-sizing: border-box;
+  margin-bottom: 16px;
+  max-width: 100%;
+  overflow-x: scroll;
+}
+
+.tableCell {
+  padding: 0.25em 1em;
+  border-bottom: 1px solid #ccc;
+  position: relative;
+}
+
+.tableCellActive.tableCellActive {
+  background: #4088DD;
+  border: 1px solid white;
+  color: white;
+}
+
+.tableRowHidden {
+  opacity: 0.2;
+}
+
+.tableRow {
+  &:first-child td {
+    border-bottom: 2px solid #111;
+  }
+}

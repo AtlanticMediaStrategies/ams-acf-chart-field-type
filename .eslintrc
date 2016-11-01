@@ -1,0 +1,12 @@
+{
+  "ecmaFeatures": {
+    "modules": true
+  },
+  "plugins": [
+    "react",
+    "html"
+  ],
+  "env": {
+    "es6": true
+  }
+}

@@ -1,0 +1,19 @@
+{
+    "name": "atlanticmediastrategies/ams-acf-chart-field-type",
+    "description": "A plugin for ACF to input a field from a csv",
+    "type": "wordpress-plugin",
+    "authors": [
+        {
+            "name": "AMS Product",
+            "email": "product@atlanticmedia.com"
+        }
+    ],
+    "require": {
+        "composer/installers": "~1.0",
+        "upstatement/routes": "0.3.*",
+        "vlucas/phpdotenv": "~2.2"
+    },
+    "require-dev": {
+        "monolog/monolog": "~1.18"
+    }
+}
