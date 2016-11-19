@@ -97,7 +97,7 @@ export default class LineGraph extends Component {
 
     data = [...data]
 
-    const x_values = data.shift()
+    const x_values = data.shift().map(parse_date)
 
     const { active_line } = this.state;
 
@@ -110,12 +110,10 @@ export default class LineGraph extends Component {
           let line_data;
           line_data = active_columns.map((j, x) => {
             return {
-              date: x_values[x],
-              value: j * 20
+              x,
+              y: parseInt(datum[j])
             }
           })
-
-          console.log(line_data)
 
           return (
             <VictoryLine
@@ -130,8 +128,6 @@ export default class LineGraph extends Component {
                   textTransform: 'uppercase'
                 }
               }}
-              x="date"
-              y="value"
               dataComponent={ <LineSegment
                                order = { i }
                                disableAnimation={ this.props.disableAnimation }
@@ -192,23 +188,58 @@ export default class LineGraph extends Component {
       Object.assign({}, x_axis_styles, {grid: {strokeWidth: 0}}) :
       x_axis_styles
 
-
-    const test_line =
-      <VictoryLine
-        data={[
-          {x: 0, y: 100},
-          {x: 1, y: 200},
-          {x: 2, y: 300},
-        ]}
-        x={(datum) => datum.x}
-        y={(datum) => datum.y}
-        >
-      </VictoryLine>
-
     return (
       <div className="line">
         <div className="line__container">
-          { test_line }
+          <Tooltip
+              coords={this.state.tooltip_coords}
+              active={this.state.tooltip_active}
+              value={this.state.tooltip_value} />
+
+          <Legend
+            data={data}
+            colors={colors}></Legend>
+
+          <VictoryChart
+            height={height}
+            width={width}
+            padding={ chart_padding }
+          >
+            <VictoryAxis
+              dependentAxis
+              label={y_axis}
+              style={ axis_styles }
+              padding={ axisPadding }
+              axisLabelComponent={ <VictoryLabel lineHeight={4} />}
+              tickCount={4}
+              tickFormat={(val) => `${val}%` }
+            >
+            </VictoryAxis>
+
+            <VictoryAxis
+              label={ x_axis }
+              padding={ axisPadding }
+              style={ line_y_axis_styles }
+              axisLabelComponent={ <VictoryLabel lineHeight={4} />}
+              tickValues={ values }
+              tickFormat={(val, i) => {
+                if(bodyWidth < DESKTOP_WIDTH) {
+                  if(i != 0 && i != values.length - 1) {
+                    return
+                  }
+                }
+                if(data.find(exists => exists).length > 14) {
+                  if(i % 2 == 1){
+                    return
+                  }
+                }
+                const date = x_values[actives[i]]
+                return moment(date).format(date_format)
+              }}
+            >
+            </VictoryAxis>
+            {lines}
+          </VictoryChart>
         </div>
       </div>
     )

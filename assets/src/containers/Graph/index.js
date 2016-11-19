@@ -129,7 +129,7 @@ export default class Graph extends Component {
           <svg className="graph__download-icon">
             <use xlinkHref="#download"/>
           </svg>
-          </a>
+        </a>
       )
     }
 

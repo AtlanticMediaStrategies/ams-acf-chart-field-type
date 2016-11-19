@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import styles from './style.scss'
 import classnames from 'classnames'
 import { Button } from 'rebass'
-import Picker from 'react-color'
+import { CompactPicker }from 'react-color'
 import { chart_colors } from '../Graphs/config.js'
 
 /**
@@ -149,15 +149,15 @@ export class EditColor extends Component {
           Cancel
         </Button>
 
-        <Picker
-          type="compact"
-          color={ colors[i] }
-          onChange={ this.save_color.bind(this) }
-          onClose={ this.picker_closed.bind(this) }
-          colors={ chart_colors }
-          display= { this.state.picker_open }
-        >
-        </Picker>
+        { false ?
+          <CompactPicker
+            color={ colors[i] }
+            onChange={ this.save_color.bind(this) }
+            onClose={ this.picker_closed.bind(this) }
+            colors={ chart_colors }
+          >
+          </CompactPicker> : null
+        }
       </td>
     )
   }
