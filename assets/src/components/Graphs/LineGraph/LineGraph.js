@@ -24,6 +24,7 @@ import ReactDOM from 'react-dom'
 import Legend from '../Legend.js'
 import Filters from './Filters.js'
 import styles from './line-graph.scss'
+import numeral from 'numeral'
 
 export default class LineGraph extends Component {
 
@@ -212,7 +213,7 @@ export default class LineGraph extends Component {
               padding={ axisPadding }
               axisLabelComponent={ <VictoryLabel lineHeight={4} />}
               tickCount={4}
-              tickFormat={(val) => `${val}%` }
+              tickFormat={(val) => (val <= 100) ? `${val}%` : numeral(val).format('0,0') }
             >
             </VictoryAxis>
 
@@ -223,11 +224,13 @@ export default class LineGraph extends Component {
               axisLabelComponent={ <VictoryLabel lineHeight={4} />}
               tickValues={ values }
               tickFormat={(val, i) => {
+                // don't show tick values on mobile
                 if(bodyWidth < DESKTOP_WIDTH) {
                   if(i != 0 && i != values.length - 1) {
                     return
                   }
                 }
+                // only show every other tick on desktop
                 if(data.find(exists => exists).length > 14) {
                   if(i % 2 == 1){
                     return

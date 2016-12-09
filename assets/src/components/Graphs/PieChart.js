@@ -78,11 +78,13 @@ export default class PieChart extends Component {
             height={ height }
             standalone={ true }
             colorScale={ pie_colors }
+            labelRadius={ -10 }
             style={{
               labels: {
-                fill: '#FDFDFD',
+                fill: '#fafafa',
                 fontFamily: 'allstate-sans, sans-serif',
                 fontWeight: 100,
+                padding: 3,
                 fontSize
               },
             }}

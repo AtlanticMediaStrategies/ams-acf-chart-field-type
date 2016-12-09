@@ -1,5 +1,4 @@
 const webpack = require('webpack');
-const LodashWebpack = require('lodash-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
@@ -24,7 +23,6 @@ module.exports = {
       __DEVELOPMENT__: false,
     }),
     new ExtractTextPlugin('bundle.css'),
-    new LodashWebpack(),
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.optimize.UglifyJsPlugin({

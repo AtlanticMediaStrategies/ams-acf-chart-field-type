@@ -1,7 +1,6 @@
 const webpack = require('webpack');
 const AnybarWebpackPlugin = require('anybar-webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const LodashWebpack = require('lodash-webpack-plugin')
 const path = require('path');
 
 module.exports = {
@@ -18,7 +17,6 @@ module.exports = {
   },
   plugins: [
     new AnybarWebpackPlugin(),
-    new LodashWebpack(),
     new webpack.HotModuleReplacementPlugin()
   ]
 };

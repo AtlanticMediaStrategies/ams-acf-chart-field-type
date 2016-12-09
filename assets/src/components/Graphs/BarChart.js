@@ -72,7 +72,7 @@ export default class BarChart extends Component {
     }
 
     const bar_count = data.filter(data => data !== false).length
-    let gutter = 180
+    let gutter = 40
 
     if(bodyWidth < DESKTOP_WIDTH) {
       gutter = 70
@@ -81,7 +81,8 @@ export default class BarChart extends Component {
 
     let bar_data, categories, bars, legend, bar_width;
 
-    bar_width = bodyWidth < 768 ? 40 : 80
+
+    bar_width = bodyWidth < 768 ? 40 : width / (active_columns.length - 20)
 
     if(active_columns.length === 1) {
 
@@ -96,7 +97,6 @@ export default class BarChart extends Component {
             return {
               x: datum[0],
               y: val,
-              width: bar_width,
               label: (val < 8) ? '' : `${val}%`,
               fill: colors[x + 1]
             }
@@ -110,9 +110,12 @@ export default class BarChart extends Component {
 
       bars = (
         <VictoryBar
-          style={ bar_styles }
-          labelComponent={ <VictoryLabel verticalAnchor="bottom" /> }
-          data={bar_data}
+          style={{
+            data: {
+              width: bar_width
+            }
+          }}
+          data={ bar_data }
         >
         </VictoryBar>
       )
@@ -176,6 +179,9 @@ export default class BarChart extends Component {
     const bar_axis_styles = Object.assign({}, axis_styles, {
       grid: {
         strokeWidth: 0
+      },
+      tickLabels: {
+        fill: 'white'
       }
     })
 
@@ -187,7 +193,7 @@ export default class BarChart extends Component {
     return (
       <div className="bar">
         <Flex wrap={ true }>
-          <Box col={ 12 } style={{maxWidth: '45em'}}>
+          <Box col={ 12 }>
             <VictoryChart
               width={ width }
               height={ height }
@@ -197,15 +203,13 @@ export default class BarChart extends Component {
                 label={ x_axis_label }
                 style={ bar_axis_styles }
                 tickValues={ categories }
-                axisLabelComponent={ <VictoryLabel lineHeight={2} />}
               ></VictoryAxis>
 
               <VictoryAxis
                 dependentAxis
                 standalone={ false }
-                axisLabelComponent={ <VictoryLabel lineHeight={3} />}
                 tickCount={3}
-                  style={ y_axis_styles }
+                style={ y_axis_styles }
                 label={ y_axis }
                 tickFormat={(perc) => `${perc}%`}
               >
