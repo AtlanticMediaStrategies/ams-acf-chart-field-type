@@ -35,10 +35,12 @@ class acf_plugin_chart {
 
 	function __construct() {
 
+		// composer autoload
+		require(dirname(__FILE__) . '/vendor/autoload.php');
+
 		// set text domain
 		// https://codex.wordpress.org/Function_Reference/load_plugin_textdomain
 		load_plugin_textdomain( 'acf-chart', false, plugin_basename( dirname( __FILE__ ) ) . '/lang' );
-
 
 		// include field
 		add_action('acf/include_field_types', 	array($this, 'include_field_types')); // v5
@@ -60,11 +62,9 @@ class acf_plugin_chart {
 	*  @return	n/a
 	*/
 
-	function include_field_types( $version = 4 ) {
-
+	function include_field_types( $version = 5 ) {
 		// include
 		include_once('fields/acf-chart-v' . $version . '.php');
-
 	}
 
 }

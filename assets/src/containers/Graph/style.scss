@@ -1,0 +1,23 @@
+.graph__download {
+  font-size: 16px;
+  font-size: 1em;
+  color: #A5B3BE;
+  text-align: right;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  margin-bottom: -2.5em;
+
+  &-icon {
+    position: relative;
+    top: 4px;
+    margin-left: 4px;
+    width: 16px;
+    height: 16px;
+    fill: #A5B3BE;
+  }
+}
+
+.acf-chart {
+  position: relative;
+}
