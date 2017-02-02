@@ -64,7 +64,6 @@ class acf_field_chart extends acf_field {
 		);
 
 		$this::map_routes();
-		$this->debug = $debug;
 
 		// do not delete!
   	parent::__construct();
