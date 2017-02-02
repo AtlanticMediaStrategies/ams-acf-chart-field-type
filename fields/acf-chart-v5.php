@@ -2,10 +2,6 @@
 // exit if accessed directly
 if( ! defined( 'ABSPATH' ) ) exit;
 
-use Monolog\Logger;
-use Monolog\Handler\ChromePHPHandler;
-use Monolog\Handler\ErrorLogHandler;
-
 if(! class_exists('Routes')) {
 	die('Router needed');
 }
@@ -68,11 +64,6 @@ class acf_field_chart extends acf_field {
 		);
 
 		$this::map_routes();
-
-
-		$debug = new Logger('acf');
-		$debug->pushHandler(new ErrorLogHandler());
-
 		$this->debug = $debug;
 
 		// do not delete!
