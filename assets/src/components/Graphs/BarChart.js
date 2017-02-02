@@ -72,17 +72,11 @@ export default class BarChart extends Component {
     }
 
     const bar_count = data.filter(data => data !== false).length
-    let gutter = 40
-
-    if(bodyWidth < DESKTOP_WIDTH) {
-      gutter = 70
-    }
-
-
+    let gutter = 70
     let bar_data, categories, bars, legend, bar_width;
 
 
-    bar_width = bodyWidth < 768 ? 40 : width / (active_columns.length - 20)
+    bar_width = bodyWidth < 768 ? 40 : width / (active_columns.length - 17)
 
     if(active_columns.length === 1) {
 
@@ -165,7 +159,7 @@ export default class BarChart extends Component {
       bars =
         <VictoryGroup
           width={width}
-          offset={bar_width + 15}
+          offset={bar_width - 20}
           style={{
             data: {
               width: bar_width
